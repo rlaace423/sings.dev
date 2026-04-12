@@ -1,0 +1,231 @@
+---
+import { defaultLocale, type Locale, isLocale, useTranslations } from "../i18n/ui";
+
+interface Props {
+	lang?: Locale;
+}
+
+const { lang: langProp = defaultLocale } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const t = useTranslations(lang);
+---
+
+<div
+	id="global-search-modal"
+	data-search-modal
+	data-search-locale={lang}
+	aria-hidden="true"
+	class="fixed inset-0 z-50 hidden"
+>
+	<button
+		type="button"
+		data-search-backdrop
+		tabindex="-1"
+		aria-label={t("search.close")}
+		class="absolute inset-0 bg-black/55 backdrop-blur-sm"
+	></button>
+
+	<div class="relative mx-auto mt-20 w-full max-w-2xl px-4 sm:mt-24 sm:px-6">
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="global-search-title"
+			class="overflow-hidden rounded-3xl border border-stone-200 bg-stone-50 shadow-2xl shadow-black/20 dark:border-stone-800 dark:bg-stone-950"
+		>
+			<div class="flex items-center justify-between gap-4 border-b border-stone-200 px-5 py-4 dark:border-stone-800">
+				<div class="space-y-1">
+					<h2
+						id="global-search-title"
+						class="text-lg font-semibold tracking-tight text-stone-950 dark:text-stone-50"
+					>
+						{t("search.title")}
+					</h2>
+					<p class="text-sm text-stone-500 dark:text-stone-400">{t("search.hint")}</p>
+				</div>
+
+				<button
+					type="button"
+					data-search-close
+					aria-label={t("search.close")}
+					class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+				>
+					<svg
+						class="h-4 w-4"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<path d="M18 6 6 18" />
+						<path d="m6 6 12 12" />
+					</svg>
+				</button>
+			</div>
+
+			<div class="px-5 py-5 sm:px-6 sm:py-6">
+				<p
+					class="hidden text-sm text-stone-500 dark:text-stone-400"
+					data-search-status
+					aria-live="polite"
+				></p>
+				<div id="global-search-root" data-search-root></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style is:inline>
+	[data-search-root] {
+		--pagefind-ui-scale: 0.95;
+		--pagefind-ui-primary: #1c1917;
+		--pagefind-ui-text: #292524;
+		--pagefind-ui-background: #fafaf9;
+		--pagefind-ui-border: #d6d3d1;
+		--pagefind-ui-tag: #f5f5f4;
+		--pagefind-ui-border-width: 1px;
+		--pagefind-ui-border-radius: 0.9rem;
+		--pagefind-ui-image-border-radius: 0.75rem;
+		--pagefind-ui-font: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+	}
+
+	.dark [data-search-root] {
+		--pagefind-ui-primary: #f5f5f4;
+		--pagefind-ui-text: #e7e5e4;
+		--pagefind-ui-background: #0c0a09;
+		--pagefind-ui-border: #292524;
+		--pagefind-ui-tag: #1c1917;
+	}
+
+	[data-search-root] .pagefind-ui__filter-panel {
+		display: none !important;
+	}
+
+	[data-search-root] .pagefind-ui__drawer {
+		display: block !important;
+	}
+
+	[data-search-root] .pagefind-ui__results-area {
+		width: 100%;
+		min-width: 100%;
+		margin-top: 1rem;
+	}
+</style>
+
+<script
+	is:inline
+	define:vars={{
+		lang,
+		placeholder: t("search.placeholder"),
+		loadingLabel: t("search.loading"),
+		unavailableLabel: t("search.unavailable"),
+	}}
+>
+	(() => {
+		const modal = document.querySelector("[data-search-modal]");
+		if (!(modal instanceof HTMLElement)) return;
+
+		const root = modal.querySelector("[data-search-root]");
+		const status = modal.querySelector("[data-search-status]");
+		const openButtons = Array.from(document.querySelectorAll("[data-search-open]"));
+		const closeButtons = Array.from(modal.querySelectorAll("[data-search-close]"));
+		const backdrop = modal.querySelector("[data-search-backdrop]");
+
+		if (!(root instanceof HTMLElement)) return;
+
+		let initialized = false;
+		let loading = false;
+		let searchUi = null;
+		let lastActiveElement = null;
+
+		const setStatus = (message) => {
+			if (!(status instanceof HTMLElement)) return;
+			status.textContent = message;
+			status.hidden = !message;
+			status.classList.toggle("hidden", !message);
+		};
+
+		const focusSearchInput = () => {
+			const input = root.querySelector(".pagefind-ui__search-input");
+			if (input instanceof HTMLInputElement) input.focus();
+		};
+
+		const ensureSearchAssets = () => {
+			if (!document.querySelector('link[data-pagefind-ui-styles="true"]')) {
+				const stylesheet = document.createElement("link");
+				stylesheet.rel = "stylesheet";
+				stylesheet.href = "/pagefind/pagefind-ui.css";
+				stylesheet.dataset.pagefindUiStyles = "true";
+				document.head.appendChild(stylesheet);
+			}
+		};
+
+		const initializeSearch = async () => {
+			if (initialized || loading) return;
+			loading = true;
+			setStatus(loadingLabel);
+
+			try {
+				ensureSearchAssets();
+				await import("/pagefind/pagefind-ui.js");
+				// @ts-ignore PagefindUI is attached globally by the imported bundle.
+				searchUi = new PagefindUI({
+					element: "#global-search-root",
+					showImages: false,
+					showSubResults: true,
+					resetStyles: false,
+					translations: {
+						placeholder,
+					},
+				});
+				searchUi.triggerFilters({ language: [lang] });
+				initialized = true;
+				setStatus("");
+			} catch {
+				setStatus(unavailableLabel);
+			} finally {
+				loading = false;
+			}
+		};
+
+		const openModal = async (trigger) => {
+			lastActiveElement = trigger instanceof HTMLElement ? trigger : document.activeElement;
+			modal.classList.remove("hidden");
+			modal.setAttribute("aria-hidden", "false");
+			document.body.style.overflow = "hidden";
+
+			await initializeSearch();
+			requestAnimationFrame(focusSearchInput);
+		};
+
+		const closeModal = () => {
+			modal.classList.add("hidden");
+			modal.setAttribute("aria-hidden", "true");
+			document.body.style.overflow = "";
+
+			if (lastActiveElement instanceof HTMLElement) {
+				lastActiveElement.focus();
+			}
+		};
+
+		openButtons.forEach((button) => {
+			button.addEventListener("click", () => openModal(button));
+		});
+
+		closeButtons.forEach((button) => {
+			button.addEventListener("click", closeModal);
+		});
+
+		if (backdrop instanceof HTMLElement) {
+			backdrop.addEventListener("click", closeModal);
+		}
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape" && modal.getAttribute("aria-hidden") === "false") {
+				closeModal();
+			}
+		});
+	})();
+</script>

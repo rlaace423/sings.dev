@@ -12,6 +12,7 @@ export const labels: Record<Locale, string> = {
 export const ui = {
 	ko: {
 		"nav.home": "홈",
+		"nav.search": "검색",
 		"nav.posts": "포스트",
 		"nav.about": "소개",
 		"nav.resume": "이력서",
@@ -19,9 +20,16 @@ export const ui = {
 		"nav.theme": "테마",
 		"action.allPosts": "모든 글",
 		"action.readMore": "더 읽기",
+		"search.title": "검색",
+		"search.placeholder": "글 제목이나 내용을 검색하세요",
+		"search.hint": "Esc 키로 닫기",
+		"search.loading": "검색 준비 중...",
+		"search.unavailable": "검색 인덱스는 프로덕션 빌드 후 사용할 수 있습니다.",
+		"search.close": "검색 닫기",
 	},
 	en: {
 		"nav.home": "Home",
+		"nav.search": "Search",
 		"nav.posts": "Posts",
 		"nav.about": "About",
 		"nav.resume": "Resume",
@@ -29,6 +37,12 @@ export const ui = {
 		"nav.theme": "Theme",
 		"action.allPosts": "All posts",
 		"action.readMore": "Read more",
+		"search.title": "Search",
+		"search.placeholder": "Search titles or content",
+		"search.hint": "Press Esc to close",
+		"search.loading": "Preparing search...",
+		"search.unavailable": "The search index is available after a production build.",
+		"search.close": "Close search",
 	},
 } as const;
 

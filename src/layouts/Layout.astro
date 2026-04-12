@@ -1,6 +1,7 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import SearchModal from "../components/SearchModal.astro";
 import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
 import "../styles/global.css";
 
@@ -57,7 +58,10 @@ const resolvedDescription = resolveLocalizedValue(description);
 			})();
 		</script>
 	</head>
-	<body class="min-h-screen bg-stone-50 font-serif text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100">
+	<body
+		data-pagefind-filter={`language:${lang}`}
+		class="min-h-screen bg-stone-50 font-serif text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
+	>
 		<div class="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 sm:px-6">
 			<Header lang={lang} />
 			<main class="flex-1 py-12 sm:py-16">
@@ -67,6 +71,7 @@ const resolvedDescription = resolveLocalizedValue(description);
 			</main>
 			<Footer />
 		</div>
+		<SearchModal lang={lang} />
 		<script is:inline>
 			(() => {
 				const storageKey = "theme";

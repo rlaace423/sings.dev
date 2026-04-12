@@ -59,6 +59,29 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 				</ul>
 			</nav>
 
+			<button
+				type="button"
+				data-search-open
+				aria-haspopup="dialog"
+				aria-controls="global-search-modal"
+				aria-label={t("nav.search")}
+				class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+			>
+				<svg
+					class="h-4 w-4"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.8"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="11" cy="11" r="7" />
+					<path d="m20 20-3.5-3.5" />
+				</svg>
+			</button>
+
 			<a
 				href={switchHref}
 				class="inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-stone-200 px-3 text-xs font-semibold tracking-[0.14em] text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
