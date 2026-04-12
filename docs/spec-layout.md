@@ -11,7 +11,12 @@
 - **Header**:
   - Left: text logo linking to the locale-aware home page.
   - Right: minimalist navigation links for `Posts` and `About`.
-  - Controls: a locale switcher sits immediately to the left of the theme toggle.
+  - Controls: a search button sits to the left of the locale switcher, and the locale switcher sits to the left of the theme toggle.
   - Korean UI labels are `포스트`, `소개`; English UI labels are `Posts`, `About`.
+  - Apply a smart sticky header treatment:
+    - The header is `sticky top-0 z-40`.
+    - Use a semi-transparent stone-toned background with `backdrop-blur`.
+    - On desktop (`md` and up), keep the header always visible.
+    - On mobile, hide the header while scrolling down and reveal it again while scrolling up.
 - **Footer**:
   - Keep a simple copyright line at the bottom.

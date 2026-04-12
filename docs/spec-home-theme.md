@@ -8,8 +8,10 @@
   - Toggle the `dark` class on the `<html>` element and keep `color-scheme` in sync.
   - Apply `dark:` utilities consistently across layout, header, footer, archive pages, detail pages, and post footer components.
 - **Header Controls**:
-  - Keep the locale switcher immediately to the left of the theme toggle.
   - Keep the navigation minimal: `Posts` and `About` only.
+  - Place the search button to the left of the locale switcher.
+  - Keep the locale switcher immediately to the left of the theme toggle.
+  - Keep the header visually quiet but sticky, with a semi-transparent background and backdrop blur so it remains readable over long-form content.
 - **Home Page Structure**:
   - Korean home page: `src/pages/index.astro`
   - English home page: `src/pages/en/index.astro`

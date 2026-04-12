@@ -4,9 +4,11 @@
 - **Header Update (`src/components/Header.astro`)**:
   - Remove the "Home" link.
   - Use `useTranslations(lang)` to display labels for "Posts" and "About".
+  - Add a search button to the right-side controls and place it to the **LEFT** of the Language Toggle.
   - **Language Toggle**: 
     - Place the `EN / KO` toggle button to the **LEFT** of the Theme Toggle.
     - It should link to the current page's equivalent in the other language. (e.g., `/posts` <-> `/en/posts`).
+  - Keep the header sticky and locale-agnostic: the same smart sticky behavior should apply in both Korean and English routes.
 - **Layout Update (`src/layouts/Layout.astro`)**:
   - Accept a `lang` prop (defaulting to 'ko').
   - Set the `<html lang={lang}>` attribute.

@@ -32,7 +32,10 @@ const homeHref = getRelativeLocaleUrl(lang, "");
 const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 ---
 
-<header class="border-b border-stone-200 py-6 dark:border-stone-800">
+<header
+	data-smart-header
+	class="sticky top-0 z-40 border-b border-stone-200 bg-stone-50/80 py-6 backdrop-blur-md transition-transform duration-300 dark:border-stone-800 dark:bg-stone-950/80"
+>
 	<div class="flex items-center justify-between gap-6">
 		<a
 			href={homeHref}
@@ -134,3 +137,60 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 		</div>
 	</div>
 </header>
+
+<script is:inline>
+	(() => {
+		const header = document.querySelector("[data-smart-header]");
+		if (!(header instanceof HTMLElement)) return;
+
+		const desktopQuery = window.matchMedia("(min-width: 768px)");
+		let lastScrollY = window.scrollY;
+		let ticking = false;
+
+		const syncHeader = () => {
+			if (desktopQuery.matches) {
+				header.classList.remove("-translate-y-full");
+				lastScrollY = window.scrollY;
+				return;
+			}
+
+			const currentScrollY = window.scrollY;
+			const scrollingDown = currentScrollY > lastScrollY;
+			const passedHeader = currentScrollY > header.offsetHeight;
+
+			if (scrollingDown && passedHeader) {
+				header.classList.add("-translate-y-full");
+			} else {
+				header.classList.remove("-translate-y-full");
+			}
+
+			if (currentScrollY <= 0) {
+				header.classList.remove("-translate-y-full");
+			}
+
+			lastScrollY = currentScrollY;
+			ticking = false;
+		};
+
+		const onScroll = () => {
+			if (ticking) return;
+			ticking = true;
+			window.requestAnimationFrame(syncHeader);
+		};
+
+		const onViewportChange = () => {
+			header.classList.remove("-translate-y-full");
+			lastScrollY = window.scrollY;
+		};
+
+		window.addEventListener("scroll", onScroll, { passive: true });
+
+		if (typeof desktopQuery.addEventListener === "function") {
+			desktopQuery.addEventListener("change", onViewportChange);
+		} else {
+			desktopQuery.addListener(onViewportChange);
+		}
+
+		syncHeader();
+	})();
+</script>

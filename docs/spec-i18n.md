@@ -33,6 +33,8 @@
      - Store shared UI labels for navigation and common actions.
      - Provide locale helpers such as `isLocale()` and `useTranslations(lang)`.
 - **Navigation (`src/components/Header.astro`)**:
-  - Keep the header simple with `Posts` and `About` only.
+  - Keep the header simple with `Posts` and `About` as the only text navigation links.
+  - Place the search button to the left of the locale switcher.
   - Use a locale switcher immediately to the left of the theme toggle.
   - Build internal links with `getRelativeLocaleUrl()` so the language switch preserves the current page path.
+  - The global search modal should inherit the current locale and search only content from that locale.

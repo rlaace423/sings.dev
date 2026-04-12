@@ -6,17 +6,27 @@
   - Update `package.json` build script to generate the index: `"build": "astro build && pagefind --site dist"`
 - **Components to Create**:
   1. **`src/components/SearchModal.astro`**:
-     - **Layout**: Use Tailwind to create a full-screen, semi-transparent backdrop (`fixed inset-0 bg-black/50 z-50`). Clicking this backdrop must close the modal.
-     - **Modal Box**: A centered container (`max-w-xl mx-auto mt-24 p-4`).
-     - **Pagefind UI**: Render the default `pagefind-ui` widget inside this box.
-     - **i18n**: Ensure search results are filtered by the current language (`ko` or `en`) using Pagefind's data attribute filtering.
-     - **Styling**: Tweak CSS variables (`--pagefind-ui-*`) to match the site's dark/minimalist aesthetic.
+     - **Layout**: Use Tailwind to create a full-screen modal layer with a dark backdrop and a centered dialog card.
+     - **Backdrop**: The backdrop should be a clickable element that closes the modal.
+     - **Modal Box**: Use a roomy centered container suitable for a Spotlight-like search experience.
+     - **Pagefind UI**: Render the default `pagefind-ui` widget inside the modal.
+     - **Lazy Init**: Load the Pagefind UI script and stylesheet only when the modal is opened for the first time.
+     - **i18n**: Filter results to the current language (`ko` or `en`) with Pagefind filtering so Korean pages search Korean posts and English pages search English posts only.
+     - **Hidden Filter UI**: Keep the language filter active in the background, but do not show Pagefind's visible filter panel in the UI.
+     - **Styling**: Tweak CSS variables (`--pagefind-ui-*`) to match the site's serif, stone-toned, dark-mode-aware aesthetic.
   2. **Update Header (`src/components/Header.astro`)**:
-     - Add a simple magnifying glass icon (`<button id="search-trigger">`) to the main navigation, positioned to the **LEFT** of the Language Toggle.
-     - Include a vanilla JS `<script>` to handle logic:
-       - Open modal on `#search-trigger` click.
-       - Close modal on backdrop click or 'Escape' key press.
-       - Focus the search input automatically when opened.
+     - Add a simple magnifying glass icon button to the right-side controls, positioned to the **LEFT** of the Language Toggle.
+     - Keep the header button itself lightweight. It only needs a stable hook such as a data attribute for opening the modal.
+  3. **Update Layout (`src/layouts/Layout.astro`)**:
+     - Mount `<SearchModal lang={lang} />` once near the bottom of `<body>`.
+     - Apply locale-aware Pagefind metadata such as `data-pagefind-filter="language:..."` at the layout or page level so the generated index can be filtered per locale.
+  4. **Modal Behavior (Vanilla JS)**:
+     - Keep modal open/close logic inside `src/components/SearchModal.astro`.
+     - Open the modal when any `[data-search-open]` trigger is clicked.
+     - Close the modal on backdrop click, close button click, or `Escape` key press.
+     - Move focus to the Pagefind input after opening.
+     - Restore focus to the previously active trigger after closing.
 - **Constraints**: 
   - Do NOT build a custom React/Vue component. Use Pagefind's default Vanilla JS UI widget.
-  - Keep the initial JS zero by initializing Pagefind only when needed or letting its native script handle it gracefully within the modal.
+  - Keep the initial JS near zero by initializing Pagefind only when needed.
+  - Do not expose extra filter UI or advanced search chrome that breaks the minimalist reading experience.
