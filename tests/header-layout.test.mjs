@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+test("layout renders the header outside the centered site shell", async () => {
+	const layout = await readFile(new URL("../src/layouts/Layout.astro", import.meta.url), "utf8");
+	const headerIndex = layout.indexOf("<Header lang={lang} />");
+	const shellIndex = layout.indexOf("max-w-4xl");
+
+	assert.notEqual(headerIndex, -1, "Layout should render the shared header");
+	assert.notEqual(shellIndex, -1, "Layout should still keep a centered max-w-4xl site shell");
+	assert.ok(
+		headerIndex < shellIndex,
+		"Header should render before the centered site shell so its chrome can be full-bleed",
+	);
+});
+
+test("header keeps its controls inside an inner centered container", async () => {
+	const header = await readFile(new URL("../src/components/Header.astro", import.meta.url), "utf8");
+
+	assert.match(
+		header,
+		/<div class="mx-auto flex w-full max-w-4xl[^"]*px-4[^"]*sm:px-6/,
+		"Header should keep its controls inside an inner centered max-w-4xl container",
+	);
+});

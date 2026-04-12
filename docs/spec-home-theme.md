@@ -12,6 +12,7 @@
   - Place the search button to the left of the locale switcher.
   - Keep the locale switcher immediately to the left of the theme toggle.
   - Keep the header visually quiet but sticky, with a semi-transparent background and backdrop blur so it remains readable over long-form content.
+  - Render the header background and bottom border full-bleed across the viewport while keeping the navigation and control cluster aligned to the centered site container.
 - **Home Page Structure**:
   - Korean home page: `src/pages/index.astro`
   - English home page: `src/pages/en/index.astro`

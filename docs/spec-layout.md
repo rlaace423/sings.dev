@@ -5,6 +5,8 @@
 - **Layout Structure**:
   - Use a centered outer container around `max-w-4xl` with horizontal padding.
   - Keep the default reading width around `max-w-3xl`, but allow wider layouts for post detail pages through a `contentClass` prop.
+  - Keep the sticky header chrome outside that centered shell so its background and bottom border can span the full viewport width.
+  - Inside the header, use a centered inner container that matches the site's `max-w-4xl` width and horizontal padding.
   - Accept a `lang` prop in `src/layouts/Layout.astro` and apply it to `<html lang={lang}>`.
   - Support localized `title` and `description` metadata when needed.
   - Support both light and dark mode.
@@ -16,6 +18,7 @@
   - Apply a smart sticky header treatment:
     - The header is `sticky top-0 z-40`.
     - Use a semi-transparent stone-toned background with `backdrop-blur`.
+    - Let the header background and bottom border run full-bleed across the viewport, while keeping the logo, navigation, and controls aligned to the centered inner container.
     - On desktop (`md` and up), keep the header always visible.
     - On mobile, hide the header while scrolling down and reveal it again while scrolling up.
 - **Footer**:
