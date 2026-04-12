@@ -2,9 +2,10 @@
 import { getCollection, render } from "astro:content";
 import AuthorProfile from "../../components/AuthorProfile.astro";
 import Comments from "../../components/Comments.astro";
+import PostHeader from "../../components/PostHeader.astro";
 import TOC from "../../components/TOC.astro";
 import Layout from "../../layouts/Layout.astro";
-import { matchesLocale, stripLocaleFromId } from "../../utils/blog";
+import { getReadingTimeMinutes, matchesLocale, stripLocaleFromId } from "../../utils/blog";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
@@ -17,7 +18,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
-const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
+const readingTimeMinutes = getReadingTimeMinutes(post.body);
 ---
 
 <Layout
@@ -41,20 +42,18 @@ const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
 					</div>
 				</details>
 
-				<header class="space-y-4">
-					<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
-						{formattedDate}
-					</p>
-					<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
-						{post.data.title}
-					</h1>
-					<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
-						{post.data.description}
-					</p>
-				</header>
+				<PostHeader
+					category={post.data.category}
+					description={post.data.description}
+					lang="ko"
+					pubDate={post.data.pubDate}
+					readingTimeMinutes={readingTimeMinutes}
+					tags={post.data.tags ?? []}
+					title={post.data.title}
+				/>
 
 				<div
-					class="prose prose-stone mt-12 max-w-none prose-headings:tracking-tight prose-a:text-stone-900 prose-a:decoration-stone-300 prose-a:underline-offset-4 prose-blockquote:border-stone-200 prose-blockquote:text-stone-600 prose-code:text-stone-900 prose-pre:border prose-pre:border-stone-200 prose-pre:bg-stone-100 dark:prose-invert dark:prose-a:text-stone-100 dark:prose-a:decoration-stone-500 dark:prose-blockquote:border-stone-700 dark:prose-blockquote:text-stone-300 dark:prose-code:text-stone-100 dark:prose-pre:border-stone-700 dark:prose-pre:bg-stone-900"
+					class="prose prose-stone mt-10 max-w-none prose-headings:tracking-tight prose-a:text-stone-900 prose-a:decoration-stone-300 prose-a:underline-offset-4 prose-blockquote:border-stone-200 prose-blockquote:text-stone-600 prose-code:text-stone-900 prose-pre:border prose-pre:border-stone-200 prose-pre:bg-stone-100 dark:prose-invert dark:prose-a:text-stone-100 dark:prose-a:decoration-stone-500 dark:prose-blockquote:border-stone-700 dark:prose-blockquote:text-stone-300 dark:prose-code:text-stone-100 dark:prose-pre:border-stone-700 dark:prose-pre:bg-stone-900"
 				>
 					<Content />
 				</div>
@@ -70,7 +69,7 @@ const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
 			</div>
 
 			<aside class="hidden md:block md:w-1/4">
-				<div class="sticky top-20">
+				<div class="sticky top-20 border-l border-stone-200 pl-6 dark:border-stone-800">
 					<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
 				</div>
 			</aside>
