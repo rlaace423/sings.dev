@@ -1,9 +1,13 @@
 # Spec: Blog Post Detail & Table of Contents (TOC)
 
-- **Goal**: Render localized post detail pages with a readable body and a lightweight table of contents.
+- **Goal**: Render localized post detail pages with a shared post header, a readable body, and a lightweight table of contents.
 - **Routes**:
   - Korean detail pages: `src/pages/posts/[...slug].astro`
   - English detail pages: `src/pages/en/posts/[...slug].astro`
+- **Shared Post Header (`src/components/PostHeader.astro`)**:
+  - Render a compact metadata line above the title with category, publication date, and reading time.
+  - Render the title, description, and full frontmatter tag list.
+  - Carry the divider that separates the intro chrome from the article body.
 - **Styling the Content**:
   - Wrap the rendered markdown `<Content />` in a container using Tailwind Typography (`prose`).
   - Use `max-w-none` so the prose styles fill the article column naturally.
@@ -15,8 +19,9 @@
 - **Layout Change for Post Detail**:
   - **Desktop (`md:` and above)**:
     - Use a 2-column layout.
-    - Left column: title, date, description, article body, and post footer.
-    - Right column: a sticky TOC with `top-20`.
+    - Left column: shared header, article body, and post footer.
+    - Right column: a sticky TOC rail with a subtle left divider and padding treatment.
   - **Mobile**:
     - Use a single-column layout.
     - Render the TOC above the article body in a native `<details>` / `<summary>` block.
+    - Start the article body after a quieter separation below the header block.

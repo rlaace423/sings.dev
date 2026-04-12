@@ -21,6 +21,8 @@
   - Show category, date, title, description, and tags.
   - The archive filter controls at the top are selection controls.
   - The category and tag badges inside each post item remain links to taxonomy pages.
+- **Post Detail Pages**:
+  - The shared post header renders the full frontmatter tag list for the post.
 - **Taxonomy Pages**:
   - Korean:
     - `src/pages/category/[category].astro`
