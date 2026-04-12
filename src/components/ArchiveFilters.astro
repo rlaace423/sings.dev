@@ -1,0 +1,81 @@
+---
+import { slugifyTaxonomy } from "../utils/blog";
+
+interface Props {
+	categories: string[];
+	tags: string[];
+	categoryLabel?: string;
+	tagsLabel?: string;
+	allCategoriesLabel?: string;
+	categoryAriaLabel?: string;
+}
+
+const {
+	categories,
+	tags,
+	categoryLabel = "Categories",
+	tagsLabel = "Tags",
+	allCategoriesLabel = "All categories",
+	categoryAriaLabel = categoryLabel,
+} = Astro.props;
+---
+
+<section class="mt-12 space-y-5 border-t border-stone-200 pt-8 dark:border-stone-800">
+	<div class="max-w-sm space-y-2">
+		<label
+			for="category-filter"
+			class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500"
+		>
+			{categoryLabel}
+		</label>
+		<div class="relative">
+			<select
+				id="category-filter"
+				data-category-filter
+				aria-label={categoryAriaLabel}
+				class="w-full appearance-none rounded-xl border border-stone-200 bg-white px-4 py-3 pr-10 text-sm text-stone-700 outline-none transition-colors focus:border-stone-300 dark:border-stone-800 dark:bg-stone-950 dark:text-stone-200 dark:focus:border-stone-700"
+			>
+				<option value="">{allCategoriesLabel}</option>
+				{
+					categories.map((category) => (
+						<option value={slugifyTaxonomy(category)}>{category}</option>
+					))
+				}
+			</select>
+			<svg
+				class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500 dark:text-stone-500"
+				viewBox="0 0 20 20"
+				fill="currentColor"
+				aria-hidden="true"
+			>
+				<path
+					fill-rule="evenodd"
+					d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z"
+					clip-rule="evenodd"
+				/>
+			</svg>
+		</div>
+	</div>
+
+	<div class="space-y-3">
+		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			{tagsLabel}
+		</p>
+		<ul class="flex flex-wrap gap-2">
+			{
+				tags.map((tag) => (
+					<li>
+						<button
+							type="button"
+							data-tag-filter={slugifyTaxonomy(tag)}
+							aria-pressed="false"
+							class="inline-flex rounded-full bg-stone-100 px-3 py-1.5 text-sm text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							#{tag}
+						</button>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>

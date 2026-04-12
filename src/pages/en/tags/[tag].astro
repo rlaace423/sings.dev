@@ -1,0 +1,66 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getCollection } from "astro:content";
+import PostList from "../../../components/PostList.astro";
+import Layout from "../../../layouts/Layout.astro";
+import {
+	matchesLocale,
+	slugifyTaxonomy,
+	sortPostsByDate,
+	uniqueTags,
+} from "../../../utils/blog";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "en"));
+	const tags = uniqueTags(posts);
+
+	return tags.map((tag) => ({
+		params: { tag: slugifyTaxonomy(tag) },
+		props: {
+			tag,
+			posts: sortPostsByDate(
+				posts.filter((post) => post.data.tags?.includes(tag)),
+			),
+		},
+	}));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Layout
+	title={`#${tag} | sings.dev`}
+	description={`Posts tagged with ${tag}.`}
+	lang="en"
+>
+	<section class="space-y-4">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			Tag
+		</p>
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+			#{tag}
+		</h1>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			A filtered view of posts that share this tag.
+		</p>
+		<p>
+			<a
+				href={getRelativeLocaleUrl("en", "posts")}
+				class="text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+			>
+				Back to all posts
+			</a>
+		</p>
+	</section>
+
+	<div class="mt-12 space-y-6">
+		<p class="text-sm text-stone-600 dark:text-stone-300">
+			{posts.length} posts tagged with #{tag}
+		</p>
+		<PostList
+			posts={posts}
+			emptyMessage={`No posts are tagged with ${tag} yet.`}
+			lang="en"
+		/>
+	</div>
+</Layout>

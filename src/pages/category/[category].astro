@@ -1,0 +1,66 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostList from "../../components/PostList.astro";
+import {
+	matchesLocale,
+	slugifyTaxonomy,
+	sortPostsByDate,
+	uniqueCategories,
+} from "../../utils/blog";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
+	const categories = uniqueCategories(posts);
+
+	return categories.map((category) => ({
+		params: { category: slugifyTaxonomy(category) },
+		props: {
+			category,
+			posts: sortPostsByDate(
+				posts.filter((post) => post.data.category === category),
+			),
+		},
+	}));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<Layout
+	title={`${category} | sings.dev`}
+	description={`${category} 카테고리에 속한 글 목록입니다.`}
+	lang="ko"
+>
+	<section class="space-y-4">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			카테고리
+		</p>
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+			{category}
+		</h1>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			이 카테고리에 묶인 글만 따로 모아 본 화면입니다.
+		</p>
+		<p>
+			<a
+				href={getRelativeLocaleUrl("ko", "posts")}
+				class="text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+			>
+				전체 글로 돌아가기
+			</a>
+		</p>
+	</section>
+
+	<div class="mt-12 space-y-6">
+		<p class="text-sm text-stone-600 dark:text-stone-300">
+			{category} 카테고리의 글 {posts.length}개
+		</p>
+		<PostList
+			posts={posts}
+			emptyMessage={`${category} 카테고리에 등록된 글이 아직 없습니다.`}
+			lang="ko"
+		/>
+	</div>
+</Layout>

@@ -1,0 +1,29 @@
+# Spec: i18n Routing & Navigation Update
+
+- **Goal**: Apply i18n to all pages and update the navigation UI.
+- **Header Update (`src/components/Header.astro`)**:
+  - Remove the "Home" link.
+  - Use `useTranslations(lang)` to display labels for "Posts" and "About".
+  - **Language Toggle**: 
+    - Place the `EN / KO` toggle button to the **LEFT** of the Theme Toggle.
+    - It should link to the current page's equivalent in the other language. (e.g., `/posts` <-> `/en/posts`).
+- **Layout Update (`src/layouts/Layout.astro`)**:
+  - Accept a `lang` prop (defaulting to 'ko').
+  - Set the `<html lang={lang}>` attribute.
+  - Use localized metadata if provided.
+- **Page Migration**:
+  - **Index Page**: 
+    - `src/pages/index.astro` (KO): Fetch from `blog/ko/`.
+    - `src/pages/en/index.astro` (EN): Fetch from `blog/en/`.
+  - **Posts Page**:
+    - `src/pages/posts/index.astro` (KO): Fetch all from `blog/ko/`.
+    - `src/pages/en/posts/index.astro` (EN): Fetch all from `blog/en/`.
+  - **About Page (New)**:
+    - `src/pages/about.astro` (KO): Render content from `src/content/pages/ko/about.md`.
+    - `src/pages/en/about.astro` (EN): Render content from `src/content/pages/en/about.md`.
+- **Supporting Routes**:
+  - Korean post detail: `src/pages/posts/[...slug].astro`
+  - English post detail: `src/pages/en/posts/[...slug].astro`
+  - Korean taxonomy pages: `src/pages/category/[category].astro`, `src/pages/tags/[tag].astro`
+  - English taxonomy pages: `src/pages/en/category/[category].astro`, `src/pages/en/tags/[tag].astro`
+- **Constraint**: Update `getCollection` calls to filter by the language prefix (e.g., `id.startsWith("ko/")`). Use `getRelativeLocaleUrl` from `astro:i18n` for all internal links.

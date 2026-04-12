@@ -1,0 +1,76 @@
+---
+import { getCollection, render } from "astro:content";
+import AuthorProfile from "../../components/AuthorProfile.astro";
+import Comments from "../../components/Comments.astro";
+import TOC from "../../components/TOC.astro";
+import Layout from "../../layouts/Layout.astro";
+import { matchesLocale, stripLocaleFromId } from "../../utils/blog";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
+
+	return posts.map((post) => ({
+		params: { slug: stripLocaleFromId(post.id) },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
+---
+
+<Layout
+	title={`${post.data.title} | sings.dev`}
+	description={post.data.description}
+	lang="ko"
+	contentClass="max-w-none"
+>
+	<article class="mx-auto max-w-5xl">
+		<div class="md:flex md:items-start md:gap-16">
+			<div class="min-w-0 md:w-3/4">
+				<details class="mb-10 rounded-lg border border-stone-200 px-4 py-3 dark:border-stone-800 md:hidden">
+					<summary class="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-300">
+						목차
+					</summary>
+					<div class="mt-4 border-t border-stone-200 pt-4 dark:border-stone-800">
+						<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
+					</div>
+				</details>
+
+				<header class="space-y-4">
+					<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+						{formattedDate}
+					</p>
+					<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+						{post.data.title}
+					</h1>
+					<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+						{post.data.description}
+					</p>
+				</header>
+
+				<div
+					class="prose prose-stone mt-12 max-w-none prose-headings:tracking-tight prose-a:text-stone-900 prose-a:decoration-stone-300 prose-a:underline-offset-4 prose-blockquote:border-stone-200 prose-blockquote:text-stone-600 prose-code:text-stone-900 prose-pre:border prose-pre:border-stone-200 prose-pre:bg-stone-100 dark:prose-invert dark:prose-a:text-stone-100 dark:prose-a:decoration-stone-500 dark:prose-blockquote:border-stone-700 dark:prose-blockquote:text-stone-300 dark:prose-code:text-stone-100 dark:prose-pre:border-stone-700 dark:prose-pre:bg-stone-900"
+				>
+					<Content />
+				</div>
+
+				<div class="mt-16 border-t border-stone-200 pt-10 dark:border-stone-800">
+					<div class="space-y-10">
+						<AuthorProfile lang="ko" />
+						<div class="border-t border-stone-200 pt-10 dark:border-stone-800">
+							<Comments lang="ko" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<aside class="hidden md:block md:w-1/4">
+				<div class="sticky top-20">
+					<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
+				</div>
+			</aside>
+		</div>
+	</article>
+</Layout>

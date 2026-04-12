@@ -1,0 +1,20 @@
+# Spec: Home Page & Dark Mode Toggle
+
+- **Goal**: Keep the home pages lightweight while supporting theme switching across the whole site.
+- **Dark Mode Implementation (`src/components/Header.astro` & `src/layouts/Layout.astro`)**:
+  - Use a simple theme toggle `<button>` in the header with inline SVG icons.
+  - Store the selected theme in `localStorage`.
+  - On load, resolve the theme from `localStorage` first, then fall back to `prefers-color-scheme`.
+  - Toggle the `dark` class on the `<html>` element and keep `color-scheme` in sync.
+  - Apply `dark:` utilities consistently across layout, header, footer, archive pages, detail pages, and post footer components.
+- **Header Controls**:
+  - Keep the locale switcher immediately to the left of the theme toggle.
+  - Keep the navigation minimal: `Posts` and `About` only.
+- **Home Page Structure**:
+  - Korean home page: `src/pages/index.astro`
+  - English home page: `src/pages/en/index.astro`
+  - Each locale fetches recent posts from its matching content folder only.
+  - Each home page contains:
+    - A short hero/introduction section.
+    - A recent posts section showing the latest 3 to 5 posts.
+  - Reuse the same quiet, text-first list style as the archive page.

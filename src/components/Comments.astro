@@ -1,0 +1,48 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface Props {
+	lang?: Locale;
+	eyebrow?: string;
+	title?: string;
+}
+
+const { lang: langProp = defaultLocale, eyebrow, title } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const resolvedEyebrow = eyebrow ?? (lang === "ko" ? "토론" : "Discussion");
+const resolvedTitle = title ?? (lang === "ko" ? "댓글" : "Comments");
+---
+
+<section aria-labelledby="comments-title" class="space-y-4">
+	<div class="space-y-1">
+		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			{resolvedEyebrow}
+		</p>
+		<h2
+			id="comments-title"
+			class="text-2xl font-semibold tracking-tight text-stone-950 dark:text-stone-50"
+		>
+			{resolvedTitle}
+		</h2>
+	</div>
+
+	<div class="rounded-2xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-950 sm:p-6">
+		<script
+			src="https://giscus.app/client.js"
+			data-repo="rlaace423/sings.dev"
+			data-repo-id="R_kgDORctzvg"
+			data-category="Announcements"
+			data-category-id="DIC_kwDORctzvs4C6pmR"
+			data-mapping="pathname"
+			data-strict="0"
+			data-reactions-enabled="1"
+			data-emit-metadata="0"
+			data-input-position="top"
+			data-theme="preferred_color_scheme"
+			data-lang={lang}
+			data-loading="lazy"
+			crossorigin="anonymous"
+			async
+		></script>
+	</div>
+</section>

@@ -1,0 +1,77 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface Props {
+	lang?: Locale;
+	name?: string;
+	bio?: string;
+	githubHref?: string;
+	emailHref?: string;
+	eyebrow?: string;
+	emailLabel?: string;
+}
+
+const {
+	lang: langProp = defaultLocale,
+	name = "Sam",
+	bio,
+	githubHref = "https://github.com/your-name",
+	emailHref = "mailto:hello@example.com",
+	eyebrow,
+	emailLabel,
+} = Astro.props;
+
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const resolvedEyebrow = eyebrow ?? (lang === "ko" ? "글쓴이 소개" : "About the author");
+const resolvedBio =
+	bio ??
+	(lang === "ko"
+		? "차분한 시스템 설계, 백엔드 구조, 오래 유지할 수 있는 웹의 작은 판단들을 기록합니다."
+		: "Writing about calm system design, backend architecture, and small decisions that make the web easier to maintain.");
+const resolvedEmailLabel = emailLabel ?? (lang === "ko" ? "이메일" : "Email");
+---
+
+<section
+	aria-labelledby="author-profile-title"
+	class="rounded-2xl bg-stone-100/70 p-6 dark:bg-stone-900"
+>
+	<div class="flex items-start gap-4">
+		<div
+			aria-hidden="true"
+			class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-stone-300 text-sm font-semibold text-stone-700 dark:bg-stone-700 dark:text-stone-100"
+		>
+			{name.slice(0, 1).toUpperCase()}
+		</div>
+
+		<div class="min-w-0 space-y-3">
+			<div class="space-y-1">
+				<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+					{resolvedEyebrow}
+				</p>
+				<h2
+					id="author-profile-title"
+					class="text-lg font-semibold text-stone-950 dark:text-stone-50"
+				>
+					{name}
+				</h2>
+			</div>
+
+			<p class="max-w-2xl leading-7 text-stone-600 dark:text-stone-300">{resolvedBio}</p>
+
+			<div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-stone-600 dark:text-stone-300">
+				<a
+					href={githubHref}
+					class="transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-900"
+				>
+					GitHub
+				</a>
+				<a
+					href={emailHref}
+					class="transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-900"
+				>
+					{resolvedEmailLabel}
+				</a>
+			</div>
+		</div>
+	</div>
+</section>

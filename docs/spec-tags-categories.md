@@ -1,0 +1,30 @@
+# Spec: Categories & Tags System
+
+- **Goal**: Support category and tag metadata in blog posts, expose taxonomy routes, and provide lightweight filtering in the archive.
+- **Data Schema (`src/content/config.ts`)**:
+  - `category` is required.
+  - `tags` is optional.
+- **Archive Filtering UI**:
+  - Use a native `<select>` for category filtering.
+  - Use pill-shaped tag `<button>` elements for tag selection.
+  - Keep the implementation lightweight with inline vanilla JS and Tailwind utilities only.
+  - Filter behavior:
+    - Category is a single-select filter.
+    - Tags are multi-select filters.
+    - Multiple selected tags use **OR** logic.
+    - Category and selected tags combine with **AND** logic.
+- **Archive Routes**:
+  - Korean archive: `src/pages/posts/index.astro`
+  - English archive: `src/pages/en/posts/index.astro`
+  - Each archive must only use posts from the matching locale.
+- **Post List Items**:
+  - Show category, date, title, description, and tags.
+  - The archive filter controls at the top are selection controls.
+  - The category and tag badges inside each post item remain links to taxonomy pages.
+- **Taxonomy Pages**:
+  - Korean:
+    - `src/pages/category/[category].astro`
+    - `src/pages/tags/[tag].astro`
+  - English:
+    - `src/pages/en/category/[category].astro`
+    - `src/pages/en/tags/[tag].astro`

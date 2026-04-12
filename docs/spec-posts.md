@@ -1,0 +1,26 @@
+# Spec: Blog Content & Post List
+
+- **Goal**: Maintain Astro Content Collections for localized blog content and expose simple archive pages.
+- **Content Collections**:
+  - Use Astro's built-in `astro:content` API.
+  - Define a `blog` collection in `src/content/config.ts`.
+  - Define a `pages` collection in `src/content/config.ts` for static markdown pages such as `about`.
+  - `blog` schema requirements:
+    - `title` (string)
+    - `pubDate` (Date)
+    - `description` (string)
+    - `category` (string, required)
+    - `tags` (array of strings, optional)
+- **Content Structure**:
+  - Korean posts live under `src/content/blog/ko/`.
+  - English posts live under `src/content/blog/en/`.
+  - Static pages live under `src/content/pages/ko/` and `src/content/pages/en/`.
+- **Archive Pages**:
+  - `src/pages/posts/index.astro` serves the Korean archive and only reads `blog/ko/*`.
+  - `src/pages/en/posts/index.astro` serves the English archive and only reads `blog/en/*`.
+  - Sort posts by `pubDate` in descending order.
+  - Keep the archive text-first and minimalist. No image cards or heavy visual UI.
+  - Each item should show category, date, title, description, and tags.
+- **Detail Routes**:
+  - Korean detail pages are generated from `src/pages/posts/[...slug].astro`.
+  - English detail pages are generated from `src/pages/en/posts/[...slug].astro`.

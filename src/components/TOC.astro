@@ -1,0 +1,42 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings?: Heading[];
+	title?: string;
+	ariaLabel?: string;
+}
+
+const {
+	headings = [],
+	title = "On this page",
+	ariaLabel = "Table of contents",
+} = Astro.props;
+const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+{
+	items.length > 0 && (
+		<nav aria-label={ariaLabel} class="text-sm text-stone-600 dark:text-stone-300">
+			<p class="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+				{title}
+			</p>
+			<ul class="space-y-3">
+				{items.map((heading) => (
+					<li class:list={[heading.depth > 2 && "pl-4"]}>
+						<a
+							href={`#${heading.slug}`}
+							class="block leading-6 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							{heading.text}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}

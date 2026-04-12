@@ -1,0 +1,173 @@
+---
+import ArchiveFilters from "../../../components/ArchiveFilters.astro";
+import Layout from "../../../layouts/Layout.astro";
+import PostList from "../../../components/PostList.astro";
+import { getCollection } from "astro:content";
+import {
+	matchesLocale,
+	sortPostsByDate,
+	uniqueCategories,
+	uniqueTags,
+} from "../../../utils/blog";
+
+const posts = sortPostsByDate(
+	await getCollection("blog", ({ id }) => matchesLocale(id, "en")),
+);
+const categories = uniqueCategories(posts);
+const tags = uniqueTags(posts);
+---
+
+<Layout
+	title="Posts | sings.dev"
+	description="An archive of English posts published on sings.dev."
+	lang="en"
+>
+	<section class="space-y-4">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			Archive
+		</p>
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+			Posts
+		</h1>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			A quiet list of essays, notes, and project logs.
+		</p>
+	</section>
+
+	<ArchiveFilters
+		categories={categories}
+		tags={tags}
+		categoryLabel="Categories"
+		tagsLabel="Tags"
+		allCategoriesLabel="All categories"
+		categoryAriaLabel="Categories"
+	/>
+
+	<div class="mt-12 space-y-6" data-posts-archive>
+		<p
+			class="text-sm text-stone-600 dark:text-stone-300"
+			data-results-count
+		>
+			{posts.length} posts in the archive
+		</p>
+		<PostList posts={posts} filterable lang="en" />
+		<p
+			class="hidden text-sm text-stone-600 dark:text-stone-300"
+			data-empty-results
+		>
+			No posts match the current filters.
+		</p>
+	</div>
+
+	<script is:inline>
+		(() => {
+			const archive = document.querySelector("[data-posts-archive]");
+			if (!(archive instanceof HTMLElement)) return;
+
+			const categorySelect = document.querySelector("[data-category-filter]");
+			if (!(categorySelect instanceof HTMLSelectElement)) return;
+
+			const tagButtons = Array.from(
+				document.querySelectorAll("[data-tag-filter]"),
+			).filter((button) => button instanceof HTMLButtonElement);
+			const items = Array.from(
+				archive.querySelectorAll("[data-post-item]"),
+			).filter((item) => item instanceof HTMLElement);
+			const count = archive.querySelector("[data-results-count]");
+			const empty = archive.querySelector("[data-empty-results]");
+			const selectedTags = new Set();
+
+			const activeClasses = [
+				"bg-stone-900",
+				"text-stone-50",
+				"dark:bg-stone-100",
+				"dark:text-stone-950",
+			];
+			const inactiveClasses = [
+				"bg-stone-100",
+				"text-stone-600",
+				"hover:bg-stone-200",
+				"hover:text-stone-950",
+				"dark:bg-stone-900",
+				"dark:text-stone-300",
+				"dark:hover:bg-stone-800",
+				"dark:hover:text-stone-50",
+			];
+
+			const syncTagButton = (button) => {
+				const tag = button.dataset.tagFilter ?? "";
+				const active = selectedTags.has(tag);
+
+				button.setAttribute("aria-pressed", String(active));
+				button.classList.toggle("bg-stone-900", active);
+				button.classList.toggle("text-stone-50", active);
+				button.classList.toggle("dark:bg-stone-100", active);
+				button.classList.toggle("dark:text-stone-950", active);
+
+				activeClasses.forEach((className) => {
+					if (!active) button.classList.remove(className);
+				});
+
+				inactiveClasses.forEach((className) => {
+					button.classList.toggle(className, !active);
+				});
+			};
+
+			const updateCount = (visibleCount) => {
+				const hasFilters =
+					categorySelect.value.length > 0 || selectedTags.size > 0;
+				const noun = visibleCount === 1 ? "post" : "posts";
+				const suffix = hasFilters ? "match the current filters" : "in the archive";
+
+				if (count) count.textContent = `${visibleCount} ${noun} ${suffix}`;
+				if (empty instanceof HTMLElement) empty.hidden = visibleCount !== 0;
+			};
+
+			const applyFilters = () => {
+				const selectedCategory = categorySelect.value;
+				let visibleCount = 0;
+
+				items.forEach((item) => {
+					const itemCategory = item.dataset.category ?? "";
+					const itemTags = (item.dataset.tags ?? "")
+						.split(",")
+						.map((tag) => tag.trim())
+						.filter(Boolean);
+
+					const matchesCategory =
+						selectedCategory === "" || itemCategory === selectedCategory;
+					const matchesTags =
+						selectedTags.size === 0 ||
+						itemTags.some((tag) => selectedTags.has(tag));
+					const visible = matchesCategory && matchesTags;
+
+					item.hidden = !visible;
+					item.classList.toggle("hidden", !visible);
+					if (visible) visibleCount += 1;
+				});
+
+				updateCount(visibleCount);
+			};
+
+			tagButtons.forEach((button) => {
+				syncTagButton(button);
+				button.addEventListener("click", () => {
+					const tag = button.dataset.tagFilter ?? "";
+					if (!tag) return;
+
+					if (selectedTags.has(tag)) {
+						selectedTags.delete(tag);
+					} else {
+						selectedTags.add(tag);
+					}
+
+					syncTagButton(button);
+					applyFilters();
+				});
+			});
+
+			categorySelect.addEventListener("change", applyFilters);
+			applyFilters();
+		})();
+	</script>
+</Layout>

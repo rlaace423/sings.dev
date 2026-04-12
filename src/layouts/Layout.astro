@@ -1,0 +1,140 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+import "../styles/global.css";
+
+type LocalizedValue = string | Partial<Record<Locale, string>>;
+
+interface Props {
+	title?: LocalizedValue;
+	description?: LocalizedValue;
+	lang?: Locale;
+	contentClass?: string;
+}
+
+const {
+	title = "sings.dev",
+	description = "A minimalist Astro site for notes, posts, and essays.",
+	lang: langProp = defaultLocale,
+	contentClass = "max-w-3xl",
+} = Astro.props;
+
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+
+const resolveLocalizedValue = (value: LocalizedValue) =>
+	typeof value === "string" ? value : value[lang] ?? value[defaultLocale] ?? "";
+
+const resolvedTitle = resolveLocalizedValue(title);
+const resolvedDescription = resolveLocalizedValue(description);
+---
+
+<!doctype html>
+<html lang={lang} class="bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={resolvedDescription} />
+		<title>{resolvedTitle}</title>
+		<script is:inline>
+			(() => {
+				const storageKey = "theme";
+				const root = document.documentElement;
+				let storedTheme = null;
+
+				try {
+					storedTheme = localStorage.getItem(storageKey);
+				} catch {}
+
+				const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+				const isDark = storedTheme ? storedTheme === "dark" : prefersDark;
+
+				root.classList.toggle("dark", isDark);
+				root.style.colorScheme = isDark ? "dark" : "light";
+			})();
+		</script>
+	</head>
+	<body class="min-h-screen bg-stone-50 font-serif text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100">
+		<div class="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 sm:px-6">
+			<Header lang={lang} />
+			<main class="flex-1 py-12 sm:py-16">
+				<div class={contentClass}>
+					<slot />
+				</div>
+			</main>
+			<Footer />
+		</div>
+		<script is:inline>
+			(() => {
+				const storageKey = "theme";
+				const root = document.documentElement;
+				const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+				const updateButtons = () => {
+					const isDark = root.classList.contains("dark");
+					const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+
+					document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+						button.setAttribute("aria-pressed", String(isDark));
+						button.setAttribute("aria-label", label);
+
+						const text = button.querySelector("[data-theme-label]");
+						if (text) text.textContent = label;
+					});
+				};
+
+				const applyTheme = (theme) => {
+					const isDark = theme === "dark";
+					root.classList.toggle("dark", isDark);
+					root.style.colorScheme = isDark ? "dark" : "light";
+					updateButtons();
+				};
+
+				const getPreferredTheme = () => {
+					try {
+						const storedTheme = localStorage.getItem(storageKey);
+						if (storedTheme === "light" || storedTheme === "dark") {
+							return storedTheme;
+						}
+					} catch {}
+
+					return media.matches ? "dark" : "light";
+				};
+
+				applyTheme(getPreferredTheme());
+
+				document.addEventListener("click", (event) => {
+					const target = event.target;
+					if (!(target instanceof Element)) return;
+
+					const button = target.closest("[data-theme-toggle]");
+					if (!button) return;
+
+					const nextTheme = root.classList.contains("dark") ? "light" : "dark";
+					applyTheme(nextTheme);
+
+					try {
+						localStorage.setItem(storageKey, nextTheme);
+					} catch {}
+				});
+
+				const handlePreferenceChange = (event) => {
+					try {
+						if (localStorage.getItem(storageKey)) return;
+					} catch {}
+
+					applyTheme(event.matches ? "dark" : "light");
+				};
+
+				if (typeof media.addEventListener === "function") {
+					media.addEventListener("change", handlePreferenceChange);
+				} else {
+					media.addListener(handlePreferenceChange);
+				}
+			})();
+		</script>
+	</body>
+</html>

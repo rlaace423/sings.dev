@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const [page] = await getCollection("pages", ({ id }) => id === "ko/about");
+
+if (!page) {
+	throw new Error("Missing ko/about page content.");
+}
+
+const { Content } = await render(page);
+---
+
+<Layout title={`${page.data.title} | sings.dev`} description={page.data.description} lang="ko">
+	<article class="prose prose-stone max-w-none dark:prose-invert dark:prose-a:text-stone-100 dark:prose-a:decoration-stone-500 dark:prose-blockquote:border-stone-700 dark:prose-blockquote:text-stone-300 dark:prose-code:text-stone-100 dark:prose-pre:border-stone-700 dark:prose-pre:bg-stone-900">
+		<h1>{page.data.title}</h1>
+		<Content />
+	</article>
+</Layout>

@@ -1,0 +1,22 @@
+# Spec: Blog Post Detail & Table of Contents (TOC)
+
+- **Goal**: Render localized post detail pages with a readable body and a lightweight table of contents.
+- **Routes**:
+  - Korean detail pages: `src/pages/posts/[...slug].astro`
+  - English detail pages: `src/pages/en/posts/[...slug].astro`
+- **Styling the Content**:
+  - Wrap the rendered markdown `<Content />` in a container using Tailwind Typography (`prose`).
+  - Use `max-w-none` so the prose styles fill the article column naturally.
+  - Ensure dark mode styles are applied with `dark:prose-invert` and matching prose utility overrides.
+- **Table of Contents Component (`src/components/TOC.astro`)**:
+  - Accept `headings` from `await render(entry)`.
+  - Render an unordered list of anchor links for level 2 and level 3 headings.
+  - Allow localized labels such as `목차` / `이 글의 흐름` and `Table of contents` / `Contents`.
+- **Layout Change for Post Detail**:
+  - **Desktop (`md:` and above)**:
+    - Use a 2-column layout.
+    - Left column: title, date, description, article body, and post footer.
+    - Right column: a sticky TOC with `top-20`.
+  - **Mobile**:
+    - Use a single-column layout.
+    - Render the TOC above the article body in a native `<details>` / `<summary>` block.
