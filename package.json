@@ -7,13 +7,12 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "test": "node --test",
+    "test": "node --experimental-strip-types --test",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.5",
     "tailwindcss": "^4.2.2"
