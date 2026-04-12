@@ -7,7 +7,7 @@
 - **Shared Post Header (`src/components/PostHeader.astro`)**:
   - Render a compact metadata line above the title with category, publication date, and reading time.
   - Render the title, description, and full frontmatter tag list.
-  - Carry the divider that separates the intro chrome from the article body.
+  - Include the bottom divider above the article body.
 - **Styling the Content**:
   - Wrap the rendered markdown `<Content />` in a container using Tailwind Typography (`prose`).
   - Use `max-w-none` so the prose styles fill the article column naturally.
@@ -20,8 +20,8 @@
   - **Desktop (`md:` and above)**:
     - Use a 2-column layout.
     - Left column: shared header, article body, and post footer.
-    - Right column: a sticky TOC rail with a subtle left divider and padding treatment.
+    - Right column: a sticky TOC rail with a left border and left padding.
   - **Mobile**:
     - Use a single-column layout.
     - Render the TOC above the article body in a native `<details>` / `<summary>` block.
-    - Start the article body after a quieter separation below the header block.
+    - Start the article body below the header with `mt-10` spacing.

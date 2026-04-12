@@ -22,7 +22,7 @@
   - The archive filter controls at the top are selection controls.
   - The category and tag badges inside each post item remain links to taxonomy pages.
 - **Post Detail Pages**:
-  - The shared post header renders the full frontmatter tag list for the post.
+  - The shared post header exposes taxonomy navigation for the category and the full frontmatter tag list.
 - **Taxonomy Pages**:
   - Korean:
     - `src/pages/category/[category].astro`
