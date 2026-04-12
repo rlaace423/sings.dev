@@ -1,0 +1,82 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+import {
+	categoryHref,
+	formatDate,
+	formatReadingTime,
+	slugifyTaxonomy,
+	tagHref,
+} from "../utils/blog";
+
+interface Props {
+	category: string;
+	description: string;
+	lang?: Locale;
+	pubDate: Date;
+	readingTimeMinutes: number;
+	tags?: string[];
+	title: string;
+}
+
+const {
+	category,
+	description,
+	lang: langProp,
+	pubDate,
+	readingTimeMinutes,
+	tags = [],
+	title,
+} = Astro.props;
+
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const categoryLink =
+	lang === defaultLocale
+		? categoryHref(category)
+		: getRelativeLocaleUrl(lang, `category/${slugifyTaxonomy(category)}`);
+---
+
+<header class="space-y-6 border-b border-stone-200 pb-10 dark:border-stone-800">
+	<div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
+		<a
+			href={categoryLink}
+			class="transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+		>
+			{category}
+		</a>
+		<span aria-hidden="true">·</span>
+		<time datetime={pubDate.toISOString().slice(0, 10)}>{formatDate(pubDate)}</time>
+		<span aria-hidden="true">·</span>
+		<p>{formatReadingTime(readingTimeMinutes, lang)}</p>
+	</div>
+
+	<div class="space-y-4">
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+			{title}
+		</h1>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			{description}
+		</p>
+	</div>
+
+	{
+		tags.length > 0 && (
+			<ul class="flex flex-wrap gap-2">
+				{tags.map((tag) => (
+					<li>
+						<a
+							href={
+								lang === defaultLocale
+									? tagHref(tag)
+									: getRelativeLocaleUrl(lang, `tags/${slugifyTaxonomy(tag)}`)
+							}
+							class="inline-flex rounded-full bg-stone-100 px-3 py-1 text-sm text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							#{tag}
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</header>
