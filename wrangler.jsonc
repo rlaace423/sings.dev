@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "sings-dev",
+  "compatibility_date": "2026-04-13",
+  "assets": {
+    "directory": "./dist"
+  }
+}
+

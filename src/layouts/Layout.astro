@@ -2,7 +2,8 @@
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import SearchModal from "../components/SearchModal.astro";
-import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+import { defaultLocale, locales, type Locale, isLocale } from "../i18n/ui";
+import { getLocalizedSeoUrls } from "../utils/seo";
 import "../styles/global.css";
 
 type LocalizedValue = string | Partial<Record<Locale, string>>;
@@ -22,6 +23,7 @@ const {
 } = Astro.props;
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
+const seoUrls = Astro.site ? getLocalizedSeoUrls(Astro.site, Astro.url.pathname) : null;
 
 const resolveLocalizedValue = (value: LocalizedValue) =>
 	typeof value === "string" ? value : value[lang] ?? value[defaultLocale] ?? "";
@@ -39,6 +41,14 @@ const resolvedDescription = resolveLocalizedValue(description);
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={resolvedDescription} />
+		{seoUrls && <link rel="canonical" href={seoUrls.canonical} />}
+		{
+			seoUrls &&
+				locales.map((locale) => (
+					<link rel="alternate" hreflang={locale} href={seoUrls.alternates[locale]} />
+				))
+		}
+		{seoUrls && <link rel="alternate" hreflang="x-default" href={seoUrls.alternates[defaultLocale]} />}
 		<title>{resolvedTitle}</title>
 		<script is:inline>
 			(() => {
