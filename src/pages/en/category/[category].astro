@@ -7,6 +7,7 @@ import Layout from "../../../layouts/Layout.astro";
 import {
 	getTopTagsForPosts,
 	matchesLocale,
+	normalizeTaxonomyTags,
 	slugifyTaxonomy,
 	sortPostsByDate,
 	uniqueCategories,
@@ -30,7 +31,9 @@ export async function getStaticPaths() {
 const { category, posts } = Astro.props;
 const categoryDescription = getCategoryDescription("en", category);
 const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
-	posts.filter((post) => post.data.tags?.includes(tag)).length >= 2,
+	posts.filter((post) =>
+		normalizeTaxonomyTags(post.data.tags ?? []).includes(tag),
+	).length >= 2,
 ).slice(0, 3);
 ---
 

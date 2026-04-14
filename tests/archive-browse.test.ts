@@ -5,7 +5,7 @@ import {
 	getArchiveBrowseConfig,
 	getCategoryDescription,
 } from "../src/data/archiveBrowse.ts";
-import { getTopTagsForPosts } from "../src/utils/blog.ts";
+import { getTopTagsForPosts, normalizeTaxonomyTags } from "../src/utils/blog.ts";
 
 test("returns locale-aware browse metadata", () => {
 	const ko = getArchiveBrowseConfig("ko");
@@ -60,4 +60,11 @@ test("normalizes tags before counting top tags", () => {
 	] as any;
 
 	assert.deepEqual(getTopTagsForPosts(posts, 5), ["astro", "docs"]);
+});
+
+test("normalizes taxonomy tag lists before consumers compare them", () => {
+	assert.deepEqual(normalizeTaxonomyTags([" Architecture ", "DOCS", "", "  "]), [
+		"architecture",
+		"docs",
+	]);
 });

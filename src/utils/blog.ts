@@ -61,6 +61,13 @@ export const categoryHref = (category: string | null | undefined) =>
 export const tagHref = (tag: string | null | undefined) =>
 	`/tags/${slugifyTaxonomy(tag)}/`;
 
+export const normalizeTaxonomyTags = (
+	tags: Array<string | null | undefined>,
+) =>
+	tags
+		.filter((tag): tag is string => Boolean(tag?.trim()))
+		.map((tag) => slugifyTaxonomy(tag));
+
 export const uniqueCategories = (posts: BlogPost[]) =>
 	Array.from(
 		new Set(
@@ -82,12 +89,7 @@ export const uniqueTags = (posts: BlogPost[]) =>
 export const getTopTagsForPosts = (posts: BlogPost[], limit = 4) =>
 	Array.from(
 		posts.reduce((counts, post) => {
-			for (const tag of post.data.tags ?? []) {
-				if (!tag?.trim()) {
-					continue;
-				}
-
-				const normalizedTag = slugifyTaxonomy(tag);
+			for (const normalizedTag of normalizeTaxonomyTags(post.data.tags ?? [])) {
 				counts.set(normalizedTag, (counts.get(normalizedTag) ?? 0) + 1);
 			}
 
