@@ -68,3 +68,10 @@ test("normalizes taxonomy tag lists before consumers compare them", () => {
 		"docs",
 	]);
 });
+
+test("deduplicates normalized taxonomy tag lists", () => {
+	assert.deepEqual(
+		normalizeTaxonomyTags(["DOCS", "docs", " Docs ", "architecture"]),
+		["docs", "architecture"],
+	);
+});

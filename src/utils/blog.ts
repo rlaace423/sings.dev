@@ -64,9 +64,13 @@ export const tagHref = (tag: string | null | undefined) =>
 export const normalizeTaxonomyTags = (
 	tags: Array<string | null | undefined>,
 ) =>
-	tags
-		.filter((tag): tag is string => Boolean(tag?.trim()))
-		.map((tag) => slugifyTaxonomy(tag));
+	Array.from(
+		new Set(
+			tags
+				.filter((tag): tag is string => Boolean(tag?.trim()))
+				.map((tag) => slugifyTaxonomy(tag)),
+		),
+	);
 
 export const uniqueCategories = (posts: BlogPost[]) =>
 	Array.from(
