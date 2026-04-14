@@ -1,6 +1,6 @@
 # Spec: Categories & Tags System
 
-- **Goal**: Support category and tag metadata in blog posts, expose taxonomy routes, and provide lightweight filtering in the archive.
+- **Goal**: Support category and tag metadata in blog posts, expose taxonomy routes, and keep archive filtering lightweight.
 - **Data Schema (`src/content/config.ts`)**:
   - `category` is required.
   - `tags` is optional.
@@ -21,12 +21,14 @@
   - Show category, date, title, description, and tags.
   - The archive filter controls at the top are selection controls.
   - The category and tag badges inside each post item remain links to taxonomy pages.
+- **Category Pages**:
+  - Korean: `src/pages/category/[category].astro`
+  - English: `src/pages/en/category/[category].astro`
+  - Category pages are shallow landing pages.
+  - Each category page shows a short description, related tags only when there is actual signal, and a reverse-chronological post list.
+- **Tag Pages**:
+  - Korean: `src/pages/tags/[tag].astro`
+  - English: `src/pages/en/tags/[tag].astro`
+  - Tag pages remain lightweight result pages in this iteration.
 - **Post Detail Pages**:
   - The shared post header exposes taxonomy navigation for the category and the full frontmatter tag list.
-- **Taxonomy Pages**:
-  - Korean:
-    - `src/pages/category/[category].astro`
-    - `src/pages/tags/[tag].astro`
-  - English:
-    - `src/pages/en/category/[category].astro`
-    - `src/pages/en/tags/[tag].astro`

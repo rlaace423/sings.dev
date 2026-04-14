@@ -18,7 +18,11 @@
 - **Archive Pages**:
   - `src/pages/posts/index.astro` serves the Korean archive and only reads `blog/ko/*`.
   - `src/pages/en/posts/index.astro` serves the English archive and only reads `blog/en/*`.
-  - Sort posts by `pubDate` in descending order.
+  - Each archive remains reverse-chronological.
+  - The page flow is `intro -> browse -> filter -> post list`.
+  - The browse section is a static navigation layer that surfaces all categories and curated representative tags.
+  - Browse links are navigational taxonomy links; they do not modify the current archive state.
+  - Filter controls operate only within the current archive page.
   - Keep the archive text-first and minimalist. No image cards or heavy visual UI.
   - Each item should show category, date, title, description, and tags.
 - **Detail Routes**:
