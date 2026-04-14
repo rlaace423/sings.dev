@@ -83,7 +83,12 @@ export const getTopTagsForPosts = (posts: BlogPost[], limit = 4) =>
 	Array.from(
 		posts.reduce((counts, post) => {
 			for (const tag of post.data.tags ?? []) {
-				counts.set(tag, (counts.get(tag) ?? 0) + 1);
+				if (!tag?.trim()) {
+					continue;
+				}
+
+				const normalizedTag = slugifyTaxonomy(tag);
+				counts.set(normalizedTag, (counts.get(normalizedTag) ?? 0) + 1);
 			}
 
 			return counts;

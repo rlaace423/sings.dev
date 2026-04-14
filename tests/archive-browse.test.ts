@@ -41,3 +41,12 @@ test("orders top tags by frequency and then alphabetically", () => {
 	]);
 });
 
+test("normalizes tags before counting top tags", () => {
+	const posts = [
+		{ data: { tags: ["astro", ""] } },
+		{ data: { tags: ["Astro", "docs"] } },
+		{ data: { tags: ["DOCS", "   "] } },
+	] as any;
+
+	assert.deepEqual(getTopTagsForPosts(posts, 5), ["astro", "docs"]);
+});
