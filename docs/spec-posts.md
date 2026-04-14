@@ -20,9 +20,10 @@
   - `src/pages/en/posts/index.astro` serves the English archive and only reads `blog/en/*`.
   - Each archive remains reverse-chronological.
   - The page flow is `intro -> browse -> filter -> post list`.
-  - The browse section is a static navigation layer that surfaces all categories and curated representative tags.
+  - The browse section is a static navigation layer where categories are the primary browse entry and curated representative tags are a secondary aid.
   - Browse links are navigational taxonomy links; they do not modify the current archive state.
   - Filter controls operate only within the current archive page.
+  - Search, if present in this iteration, remains a separate concern from taxonomy browsing.
   - Keep the archive text-first and minimalist. No image cards or heavy visual UI.
   - Each item should show category, date, title, description, and tags.
 - **Detail Routes**:
