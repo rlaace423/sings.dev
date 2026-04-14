@@ -41,6 +41,17 @@ test("orders top tags by frequency and then alphabetically", () => {
 	]);
 });
 
+test("limits related tags to the requested amount", () => {
+	const posts = [
+		{ data: { tags: ["architecture"] } },
+		{ data: { tags: ["docs"] } },
+		{ data: { tags: ["operations"] } },
+		{ data: { tags: ["essay"] } },
+	] as any;
+
+	assert.deepEqual(getTopTagsForPosts(posts, 2), ["architecture", "docs"]);
+});
+
 test("normalizes tags before counting top tags", () => {
 	const posts = [
 		{ data: { tags: ["astro", ""] } },

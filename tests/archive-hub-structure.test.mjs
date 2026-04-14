@@ -130,6 +130,40 @@ test("archive browse omits empty descriptions and uses default locale links", as
 	assert.doesNotMatch(rendered, /<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">\s*<\/p>/);
 });
 
+test("category pages use manual descriptions, related tags, and keep the post list below the landing copy", async () => {
+	const koPage = await readFile(
+		new URL("../src/pages/category/[category].astro", import.meta.url),
+		"utf8",
+	);
+	const enPage = await readFile(
+		new URL("../src/pages/en/category/[category].astro", import.meta.url),
+		"utf8",
+	);
+
+	assert.match(koPage, /import \{ getCategoryDescription \} from "\.\.\/\.\.\/data\/archiveBrowse";/);
+	assert.match(enPage, /import \{ getCategoryDescription \} from "\.\.\/\.\.\/\.\.\/data\/archiveBrowse";/);
+	assert.match(koPage, /import \{[^}]*getTopTagsForPosts[^}]*\} from "\.\.\/\.\.\/utils\/blog";/);
+	assert.match(enPage, /import \{[^}]*getTopTagsForPosts[^}]*\} from "\.\.\/\.\.\/\.\.\/utils\/blog";/);
+	assert.match(koPage, /const relatedTags = getTopTagsForPosts\(posts, 3\);/);
+	assert.match(enPage, /const relatedTags = getTopTagsForPosts\(posts, 3\);/);
+	assert.match(
+		koPage,
+		/getRelativeLocaleUrl\([\s\S]*"ko"[\s\S]*`tags\/\$\{slugifyTaxonomy\(tag\)\}`[\s\S]*\)/,
+	);
+	assert.match(
+		enPage,
+		/getRelativeLocaleUrl\([\s\S]*"en"[\s\S]*`tags\/\$\{slugifyTaxonomy\(tag\)\}`[\s\S]*\)/,
+	);
+	assert.ok(
+		koPage.indexOf("<PostList") > koPage.indexOf("relatedTags"),
+		"Related tags should be declared before the post list in the Korean category page",
+	);
+	assert.ok(
+		enPage.indexOf("<PostList") > enPage.indexOf("relatedTags"),
+		"Related tags should be declared before the post list in the English category page",
+	);
+});
+
 test("/posts pages place browse above filters and keep locale-aware archive wiring", async () => {
 	const koPage = await readFile(new URL("../src/pages/posts/index.astro", import.meta.url), "utf8");
 	const enPage = await readFile(new URL("../src/pages/en/posts/index.astro", import.meta.url), "utf8");

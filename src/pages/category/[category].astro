@@ -1,9 +1,11 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
+import { getCategoryDescription } from "../../data/archiveBrowse";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
 import {
+	getTopTagsForPosts,
 	matchesLocale,
 	slugifyTaxonomy,
 	sortPostsByDate,
@@ -26,11 +28,15 @@ export async function getStaticPaths() {
 }
 
 const { category, posts } = Astro.props;
+const categoryDescription = getCategoryDescription("ko", category);
+const relatedTags = getTopTagsForPosts(posts, 3);
 ---
 
 <Layout
 	title={`${category} | sings.dev`}
-	description={`${category} 카테고리에 속한 글 목록입니다.`}
+	description={
+		categoryDescription || `${category} 카테고리에 속한 글 목록입니다.`
+	}
 	lang="ko"
 >
 	<section class="space-y-4">
@@ -41,16 +47,33 @@ const { category, posts } = Astro.props;
 			{category}
 		</h1>
 		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
-			이 카테고리에 묶인 글만 따로 모아 본 화면입니다.
+			{categoryDescription ||
+				"이 카테고리에 묶인 글만 따로 모아 본 화면입니다."}
 		</p>
-		<p>
-			<a
-				href={getRelativeLocaleUrl("ko", "posts")}
-				class="text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
-			>
-				전체 글로 돌아가기
-			</a>
-		</p>
+		{
+			relatedTags.length > 0 ? (
+				<div class="space-y-3">
+					<p class="text-sm font-medium text-stone-600 dark:text-stone-300">
+						관련 태그
+					</p>
+					<ul class="flex flex-wrap gap-x-3 gap-y-2">
+						{relatedTags.map((tag) => (
+							<li>
+								<a
+									href={getRelativeLocaleUrl(
+										"ko",
+										`tags/${slugifyTaxonomy(tag)}`,
+									)}
+									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+								>
+									#{tag}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			) : null
+		}
 	</section>
 
 	<div class="mt-12 space-y-6">
