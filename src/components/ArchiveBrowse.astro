@@ -5,7 +5,7 @@ import { categoryHref, slugifyTaxonomy, tagHref } from "../utils/blog";
 
 type ArchiveBrowseCategory = {
 	name: string;
-	description: string;
+	description?: string;
 	count: number;
 };
 
@@ -68,9 +68,13 @@ const getTagLink = (tag: string) =>
 											<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-stone-50 dark:group-hover:text-stone-200">
 												{category.name}
 											</h2>
-											<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">
-												{category.description}
-											</p>
+											{
+												category.description ? (
+													<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">
+														{category.description}
+													</p>
+												) : null
+											}
 										</div>
 										<span class="shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">
 											{category.count}

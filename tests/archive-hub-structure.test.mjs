@@ -106,12 +106,40 @@ test("archive browse renders category counts, manual descriptions, and represent
 	assert.match(rendered, /<span class="shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">[\s\S]*2[\s\S]*posts[\s\S]*<\/span>/);
 });
 
+test("archive browse omits empty descriptions and uses default locale links", async () => {
+	const rendered = await renderAstroComponent(
+		new URL("../src/components/ArchiveBrowse.astro", import.meta.url),
+		{
+			categories: [
+				{
+					name: "Development",
+					count: 1,
+				},
+			],
+			lang: "ko",
+			tags: ["architecture"],
+		},
+		[
+			{ find: "../i18n/ui", replaceWith: repoUiUrl },
+			{ find: "../utils/blog", replaceWith: repoBlogUrl },
+		],
+	);
+
+	assert.match(rendered, /href="\/category\/development\//);
+	assert.match(rendered, /href="\/tags\/architecture\//);
+	assert.doesNotMatch(rendered, /<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">\s*<\/p>/);
+});
+
 test("/posts pages place browse above filters and keep locale-aware archive wiring", async () => {
 	const koPage = await readFile(new URL("../src/pages/posts/index.astro", import.meta.url), "utf8");
 	const enPage = await readFile(new URL("../src/pages/en/posts/index.astro", import.meta.url), "utf8");
 
 	assert.match(koPage, /import ArchiveBrowse from "\.\.\/\.\.\/components\/ArchiveBrowse\.astro";/);
 	assert.match(enPage, /import ArchiveBrowse from "\.\.\/\.\.\/\.\.\/components\/ArchiveBrowse\.astro";/);
+	assert.match(koPage, /browseConfig\.representativeTags\.filter/);
+	assert.match(enPage, /browseConfig\.representativeTags\.filter/);
+	assert.match(koPage, /tags\.includes\(tag\),/);
+	assert.match(enPage, /tags\.includes\(tag\),/);
 	assert.ok(
 		koPage.indexOf("<ArchiveBrowse") > koPage.indexOf("<section class=\"space-y-4\">"),
 		"Browse should render after the intro section in the Korean archive page",

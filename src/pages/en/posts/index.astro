@@ -30,7 +30,9 @@ const browseCategories = categories.map((category) => ({
 	description: getCategoryDescription("en", category),
 	count: categoryCounts.get(category) ?? 0,
 }));
-const browseTags = browseConfig.representativeTags;
+const browseTags = browseConfig.representativeTags.filter((tag) =>
+	tags.includes(tag),
+);
 ---
 
 <Layout
@@ -45,20 +47,20 @@ const browseTags = browseConfig.representativeTags;
 		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
 			Posts
 		</h1>
-	<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
-		A quiet list of essays, notes, and project logs.
-	</p>
-</section>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			A quiet list of essays, notes, and project logs.
+		</p>
+	</section>
 
-<ArchiveBrowse
-	categories={browseCategories}
-	tags={browseTags}
-	lang={"en"}
-/>
+	<ArchiveBrowse
+		categories={browseCategories}
+		tags={browseTags}
+		lang={"en"}
+	/>
 
-<ArchiveFilters
-	categories={categories}
-	tags={tags}
+	<ArchiveFilters
+		categories={categories}
+		tags={tags}
 		categoryLabel="Categories"
 		tagsLabel="Tags"
 		allCategoriesLabel="All categories"
