@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { transform } from "@astrojs/compiler";
@@ -12,6 +12,7 @@ const astroRuntimeUrl = new URL(
 	import.meta.url,
 ).href;
 const repoUiUrl = new URL("../src/i18n/ui.ts", import.meta.url).href;
+const repoArchiveBrowseUrl = new URL("../src/data/archiveBrowse.ts", import.meta.url).href;
 const repoBlogUrl = new URL("../src/utils/blog.ts", import.meta.url).href;
 
 async function renderAstroComponent(sourceUrl, props, replacements = []) {
@@ -59,6 +60,145 @@ async function renderAstroComponent(sourceUrl, props, replacements = []) {
 		await writeFile(componentPath, rewritten);
 
 		const component = await import(pathToFileURL(componentPath).href);
+		const container = await AstroContainer.create();
+
+		return await container.renderToString(component.default, { props });
+	} finally {
+		await rm(tempDir, { recursive: true, force: true });
+	}
+}
+
+async function compileAstroStub(source, filename, runtimeStubPath) {
+	const compiled = await transform(source, {
+		filename,
+		internalURL: "astro/runtime/server/index.js",
+	});
+
+	return compiled.code.replaceAll(
+		"astro/runtime/server/index.js",
+		pathToFileURL(runtimeStubPath).href,
+	);
+}
+
+async function renderAstroPage(sourceUrl, props, replacements = []) {
+	const source = await readFile(sourceUrl, "utf8");
+	const compiled = await transform(source, {
+		filename: sourceUrl.pathname,
+		internalURL: "astro/runtime/server/index.js",
+	});
+
+	const tempDir = await mkdtemp(join(tmpdir(), "archive-hub-page-"));
+	const i18nStubPath = join(tempDir, "astro-i18n-stub.ts");
+	const contentStubPath = join(tempDir, "astro-content-stub.ts");
+	const runtimeStubPath = join(tempDir, "astro-runtime-stub.ts");
+	const isEnglishPage = sourceUrl.pathname.includes("/src/pages/en/");
+	const pageDirectory = isEnglishPage
+		? join(tempDir, "src", "pages", "en", "category")
+		: join(tempDir, "src", "pages", "category");
+	const layoutStubSourcePath = join(tempDir, "LayoutStub.astro");
+	const postListStubSourcePath = join(tempDir, "PostListStub.astro");
+	const layoutStubPath = join(tempDir, "src", "layouts", "Layout.ts");
+	const postListStubPath = join(tempDir, "src", "components", "PostList.ts");
+	const pagePath = join(pageDirectory, "page.ts");
+
+	try {
+		await mkdir(dirname(layoutStubPath), { recursive: true });
+		await mkdir(dirname(postListStubPath), { recursive: true });
+		await mkdir(pageDirectory, { recursive: true });
+		await writeFile(
+			i18nStubPath,
+			[
+				"export const getRelativeLocaleUrl = (locale, path) => `/${locale}/${path}`;",
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			runtimeStubPath,
+			[
+				`export * from ${JSON.stringify(astroRuntimeUrl)};`,
+				"export const createMetadata = () => ({})",
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			contentStubPath,
+			[
+				"export const getCollection = async () => [];",
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			layoutStubSourcePath,
+			[
+				"---",
+				"const { lang = 'en' } = Astro.props;",
+				"---",
+				`<html lang={lang}><body><slot /></body></html>`,
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			postListStubSourcePath,
+			[
+				"---",
+				"const { posts = [] } = Astro.props;",
+				"---",
+				`<div data-post-list>{posts.length}</div>`,
+				"",
+			].join("\n"),
+		);
+
+		const layoutStubCode = await compileAstroStub(
+			await readFile(layoutStubSourcePath, "utf8"),
+			layoutStubSourcePath,
+			runtimeStubPath,
+		);
+		const postListStubCode = await compileAstroStub(
+			await readFile(postListStubSourcePath, "utf8"),
+			postListStubSourcePath,
+			runtimeStubPath,
+		);
+		await writeFile(layoutStubPath, layoutStubCode);
+		await writeFile(postListStubPath, postListStubCode);
+
+		let rewritten = compiled.code.replaceAll(
+			"astro/runtime/server/index.js",
+			pathToFileURL(runtimeStubPath).href,
+		);
+		rewritten = rewritten.replaceAll(
+			"astro:i18n",
+			pathToFileURL(i18nStubPath).href,
+		);
+		rewritten = rewritten.replaceAll(
+			"astro:content",
+			pathToFileURL(contentStubPath).href,
+		);
+
+		for (const { find, replaceWith } of replacements) {
+			rewritten = rewritten.replaceAll(find, replaceWith);
+		}
+
+		rewritten = rewritten
+			.replaceAll(
+				"../../layouts/Layout.astro",
+				"../../layouts/Layout.ts",
+			)
+			.replaceAll(
+				"../../../layouts/Layout.astro",
+				"../../../layouts/Layout.ts",
+			)
+			.replaceAll(
+				"../../components/PostList.astro",
+				"../../components/PostList.ts",
+			)
+			.replaceAll(
+				"../../../components/PostList.astro",
+				"../../../components/PostList.ts",
+			);
+
+		await writeFile(pagePath, rewritten);
+
+		const component = await import(pathToFileURL(pagePath).href);
 		const container = await AstroContainer.create();
 
 		return await container.renderToString(component.default, { props });
@@ -130,38 +270,102 @@ test("archive browse omits empty descriptions and uses default locale links", as
 	assert.doesNotMatch(rendered, /<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">\s*<\/p>/);
 });
 
-test("category pages use manual descriptions, related tags, and keep the post list below the landing copy", async () => {
-	const koPage = await readFile(
+test("category pages hide related tags when there is no repeated signal", async () => {
+	const rendered = await renderAstroPage(
 		new URL("../src/pages/category/[category].astro", import.meta.url),
-		"utf8",
-	);
-	const enPage = await readFile(
-		new URL("../src/pages/en/category/[category].astro", import.meta.url),
-		"utf8",
+		{
+			category: "Development",
+			posts: [
+				{
+					id: "ko/development/one",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-01"),
+						title: "One",
+						description: "One",
+						tags: ["astro"],
+					},
+				},
+				{
+					id: "ko/development/two",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-02"),
+						title: "Two",
+						description: "Two",
+						tags: ["docs"],
+					},
+				},
+				{
+					id: "ko/development/three",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-03"),
+						title: "Three",
+						description: "Three",
+						tags: ["architecture"],
+					},
+				},
+			],
+		},
+		[
+			{ find: "../../data/archiveBrowse", replaceWith: repoArchiveBrowseUrl },
+			{ find: "../../utils/blog", replaceWith: repoBlogUrl },
+		],
 	);
 
-	assert.match(koPage, /import \{ getCategoryDescription \} from "\.\.\/\.\.\/data\/archiveBrowse";/);
-	assert.match(enPage, /import \{ getCategoryDescription \} from "\.\.\/\.\.\/\.\.\/data\/archiveBrowse";/);
-	assert.match(koPage, /import \{[^}]*getTopTagsForPosts[^}]*\} from "\.\.\/\.\.\/utils\/blog";/);
-	assert.match(enPage, /import \{[^}]*getTopTagsForPosts[^}]*\} from "\.\.\/\.\.\/\.\.\/utils\/blog";/);
-	assert.match(koPage, /const relatedTags = getTopTagsForPosts\(posts, 3\);/);
-	assert.match(enPage, /const relatedTags = getTopTagsForPosts\(posts, 3\);/);
-	assert.match(
-		koPage,
-		/getRelativeLocaleUrl\([\s\S]*"ko"[\s\S]*`tags\/\$\{slugifyTaxonomy\(tag\)\}`[\s\S]*\)/,
+	assert.doesNotMatch(rendered, /관련 태그/);
+	assert.doesNotMatch(rendered, /href="\/category\/.*tags\//);
+});
+
+test("category pages render locale-aware related tag hrefs when there is repeated signal", async () => {
+	const rendered = await renderAstroPage(
+		new URL("../src/pages/en/category/[category].astro", import.meta.url),
+		{
+			category: "Development",
+			posts: [
+				{
+					id: "en/development/one",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-03"),
+						title: "One",
+						description: "One",
+						tags: ["architecture", "docs"],
+					},
+				},
+				{
+					id: "en/development/two",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-02"),
+						title: "Two",
+						description: "Two",
+						tags: ["architecture"],
+					},
+				},
+				{
+					id: "en/development/three",
+					data: {
+						category: "Development",
+						pubDate: new Date("2024-01-01"),
+						title: "Three",
+						description: "Three",
+						tags: ["docs"],
+					},
+				},
+			],
+		},
+		[
+			{ find: "../../../data/archiveBrowse", replaceWith: repoArchiveBrowseUrl },
+			{ find: "../../../utils/blog", replaceWith: repoBlogUrl },
+		],
 	);
-	assert.match(
-		enPage,
-		/getRelativeLocaleUrl\([\s\S]*"en"[\s\S]*`tags\/\$\{slugifyTaxonomy\(tag\)\}`[\s\S]*\)/,
-	);
-	assert.ok(
-		koPage.indexOf("<PostList") > koPage.indexOf("relatedTags"),
-		"Related tags should be declared before the post list in the Korean category page",
-	);
-	assert.ok(
-		enPage.indexOf("<PostList") > enPage.indexOf("relatedTags"),
-		"Related tags should be declared before the post list in the English category page",
-	);
+
+	assert.match(rendered, /<p class="text-sm font-medium text-stone-600 dark:text-stone-300">\s*Related tags\s*<\/p>/);
+	assert.match(rendered, /href="\/en\/tags\/architecture"/);
+	assert.match(rendered, /href="\/en\/tags\/docs"/);
+	assert.match(rendered, /<div data-post-list>3<\/div>/);
 });
 
 test("/posts pages place browse above filters and keep locale-aware archive wiring", async () => {
