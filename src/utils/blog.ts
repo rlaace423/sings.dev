@@ -78,3 +78,17 @@ export const uniqueTags = (posts: BlogPost[]) =>
 				.filter((tag): tag is string => Boolean(tag)),
 		),
 	).sort((a, b) => a.localeCompare(b));
+
+export const getTopTagsForPosts = (posts: BlogPost[], limit = 4) =>
+	Array.from(
+		posts.reduce((counts, post) => {
+			for (const tag of post.data.tags ?? []) {
+				counts.set(tag, (counts.get(tag) ?? 0) + 1);
+			}
+
+			return counts;
+		}, new Map<string, number>()),
+	)
+		.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+		.slice(0, limit)
+		.map(([tag]) => tag);
