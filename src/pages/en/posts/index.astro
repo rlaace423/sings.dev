@@ -1,7 +1,9 @@
 ---
+import ArchiveBrowse from "../../../components/ArchiveBrowse.astro";
 import ArchiveFilters from "../../../components/ArchiveFilters.astro";
 import Layout from "../../../layouts/Layout.astro";
 import PostList from "../../../components/PostList.astro";
+import { getArchiveBrowseConfig, getCategoryDescription } from "../../../data/archiveBrowse";
 import { getCollection } from "astro:content";
 import {
 	matchesLocale,
@@ -13,8 +15,22 @@ import {
 const posts = sortPostsByDate(
 	await getCollection("blog", ({ id }) => matchesLocale(id, "en")),
 );
+const browseConfig = getArchiveBrowseConfig("en");
+const categoryCounts = posts.reduce((counts, post) => {
+	const category = post.data.category;
+	if (!category) return counts;
+
+	counts.set(category, (counts.get(category) ?? 0) + 1);
+	return counts;
+}, new Map<string, number>());
 const categories = uniqueCategories(posts);
 const tags = uniqueTags(posts);
+const browseCategories = categories.map((category) => ({
+	name: category,
+	description: getCategoryDescription("en", category),
+	count: categoryCounts.get(category) ?? 0,
+}));
+const browseTags = browseConfig.representativeTags;
 ---
 
 <Layout
@@ -29,14 +45,20 @@ const tags = uniqueTags(posts);
 		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
 			Posts
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
-			A quiet list of essays, notes, and project logs.
-		</p>
-	</section>
+	<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+		A quiet list of essays, notes, and project logs.
+	</p>
+</section>
 
-	<ArchiveFilters
-		categories={categories}
-		tags={tags}
+<ArchiveBrowse
+	categories={browseCategories}
+	tags={browseTags}
+	lang={"en"}
+/>
+
+<ArchiveFilters
+	categories={categories}
+	tags={tags}
 		categoryLabel="Categories"
 		tagsLabel="Tags"
 		allCategoriesLabel="All categories"

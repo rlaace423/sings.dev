@@ -1,7 +1,9 @@
 ---
+import ArchiveBrowse from "../../components/ArchiveBrowse.astro";
 import ArchiveFilters from "../../components/ArchiveFilters.astro";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
+import { getArchiveBrowseConfig, getCategoryDescription } from "../../data/archiveBrowse";
 import { getCollection } from "astro:content";
 import {
 	matchesLocale,
@@ -13,8 +15,22 @@ import {
 const posts = sortPostsByDate(
 	await getCollection("blog", ({ id }) => matchesLocale(id, "ko")),
 );
+const browseConfig = getArchiveBrowseConfig("ko");
+const categoryCounts = posts.reduce((counts, post) => {
+	const category = post.data.category;
+	if (!category) return counts;
+
+	counts.set(category, (counts.get(category) ?? 0) + 1);
+	return counts;
+}, new Map<string, number>());
 const categories = uniqueCategories(posts);
 const tags = uniqueTags(posts);
+const browseCategories = categories.map((category) => ({
+	name: category,
+	description: getCategoryDescription("ko", category),
+	count: categoryCounts.get(category) ?? 0,
+}));
+const browseTags = browseConfig.representativeTags;
 ---
 
 <Layout
@@ -29,15 +45,21 @@ const tags = uniqueTags(posts);
 		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
 			포스트
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
-			백엔드 아키텍처, MPC 시스템, 인프라 운영에 대한 글을 차분하게 모아 둔
-			목록입니다.
-		</p>
-	</section>
+	<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+		백엔드 아키텍처, MPC 시스템, 인프라 운영에 대한 글을 차분하게 모아 둔
+		목록입니다.
+	</p>
+</section>
 
-	<ArchiveFilters
-		categories={categories}
-		tags={tags}
+<ArchiveBrowse
+	categories={browseCategories}
+	tags={browseTags}
+	lang={"ko"}
+/>
+
+<ArchiveFilters
+	categories={categories}
+	tags={tags}
 		categoryLabel="카테고리"
 		tagsLabel="태그"
 		allCategoriesLabel="전체 카테고리"
