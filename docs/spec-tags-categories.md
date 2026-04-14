@@ -1,6 +1,7 @@
 # Spec: Categories & Tags System
 
 - **Goal**: Support category and tag metadata in blog posts, expose taxonomy routes, and keep archive filtering lightweight.
+- **Reference Philosophy**: Categories are the primary exploratory browse destinations. Tags remain lightweight secondary cross-links. Follow `docs/spec-editorial-philosophy.md`.
 - **Data Schema (`src/content/config.ts`)**:
   - `category` is required.
   - `tags` is optional.

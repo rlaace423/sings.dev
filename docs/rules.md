@@ -12,6 +12,9 @@
    - Search: Pagefind (static, build-time indexing)
 
 3. **Architecture & Philosophy**:
+   - Follow `docs/spec-editorial-philosophy.md` as the top-level identity and editorial SSOT for the public site.
+   - This site is a quiet, text-first personal technical blog. It should feel closer to reading essays and notes than using a dashboard or browsing a portal.
    - Zero JS by default. Maximize readability and fast loading.
    - Add client-side JS only when there is a clear UX need, and keep it small, framework-free, and progressively enhanced.
-   - Minimalist design. Focus on typography and content over flashy UI.
+   - UI must support reading, not compete with it. Prefer calm typography, spacing, and understated navigation over flashy chrome.
+   - Keep discovery lightweight: categories lead exploratory browsing, tags stay secondary, and search stays a direct-lookup tool.

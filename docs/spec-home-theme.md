@@ -1,6 +1,7 @@
 # Spec: Home Page & Dark Mode Toggle
 
 - **Goal**: Keep the home pages lightweight while supporting theme switching across the whole site.
+- **Reference Philosophy**: The home page should act as a quiet front door to the blog, not a marketing landing page or brand showcase. Follow `docs/spec-editorial-philosophy.md`.
 - **Dark Mode Implementation (`src/components/Header.astro` & `src/layouts/Layout.astro`)**:
   - Use a simple theme toggle `<button>` in the header with inline SVG icons.
   - Store the selected theme in `localStorage`.
@@ -17,6 +18,7 @@
   - Korean home page: `src/pages/index.astro`
   - English home page: `src/pages/en/index.astro`
   - Each locale fetches recent posts from its matching content folder only.
+  - The page should orient a reader gently and quickly, with the writing remaining more important than any hero treatment.
   - Each home page contains:
     - A short hero/introduction section.
     - A recent posts section showing the latest 3 to 5 posts.

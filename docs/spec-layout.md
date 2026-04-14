@@ -2,9 +2,11 @@
 
 - **Goal**: Define the shared shell used by all public pages.
 - **Design Philosophy**: Minimalist, text-centric, readable, and calm. The site should feel closer to reading an essay than using a dashboard.
+- **Reference Philosophy**: Follow `docs/spec-editorial-philosophy.md` as the top-level editorial guardrail for layout decisions.
 - **Layout Structure**:
   - Use a centered outer container around `max-w-4xl` with horizontal padding.
   - Keep the default reading width around `max-w-3xl`, but allow wider layouts for post detail pages through a `contentClass` prop.
+  - Preserve a quiet reading rhythm. Layout changes should make the writing easier to read, not make the surrounding chrome more noticeable.
   - Keep the sticky header chrome outside that centered shell so its background and bottom border can span the full viewport width.
   - Inside the header, use a centered inner container that matches the site's `max-w-4xl` width and horizontal padding.
   - Accept a `lang` prop in `src/layouts/Layout.astro` and apply it to `<html lang={lang}>`.

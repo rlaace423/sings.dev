@@ -1,6 +1,7 @@
 # Spec: Global Search Modal (Pagefind)
 
 - **Goal**: Implement a site-wide global search that opens in a focused, Spotlight-like modal overlay.
+- **Reference Philosophy**: Search is a direct lookup tool, not a replacement for taxonomy browsing. Follow `docs/spec-editorial-philosophy.md`.
 - **Library Requirements**: 
   - Install `pagefind` as a dev dependency.
   - Update `package.json` build script to generate the index: `"build": "astro build && pagefind --site dist"`
@@ -29,4 +30,5 @@
 - **Constraints**: 
   - Do NOT build a custom React/Vue component. Use Pagefind's default Vanilla JS UI widget.
   - Keep the initial JS near zero by initializing Pagefind only when needed.
+  - Keep search focused on direct retrieval. Do not merge it with category/tag browsing or turn it into a discovery dashboard.
   - Do not expose extra filter UI or advanced search chrome that breaks the minimalist reading experience.

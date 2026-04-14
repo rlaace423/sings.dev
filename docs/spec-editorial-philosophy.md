@@ -1,0 +1,26 @@
+# Spec: Editorial Philosophy
+
+- **Goal**: Preserve the blog's identity as the site grows and new features are added.
+- **Core Identity**:
+  - This site is a quiet, text-first personal technical blog.
+  - It should feel closer to reading one person's essays and technical notes than using a dashboard or browsing a media portal.
+  - Writing is the primary product. Interface, navigation, and metadata exist to support reading, not to compete with it.
+- **Editorial Principles**:
+  - Favor calm, readable, modern layouts over flashy or product-like UI.
+  - Prefer typographic rhythm, spacing, and clear information hierarchy over decorative chrome.
+  - Keep discovery helpful, but never so prominent that it overpowers the writing itself.
+  - When a tradeoff is unclear, choose the option that makes the site feel lighter, quieter, and easier to read.
+- **Discovery Model**:
+  - The home page is a quiet front door, not a marketing landing page.
+  - `/posts` is the main archive and browse hub, but it must still read primarily as an archive.
+  - Categories are the primary exploratory browse destinations.
+  - Tags are lightweight secondary cross-links between related posts.
+  - Search is a direct lookup tool and should remain separate from taxonomy browsing.
+- **Editorial Aids**:
+  - Metadata, TOC, related links, and other reading aids should improve scanning without flattening the writing.
+  - TL;DR-style summary blocks are optional aids for long or structured posts, not a required template for every post.
+- **What To Avoid**:
+  - Portal-like or dashboard-like layouts
+  - Card-heavy media grids and thumbnail-first browsing
+  - Popularity widgets, tag clouds, or attention-hacking surfaces
+  - Interface patterns that make features feel more important than the writing
