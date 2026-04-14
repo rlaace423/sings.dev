@@ -405,8 +405,8 @@ test("/posts pages place browse above filters and keep locale-aware archive wiri
 	assert.match(enPage, /import ArchiveBrowse from "\.\.\/\.\.\/\.\.\/components\/ArchiveBrowse\.astro";/);
 	assert.match(koPage, /browseConfig\.representativeTags\.filter/);
 	assert.match(enPage, /browseConfig\.representativeTags\.filter/);
-	assert.match(koPage, /normalizedTags\.has\(tag\),/);
-	assert.match(enPage, /normalizedTags\.has\(tag\),/);
+	assert.match(koPage, /tags\.includes\(tag\),/);
+	assert.match(enPage, /tags\.includes\(tag\),/);
 	assert.ok(
 		koPage.indexOf("<ArchiveBrowse") > koPage.indexOf("<section class=\"space-y-4\">"),
 		"Browse should render after the intro section in the Korean archive page",
