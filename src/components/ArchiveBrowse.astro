@@ -32,7 +32,8 @@ const browseTitle = title ?? (lang === "ko" ? "둘러보기" : "Browse");
 const categoriesHeading =
 	categoriesLabel ?? (lang === "ko" ? "카테고리" : "Categories");
 const tagsHeading = tagsLabel ?? (lang === "ko" ? "대표 태그" : "Representative tags");
-const countLabel = lang === "ko" ? "개의 글" : "posts";
+const getCountLabel = (count: number) =>
+	lang === "ko" ? `${count}개의 글` : `${count} ${count === 1 ? "post" : "posts"}`;
 
 const getCategoryLink = (category: string) =>
 	lang === defaultLocale
@@ -50,7 +51,7 @@ const getTagLink = (tag: string) =>
 		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
 			{browseTitle}
 		</p>
-		<div class="grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+		<div class="space-y-8">
 			<div class="space-y-3">
 				<p class="text-sm font-medium text-stone-600 dark:text-stone-300">
 					{categoriesHeading}
@@ -63,23 +64,20 @@ const getTagLink = (tag: string) =>
 									href={getCategoryLink(category.name)}
 									class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
-									<div class="flex items-start justify-between gap-4">
-										<div class="space-y-1">
-											<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-stone-50 dark:group-hover:text-stone-200">
-												{category.name}
-											</h2>
-											{
-												category.description ? (
-													<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">
-														{category.description}
-													</p>
-												) : null
-											}
-										</div>
-										<span class="shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">
-											{category.count}
-											{countLabel}
-										</span>
+									<div class="space-y-1">
+										<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-stone-50 dark:group-hover:text-stone-200">
+											{category.name}
+										</h2>
+										{
+											category.description ? (
+												<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">
+													{category.description}
+												</p>
+											) : null
+										}
+										<p class="text-xs font-medium uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
+											{getCountLabel(category.count)}
+										</p>
 									</div>
 								</a>
 							</li>

@@ -242,8 +242,37 @@ test("archive browse renders category counts, manual descriptions, and represent
 	assert.match(rendered, /href="\/en\/tags\/docs"/);
 	assert.match(rendered, /Notes on implementation choices and system design\./);
 	assert.match(rendered, /Writing about the shape of systems in real operation\./);
-	assert.match(rendered, /<span class="shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">[\s\S]*4[\s\S]*posts[\s\S]*<\/span>/);
-	assert.match(rendered, /<span class="shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">[\s\S]*2[\s\S]*posts[\s\S]*<\/span>/);
+	assert.match(rendered, /4 posts/);
+	assert.match(rendered, /2 posts/);
+});
+
+test("archive browse keeps categories first and uses singular English count copy", async () => {
+	const rendered = await renderAstroComponent(
+		new URL("../src/components/ArchiveBrowse.astro", import.meta.url),
+		{
+			categories: [
+				{
+					name: "Development",
+					description: "Notes on implementation choices and system design.",
+					count: 1,
+				},
+			],
+			lang: "en",
+			tags: ["architecture"],
+		},
+		[
+			{ find: "../i18n/ui", replaceWith: repoUiUrl },
+			{ find: "../utils/blog", replaceWith: repoBlogUrl },
+		],
+	);
+
+	assert.doesNotMatch(rendered, /lg:grid-cols-\[/);
+	assert.ok(
+		rendered.indexOf("Notes on implementation choices and system design.") <
+			rendered.indexOf("1 post"),
+		"Count should appear after the description",
+	);
+	assert.match(rendered, /Representative tags/);
 });
 
 test("archive browse omits empty descriptions and uses default locale links", async () => {
@@ -376,8 +405,8 @@ test("/posts pages place browse above filters and keep locale-aware archive wiri
 	assert.match(enPage, /import ArchiveBrowse from "\.\.\/\.\.\/\.\.\/components\/ArchiveBrowse\.astro";/);
 	assert.match(koPage, /browseConfig\.representativeTags\.filter/);
 	assert.match(enPage, /browseConfig\.representativeTags\.filter/);
-	assert.match(koPage, /tags\.includes\(tag\),/);
-	assert.match(enPage, /tags\.includes\(tag\),/);
+	assert.match(koPage, /normalizedTags\.has\(tag\),/);
+	assert.match(enPage, /normalizedTags\.has\(tag\),/);
 	assert.ok(
 		koPage.indexOf("<ArchiveBrowse") > koPage.indexOf("<section class=\"space-y-4\">"),
 		"Browse should render after the intro section in the Korean archive page",
