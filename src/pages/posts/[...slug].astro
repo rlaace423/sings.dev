@@ -37,7 +37,7 @@ const seriesNavigation = getSeriesNavigation(localePosts, post);
 const relatedPosts = getRelatedPosts(localePosts, post);
 const seriesData = seriesNavigation
 	? {
-			title: post.data.series?.title ?? post.data.title,
+			title: post.data.title,
 			currentIndex: seriesNavigation.currentIndex,
 			items: seriesNavigation.orderedItems.map((entry) => ({
 				label: getSeriesListLabel(entry),
