@@ -1,0 +1,107 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface SeriesItem {
+	href: string;
+	title: string;
+}
+
+interface Series {
+	currentIndex: number;
+	items: SeriesItem[];
+	title: string;
+}
+
+interface Props {
+	lang?: Locale;
+	series?: Series | null;
+}
+
+const { lang: langProp, series } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const labels = lang === "ko"
+	? {
+			heading: "이 시리즈",
+			previous: "이전",
+			next: "다음",
+		}
+	: {
+			heading: "In This Series",
+			previous: "Previous",
+			next: "Next",
+		};
+
+const items = series?.items ?? [];
+const currentIndex = series ? Math.min(Math.max(series.currentIndex, 0), Math.max(items.length - 1, 0)) : 0;
+const previousItem = currentIndex > 0 ? items[currentIndex - 1] : undefined;
+const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : undefined;
+---
+
+{
+	series?.title && items.length > 0 && (
+		<section class="space-y-4 border-t border-stone-200 pt-8 dark:border-stone-800">
+			<div class="space-y-2">
+				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
+					{labels.heading}
+				</p>
+				<div class="space-y-1">
+					<p class="text-lg font-medium tracking-tight text-stone-950 dark:text-stone-50">
+						{series.title}
+					</p>
+					<p class="text-sm text-stone-500 dark:text-stone-400">
+						{currentIndex + 1} / {items.length}
+					</p>
+				</div>
+			</div>
+
+			<div class="flex flex-wrap gap-3 text-sm">
+				{
+					previousItem && (
+						<a
+							href={previousItem.href}
+							class="inline-flex items-center gap-2 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+								{labels.previous}
+							</span>
+							<span>{previousItem.title}</span>
+						</a>
+					)
+				}
+				{
+					nextItem && (
+						<a
+							href={nextItem.href}
+							class="inline-flex items-center gap-2 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+								{labels.next}
+							</span>
+							<span>{nextItem.title}</span>
+						</a>
+					)
+				}
+			</div>
+
+			<ol class="space-y-2 border-l border-stone-200 pl-4 text-sm text-stone-600 dark:border-stone-800 dark:text-stone-300">
+				{items.map((item, index) => (
+					<li class:list={[index === currentIndex && "text-stone-950 dark:text-stone-50"]}>
+						<a
+							href={item.href}
+							aria-current={index === currentIndex ? "page" : undefined}
+							class="block leading-6 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							<span class="mr-2 text-xs tabular-nums text-stone-400 dark:text-stone-500">
+								{index + 1}
+							</span>
+							<span>{item.title}</span>
+							{index === currentIndex && (
+								<span class="sr-only">Current chapter</span>
+							)}
+						</a>
+					</li>
+				))}
+			</ol>
+		</section>
+	)
+}

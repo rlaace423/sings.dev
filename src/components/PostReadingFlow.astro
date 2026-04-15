@@ -1,0 +1,46 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+import PostSeriesNav from "./PostSeriesNav.astro";
+import RelatedReading from "./RelatedReading.astro";
+
+interface SeriesItem {
+	href: string;
+	title: string;
+}
+
+interface Series {
+	currentIndex: number;
+	items: SeriesItem[];
+	title: string;
+}
+
+interface RelatedItem {
+	description?: string;
+	href: string;
+	meta?: string;
+	title: string;
+}
+
+interface Props {
+	items?: RelatedItem[];
+	lang?: Locale;
+	series?: Series | null;
+}
+
+const { items = [], lang: langProp, series } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const hasSeries = Boolean(series?.title && (series?.items?.length ?? 0) > 0);
+const visibleItems = items.slice(0, 3);
+const hasRelated = visibleItems.length > 0;
+---
+
+{
+	(hasSeries || hasRelated) && (
+		<section class="mt-16 border-t border-stone-200 pt-10 dark:border-stone-800">
+			<div class="space-y-10">
+				{hasSeries && <PostSeriesNav lang={lang} series={series} />}
+				{hasRelated && <RelatedReading lang={lang} items={visibleItems} />}
+			</div>
+		</section>
+	)
+}

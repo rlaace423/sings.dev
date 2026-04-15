@@ -1,0 +1,58 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface RelatedItem {
+	description?: string;
+	href: string;
+	meta?: string;
+	title: string;
+}
+
+interface Props {
+	items?: RelatedItem[];
+	lang?: Locale;
+}
+
+const { items = [], lang: langProp } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const labels = lang === "ko"
+	? {
+			heading: "다음 읽을거리",
+		}
+	: {
+			heading: "Keep Reading",
+		};
+const visibleItems = items.slice(0, 3);
+---
+
+{
+	visibleItems.length > 0 && (
+		<section class="space-y-4 border-t border-stone-200 pt-8 dark:border-stone-800">
+			<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
+				{labels.heading}
+			</p>
+			<ul class="space-y-4">
+				{visibleItems.map((item) => (
+					<li class="space-y-1">
+						<a
+							href={item.href}
+							class="block text-base font-medium tracking-tight text-stone-950 transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-50 dark:hover:text-stone-200 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+						>
+							{item.title}
+						</a>
+						{item.description && (
+							<p class="max-w-2xl text-sm leading-6 text-stone-600 dark:text-stone-400">
+								{item.description}
+							</p>
+						)}
+						{item.meta && (
+							<p class="text-[0.72rem] uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+								{item.meta}
+							</p>
+						)}
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}
