@@ -14,17 +14,20 @@ const legacyBlogUrl = "https://medium.com/@rlaace423";
 
 <Layout
 	title="Home | sings.dev"
-	description="While the new blog is in development, existing posts are available on Medium."
+	description="Notes on backend architecture, MPC systems, and infrastructure routing."
 	lang="en"
 >
-	<section class="space-y-6">
+	<section
+		data-legacy-notice
+		class="space-y-5 rounded-2xl border border-sky-200 bg-sky-50/80 px-6 py-6 dark:border-sky-900/80 dark:bg-sky-950/30"
+	>
 		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
 			Temporary notice
 		</p>
-		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+		<h2 class="text-2xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-3xl">
 			A new blog(HERE!) is currently under development.
-		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+		</h2>
+		<p class="max-w-2xl leading-8 text-stone-600 dark:text-stone-300">
 			While older writing is being migrated, past posts are still available on
 			Medium. The new site is being rebuilt step by step.
 		</p>
@@ -34,6 +37,24 @@ const legacyBlogUrl = "https://medium.com/@rlaace423";
 		>
 			Go to blog
 		</a>
+	</section>
+
+	<section data-home-hero class="mt-14 space-y-6">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+			Backend architecture, MPC systems, and infrastructure routing
+		</p>
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+			I write about the systems behind reliable products.
+		</h1>
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+			This is a small home for notes on service boundaries, TSS MPC
+			development, and infrastructure routing that stays readable even when the
+			systems underneath it are not.
+		</p>
+		<p class="max-w-2xl leading-8 text-stone-600 dark:text-stone-300">
+			The presentation stays intentionally quiet so architecture decisions,
+			operational trade-offs, and implementation detail can stay at the center.
+		</p>
 	</section>
 
 	<section
