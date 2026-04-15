@@ -9,7 +9,7 @@ interface SeriesItem {
 interface Series {
 	currentIndex: number;
 	items: SeriesItem[];
-	label: string;
+	title: string;
 }
 
 interface Props {
@@ -40,7 +40,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 ---
 
 {
-	series?.label && items.length > 0 && (
+	series?.title && items.length > 0 && (
 		<section class="space-y-4">
 			<div class="space-y-2">
 				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
@@ -48,7 +48,10 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 				</p>
 				<div class="space-y-1">
 					<p class="text-lg font-medium tracking-tight text-stone-950 dark:text-stone-50">
-						{series.label}
+						{series.title}
+					</p>
+					<p class="text-xs tabular-nums uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+						{currentIndex + 1} / {items.length}
 					</p>
 				</div>
 			</div>
@@ -90,9 +93,6 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 							aria-current={index === currentIndex ? "page" : undefined}
 							class="block leading-6 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 						>
-							<span class="mr-2 text-xs tabular-nums text-stone-400 dark:text-stone-500">
-								{index + 1}
-							</span>
 							<span>{item.label}</span>
 							{index === currentIndex && (
 								<span class="sr-only">{labels.current}</span>

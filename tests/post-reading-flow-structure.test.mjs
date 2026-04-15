@@ -80,7 +80,7 @@ async function renderPostReadingFlow(props = {}) {
 				"---",
 				"const { series } = Astro.props;",
 				"---",
-				"{series ? <div data-series-stub>{series.label}</div> : null}",
+				"{series ? <div data-series-stub>{series.title}</div> : null}",
 				"",
 			].join("\n"),
 		);
@@ -125,11 +125,11 @@ async function renderPostReadingFlow(props = {}) {
 	}
 }
 
-test("PostSeriesNav renders the series label, position, navigation, and ordered list", async () => {
+test("PostSeriesNav renders the series title, position, navigation, and ordered list", async () => {
 	const rendered = await renderAstroComponent(repoSeriesNavUrl, {
 		lang: "en",
 		series: {
-			label: "2/3: Middle",
+			title: "Routing Story",
 			currentIndex: 1,
 			items: [
 				{ label: "1/3: Opening", href: "/posts/opening/" },
@@ -142,10 +142,14 @@ test("PostSeriesNav renders the series label, position, navigation, and ordered 
 	]);
 
 	assert.match(rendered, /In This Series/);
-	assert.match(rendered, /2\/3: Middle/);
+	assert.match(rendered, /Routing Story/);
+	assert.match(rendered, /Current chapter/);
+	assert.match(rendered, />\s*2\s*\/\s*3\s*</);
 	assert.match(rendered, /href="\/posts\/opening\/"/);
 	assert.match(rendered, /href="\/posts\/closing\/"/);
 	assert.match(rendered, /<ol[\s\S]*<li[\s\S]*1\/3: Opening[\s\S]*<li[\s\S]*2\/3: Middle[\s\S]*<li[\s\S]*3\/3: Closing/);
+	assert.doesNotMatch(rendered, />\s*1\s*<\/span>\s*<span>1\/3: Opening/);
+	assert.doesNotMatch(rendered, />\s*2\s*<\/span>\s*<span>2\/3: Middle/);
 });
 
 test("RelatedReading renders a quiet list of short follow-up items", async () => {
@@ -186,7 +190,7 @@ test("PostReadingFlow wraps the series and related sections when content exists"
 	const rendered = await renderPostReadingFlow({
 		lang: "en",
 		series: {
-			label: "1/1: Opening",
+			title: "Routing Story",
 			currentIndex: 0,
 			items: [{ label: "1/1: Opening", href: "/posts/opening/" }],
 		},
@@ -201,8 +205,22 @@ test("PostReadingFlow wraps the series and related sections when content exists"
 	});
 
 	assert.match(rendered, /data-series-stub/);
+	assert.match(rendered, /Routing Story/);
 	assert.match(rendered, /data-related-stub/);
 	assert.match(rendered, /border-t/);
+});
+
+test("PostReadingFlow and PostSeriesNav use the shared series title contract", async () => {
+	const readingFlowSource = await readFile(repoReadingFlowUrl, "utf8");
+	const seriesNavSource = await readFile(repoSeriesNavUrl, "utf8");
+
+	assert.match(readingFlowSource, /interface Series \{[\s\S]*title: string;/);
+	assert.match(readingFlowSource, /const hasSeries = Boolean\(series\?\.title && \(series\?\.items\?\.length \?\? 0\) > 0\);/);
+	assert.doesNotMatch(readingFlowSource, /series\?\.label/);
+	assert.match(seriesNavSource, /interface Series \{[\s\S]*title: string;/);
+	assert.match(seriesNavSource, /series\?\.title && items\.length > 0 && \(/);
+	assert.doesNotMatch(seriesNavSource, /series\?\.label/);
+	assert.doesNotMatch(seriesNavSource, /\{index \+ 1\}/);
 });
 
 test("post detail pages wire post reading flow before the author and comments footer", async () => {

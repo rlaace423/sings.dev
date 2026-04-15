@@ -11,7 +11,7 @@ interface SeriesItem {
 interface Series {
 	currentIndex: number;
 	items: SeriesItem[];
-	label: string;
+	title: string;
 }
 
 interface RelatedItem {
@@ -29,7 +29,7 @@ interface Props {
 
 const { items = [], lang: langProp, series } = Astro.props;
 const lang = isLocale(langProp) ? langProp : defaultLocale;
-const hasSeries = Boolean(series?.label && (series?.items?.length ?? 0) > 0);
+const hasSeries = Boolean(series?.title && (series?.items?.length ?? 0) > 0);
 const visibleItems = items.slice(0, 3);
 const hasRelated = visibleItems.length > 0;
 ---

@@ -5,6 +5,7 @@ import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
 import {
 	categoryHref,
 	formatDate,
+	getDisplayTitle,
 	slugifyTaxonomy,
 	stripLocaleFromId,
 	tagHref,
@@ -70,7 +71,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 								)}
 								class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-300 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 							>
-								{post.data.title}
+								{getDisplayTitle(post)}
 							</a>
 						</h2>
 

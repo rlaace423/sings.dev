@@ -153,12 +153,33 @@ test("TOC renders a quieter, easier-to-scan list", async () => {
 test("post detail pages wire shared header, reading time, tags, and quiet body spacing", async () => {
 	const koPage = await readFile(new URL("../src/pages/posts/[...slug].astro", import.meta.url), "utf8");
 	const enPage = await readFile(new URL("../src/pages/en/posts/[...slug].astro", import.meta.url), "utf8");
+	const postList = await readFile(new URL("../src/components/PostList.astro", import.meta.url), "utf8");
+	const koHome = await readFile(new URL("../src/pages/index.astro", import.meta.url), "utf8");
+	const enHome = await readFile(new URL("../src/pages/en/index.astro", import.meta.url), "utf8");
 
 	for (const page of [koPage, enPage]) {
 		assert.match(page, /import PostHeader from .*\/components\/PostHeader\.astro";/);
+		assert.match(page, /import \{[\s\S]*getDisplayTitle,[\s\S]*getSeriesListLabel,[\s\S]*\} from .*\/utils\/blog";/);
 		assert.match(page, /const readingTimeMinutes = getReadingTimeMinutes\(post\.body\);/);
+		assert.match(page, /title=\{`\$\{getDisplayTitle\(post\)\} \| sings\.dev`\}/);
 		assert.match(page, /<PostHeader[\s\S]*tags=\{post\.data\.tags \?\? \[\]\}/);
+		assert.match(page, /<PostHeader[\s\S]*title=\{getDisplayTitle\(post\)\}/);
+		assert.match(page, /const seriesData = seriesNavigation[\s\S]*title: post\.data\.series\?\.title \?\? post\.data\.title,[\s\S]*items: seriesNavigation\.orderedItems\.map\(\(entry\) => \(\{[\s\S]*label: getSeriesListLabel\(entry\),/);
+		assert.doesNotMatch(page, /seriesData[\s\S]*items:[\s\S]*title: entry\.data\.title/);
+		assert.match(page, /const relatedItems = relatedPosts\.map\(\(entry\) => \(\{[\s\S]*title: getDisplayTitle\(entry\),/);
 		assert.match(page, /<div[\s\S]*class="prose prose-stone mt-10 max-w-none/);
 		assert.match(page, /<div[\s\S]*class="sticky top-20 border-l border-stone-200 pl-6 dark:border-stone-800">/);
 	}
+
+	assert.match(postList, /import \{[\s\S]*getDisplayTitle,[\s\S]*\} from "\.\.\/utils\/blog";/);
+	assert.match(postList, /\{getDisplayTitle\(post\)\}/);
+	assert.doesNotMatch(postList, /\{post\.data\.title\}/);
+
+	assert.match(koHome, /import \{[\s\S]*getDisplayTitle,[\s\S]*\} from "\.\.\/utils\/blog";/);
+	assert.match(koHome, /\{getDisplayTitle\(post\)\}/);
+	assert.doesNotMatch(koHome, /\{post\.data\.title\}/);
+
+	assert.match(enHome, /import \{[\s\S]*getDisplayTitle,[\s\S]*\} from "\.\.\/\.\.\/utils\/blog";/);
+	assert.match(enHome, /\{getDisplayTitle\(post\)\}/);
+	assert.doesNotMatch(enHome, /\{post\.data\.title\}/);
 });
