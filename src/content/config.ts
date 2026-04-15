@@ -12,9 +12,10 @@ const blog = defineCollection({
 		tags: z.array(z.string()).optional(),
 		series: z
 			.object({
-				slug: z.string(),
-				title: z.string(),
-				order: z.number().int().positive(),
+				id: z.string(),
+				index: z.number().int().positive(),
+				total: z.number().int().positive(),
+				subtitle: z.string().optional(),
 			})
 			.optional(),
 	}),
