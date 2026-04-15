@@ -204,3 +204,27 @@ test("PostReadingFlow wraps the series and related sections when content exists"
 	assert.match(rendered, /data-related-stub/);
 	assert.match(rendered, /border-t/);
 });
+
+test("post detail pages wire post reading flow before the author and comments footer", async () => {
+	const koPage = await readFile(new URL("../src/pages/posts/[...slug].astro", import.meta.url), "utf8");
+	const enPage = await readFile(new URL("../src/pages/en/posts/[...slug].astro", import.meta.url), "utf8");
+
+	for (const page of [koPage, enPage]) {
+		assert.match(page, /import PostReadingFlow from .*\/components\/PostReadingFlow\.astro";/);
+		assert.match(page, /import \{ getRelativeLocaleUrl \} from "astro:i18n";/);
+		assert.match(page, /import \{ getRelatedPosts, getSeriesNavigation \} from .*\/utils\/postReading";/);
+		assert.match(page, /const localePosts = sortPostsByDate\([\s\S]*await getCollection\("blog",/);
+		assert.match(page, /const seriesNavigation = getSeriesNavigation\(localePosts, post\);/);
+		assert.match(page, /const relatedPosts = getRelatedPosts\(localePosts, post\);/);
+		assert.match(page, /<PostReadingFlow[\s\S]*series=\{seriesData\}[\s\S]*items=\{relatedItems\}/);
+		assert.ok(
+			page.indexOf("<PostReadingFlow") < page.indexOf("<AuthorProfile"),
+			"post reading flow should render before the author footer",
+		);
+	}
+
+	assert.match(koPage, /matchesLocale\(id, "ko"\)/);
+	assert.match(koPage, /getRelativeLocaleUrl\("ko", `posts\/\$\{stripLocaleFromId\(entry\.id\)\}`\)/);
+	assert.match(enPage, /matchesLocale\(id, "en"\)/);
+	assert.match(enPage, /getRelativeLocaleUrl\("en", `posts\/\$\{stripLocaleFromId\(entry\.id\)\}`\)/);
+});

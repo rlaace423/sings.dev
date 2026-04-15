@@ -1,11 +1,20 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, render } from "astro:content";
 import AuthorProfile from "../../../components/AuthorProfile.astro";
 import Comments from "../../../components/Comments.astro";
 import PostHeader from "../../../components/PostHeader.astro";
+import PostReadingFlow from "../../../components/PostReadingFlow.astro";
 import TOC from "../../../components/TOC.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { getReadingTimeMinutes, matchesLocale, stripLocaleFromId } from "../../../utils/blog";
+import {
+	formatDate,
+	getReadingTimeMinutes,
+	matchesLocale,
+	sortPostsByDate,
+	stripLocaleFromId,
+} from "../../../utils/blog";
+import { getRelatedPosts, getSeriesNavigation } from "../../../utils/postReading";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "en"));
@@ -19,6 +28,27 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTimeMinutes = getReadingTimeMinutes(post.body);
+const localePosts = sortPostsByDate(
+	await getCollection("blog", ({ id }) => matchesLocale(id, "en")),
+);
+const seriesNavigation = getSeriesNavigation(localePosts, post);
+const relatedPosts = getRelatedPosts(localePosts, post);
+const seriesData = seriesNavigation
+	? {
+			title: post.data.series?.title ?? post.data.title,
+			currentIndex: seriesNavigation.currentIndex,
+			items: seriesNavigation.orderedItems.map((entry) => ({
+				title: entry.data.title,
+				href: getRelativeLocaleUrl("en", `posts/${stripLocaleFromId(entry.id)}`),
+			})),
+		}
+	: null;
+const relatedItems = relatedPosts.map((entry) => ({
+	title: entry.data.title,
+	href: getRelativeLocaleUrl("en", `posts/${stripLocaleFromId(entry.id)}`),
+	description: entry.data.description,
+	meta: `${entry.data.category} · ${formatDate(entry.data.pubDate)}`,
+}));
 ---
 
 <Layout
@@ -57,6 +87,8 @@ const readingTimeMinutes = getReadingTimeMinutes(post.body);
 				>
 					<Content />
 				</div>
+
+				<PostReadingFlow lang="en" series={seriesData} items={relatedItems} />
 
 				<div class="mt-16 border-t border-stone-200 pt-10 dark:border-stone-800">
 					<div class="space-y-10">

@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import { normalizeTaxonomyTags } from "./blog.ts";
 
 type BlogPost = CollectionEntry<"blog">;
 
@@ -17,15 +18,18 @@ export type SeriesNavigation = {
 const sameSeries = (left: BlogPost, right: BlogPost) =>
 	left.data.series?.slug === right.data.series?.slug;
 
+const sameLocale = (left: BlogPost, right: BlogPost) =>
+	left.id.split("/")[0] === right.id.split("/")[0];
+
 const compareBySeriesOrder = (left: SeriesItem, right: SeriesItem) =>
 	left.order - right.order ||
 	left.post.id.localeCompare(right.post.id);
 
 const getSharedTagCount = (left: BlogPost, right: BlogPost) => {
-	const leftTags = new Set(left.data.tags ?? []);
+	const leftTags = new Set(normalizeTaxonomyTags(left.data.tags ?? []));
 	let shared = 0;
 
-	for (const tag of right.data.tags ?? []) {
+	for (const tag of normalizeTaxonomyTags(right.data.tags ?? [])) {
 		if (leftTags.has(tag)) {
 			shared += 1;
 		}
@@ -43,6 +47,7 @@ export const getSeriesNavigation = (
 	}
 
 	const orderedItems = posts
+		.filter((post) => sameLocale(post, currentPost))
 		.filter((post) => sameSeries(post, currentPost))
 		.map((post) => ({
 			post,
@@ -71,6 +76,7 @@ export const getRelatedPosts = (
 	limit = 3,
 ) =>
 	posts
+		.filter((post) => sameLocale(post, currentPost))
 		.filter((post) => post.id !== currentPost.id)
 		.filter((post) =>
 			currentPost.data.series ? !sameSeries(post, currentPost) : true,

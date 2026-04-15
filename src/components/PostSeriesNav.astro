@@ -22,11 +22,13 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 const labels = lang === "ko"
 	? {
 			heading: "이 시리즈",
+			current: "현재 위치",
 			previous: "이전",
 			next: "다음",
 		}
 	: {
 			heading: "In This Series",
+			current: "Current chapter",
 			previous: "Previous",
 			next: "Next",
 		};
@@ -39,7 +41,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 
 {
 	series?.title && items.length > 0 && (
-		<section class="space-y-4 border-t border-stone-200 pt-8 dark:border-stone-800">
+		<section class="space-y-4">
 			<div class="space-y-2">
 				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
 					{labels.heading}
@@ -96,7 +98,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 							</span>
 							<span>{item.title}</span>
 							{index === currentIndex && (
-								<span class="sr-only">Current chapter</span>
+								<span class="sr-only">{labels.current}</span>
 							)}
 						</a>
 					</li>

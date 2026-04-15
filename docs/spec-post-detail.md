@@ -1,6 +1,6 @@
-# Spec: Blog Post Detail & Table of Contents (TOC)
+# Spec: Blog Post Detail, Reading Flow & Table of Contents (TOC)
 
-- **Goal**: Render localized post detail pages with a shared post header, a readable body, and a lightweight table of contents.
+- **Goal**: Render localized post detail pages with a shared post header, a readable body, a calm post-reading flow, and a lightweight table of contents.
 - **Routes**:
   - Korean detail pages: `src/pages/posts/[...slug].astro`
   - English detail pages: `src/pages/en/posts/[...slug].astro`
@@ -16,6 +16,11 @@
   - Accept `headings` from `await render(entry)`.
   - Render an unordered list of anchor links for level 2 and level 3 headings.
   - Allow localized labels such as `목차` / `이 글의 흐름` and `Table of contents` / `Contents`.
+- **Post Reading Flow**:
+  - Render a dedicated series-navigation block below the article body when a post has `series` metadata.
+  - Render a shared related-reading block for all posts when there are strong related candidates.
+  - Place both reading-flow elements between the prose body and the author/comments footer.
+  - Keep the reading-flow UI text-first and quiet. No thumbnails, cards, or portal-style recommendation chrome.
 - **Layout Change for Post Detail**:
   - **Desktop (`md:` and above)**:
     - Use a 2-column layout.

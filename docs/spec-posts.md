@@ -12,6 +12,12 @@
     - `description` (string)
     - `category` (string, required)
     - `tags` (array of strings, optional)
+    - `series` (object, optional)
+      - `slug` (string)
+      - `title` (string)
+      - `order` (positive integer)
+  - `series` metadata is opt-in and should only be added to posts that belong to an explicit ordered series.
+  - Do not infer series membership from title text such as `(1/3)`.
 - **Content Structure**:
   - Korean posts live under `src/content/blog/ko/`.
   - English posts live under `src/content/blog/en/`.
