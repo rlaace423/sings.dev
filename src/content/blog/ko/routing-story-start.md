@@ -1,5 +1,5 @@
 ---
-title: "라우팅 이야기 (1): 경계부터 정하기"
+title: "라우팅 이야기"
 pubDate: 2026-04-16
 description: "라우팅을 구현하기 전에, 무엇을 경계로 보고 어디서 책임을 나눌지부터 정리합니다."
 category: "Development"
@@ -8,9 +8,10 @@ tags:
   - infrastructure
   - architecture
 series:
-  slug: "routing-story"
-  title: "라우팅 이야기"
-  order: 1
+  id: "routing-story"
+  subtitle: "경계부터 정하기"
+  index: 1
+  total: 3
 ---
 
 라우팅 문제는 보통 코드부터 떠올리게 만듭니다. 하지만 실제로는 URL 패턴보다 먼저, 어떤 경계를 안정적으로 유지할지부터 정해야 흔들리지 않습니다.
