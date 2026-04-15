@@ -13,11 +13,18 @@
     - `category` (string, required)
     - `tags` (array of strings, optional)
     - `series` (object, optional)
-      - `slug` (string)
-      - `title` (string)
-      - `order` (positive integer)
+      - `id` (string)
+      - `index` (positive integer)
+      - `total` (positive integer)
+      - `subtitle` (string, optional)
   - `series` metadata is opt-in and should only be added to posts that belong to an explicit ordered series.
+  - `title` remains the canonical title field for every post, including posts that belong to a series.
+  - `series.id` is an internal grouping key only; it is not reader-facing copy.
   - Do not infer series membership from title text such as `(1/3)`.
+  - Shared display-title rules:
+    - non-series: `title`
+    - series without subtitle: `title (1/3)`
+    - series with subtitle: `title (1/3): subtitle`
 - **Content Structure**:
   - Korean posts live under `src/content/blog/ko/`.
   - English posts live under `src/content/blog/en/`.
@@ -34,6 +41,7 @@
   - Search, if present in this iteration, remains a separate concern from taxonomy browsing.
   - Keep the archive text-first and minimalist. No image cards or heavy visual UI.
   - Each item should show category, date, title, description, and tags.
+  - Archive and list surfaces should render the shared assembled display title instead of re-implementing series formatting inline.
 - **Detail Routes**:
   - Korean detail pages are generated from `src/pages/posts/[...slug].astro`.
   - English detail pages are generated from `src/pages/en/posts/[...slug].astro`.
