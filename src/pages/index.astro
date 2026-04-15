@@ -2,7 +2,7 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import { matchesLocale, sortPostsByDate, stripLocaleFromId } from "../utils/blog";
+import { getDisplayTitle, matchesLocale, sortPostsByDate, stripLocaleFromId } from "../utils/blog";
 
 const recentPosts = sortPostsByDate(
 	await getCollection("blog", ({ id }) => matchesLocale(id, "ko")),
@@ -107,7 +107,7 @@ const legacyBlogUrl = "https://medium.com/@rlaace423";
 									)}
 									class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-300 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
-									{post.data.title}
+									{getDisplayTitle(post)}
 								</a>
 							</h3>
 							<p class="max-w-2xl leading-8 text-stone-600 dark:text-stone-300">

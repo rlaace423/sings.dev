@@ -2,6 +2,7 @@ import type { CollectionEntry } from "astro:content";
 import type { Locale } from "../i18n/ui";
 
 type BlogPost = CollectionEntry<"blog">;
+type SeriesMetadata = NonNullable<BlogPost["data"]["series"]>;
 const CJK_CHARACTERS_PER_MINUTE = 500;
 const WORDS_PER_MINUTE = 220;
 const CJK_CHARACTER_PATTERN =
@@ -29,6 +30,31 @@ export const matchesLocale = (id: string, locale: Locale) =>
 
 export const stripLocaleFromId = (id: string) =>
 	id.split("/").slice(1).join("/");
+
+const getSeriesMetadata = (post: BlogPost): SeriesMetadata | null =>
+	post.data.series ?? null;
+
+export const getDisplayTitle = (post: BlogPost) => {
+	const series = getSeriesMetadata(post);
+
+	if (!series) {
+		return post.data.title;
+	}
+
+	const displayTitle = `${post.data.title} (${series.index}/${series.total})`;
+
+	return series.subtitle ? `${displayTitle}: ${series.subtitle}` : displayTitle;
+};
+
+export const getSeriesListLabel = (post: BlogPost) => {
+	const series = getSeriesMetadata(post);
+
+	if (!series) {
+		return post.data.title;
+	}
+
+	return `${series.index}/${series.total}: ${series.subtitle ?? post.data.title}`;
+};
 
 export const getReadingTimeMinutes = (source: string) => {
 	const cleaned = stripMarkdownForReadingTime(source);

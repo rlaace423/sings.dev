@@ -9,7 +9,9 @@ import TOC from "../../../components/TOC.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
 	formatDate,
+	getDisplayTitle,
 	getReadingTimeMinutes,
+	getSeriesListLabel,
 	matchesLocale,
 	sortPostsByDate,
 	stripLocaleFromId,
@@ -35,16 +37,16 @@ const seriesNavigation = getSeriesNavigation(localePosts, post);
 const relatedPosts = getRelatedPosts(localePosts, post);
 const seriesData = seriesNavigation
 	? {
-			title: post.data.series?.title ?? post.data.title,
+			title: post.data.title,
 			currentIndex: seriesNavigation.currentIndex,
 			items: seriesNavigation.orderedItems.map((entry) => ({
-				title: entry.data.title,
+				label: getSeriesListLabel(entry),
 				href: getRelativeLocaleUrl("en", `posts/${stripLocaleFromId(entry.id)}`),
 			})),
 		}
 	: null;
 const relatedItems = relatedPosts.map((entry) => ({
-	title: entry.data.title,
+	title: getDisplayTitle(entry),
 	href: getRelativeLocaleUrl("en", `posts/${stripLocaleFromId(entry.id)}`),
 	description: entry.data.description,
 	meta: `${entry.data.category} · ${formatDate(entry.data.pubDate)}`,
@@ -52,7 +54,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 ---
 
 <Layout
-	title={`${post.data.title} | sings.dev`}
+	title={`${getDisplayTitle(post)} | sings.dev`}
 	description={post.data.description}
 	lang="en"
 	contentClass="max-w-none"
@@ -79,7 +81,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 					pubDate={post.data.pubDate}
 					readingTimeMinutes={readingTimeMinutes}
 					tags={post.data.tags ?? []}
-					title={post.data.title}
+					title={getDisplayTitle(post)}
 				/>
 
 				<div

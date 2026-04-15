@@ -6,8 +6,18 @@
   - English detail pages: `src/pages/en/posts/[...slug].astro`
 - **Shared Post Header (`src/components/PostHeader.astro`)**:
   - Render a compact metadata line above the title with category, publication date, and reading time.
-  - Render the title, description, and full frontmatter tag list.
+  - Render the shared assembled display title, description, and full frontmatter tag list.
   - Include the bottom divider above the article body.
+- **Shared Series Title Rules**:
+  - Use `title` as the canonical post title everywhere.
+  - Shared display-title rules:
+    - non-series: `title`
+    - series without subtitle: `title (1/3)`
+    - series with subtitle: `title (1/3): subtitle`
+  - Compact series-list labels:
+    - `1/3: subtitle`
+    - `1/3: title` when `subtitle` is absent
+  - Use the same assembled-title helpers across detail pages, archive/list surfaces, related-reading items, and series navigation.
 - **Styling the Content**:
   - Wrap the rendered markdown `<Content />` in a container using Tailwind Typography (`prose`).
   - Use `max-w-none` so the prose styles fill the article column naturally.
@@ -22,6 +32,8 @@
   - Place both reading-flow elements between the prose body and the author/comments footer.
   - Keep the reading-flow UI text-first and quiet. No thumbnails, cards, or portal-style recommendation chrome.
   - Treat related reading as deterministic metadata-based linking, not a personalized recommendation system.
+  - Series navigation should use the compact series-list labels rather than raw post titles.
+  - Related-reading items should use the shared assembled display title so series subtitles stay visible outside the detail header.
   - Related-reading selection rules:
     - Only consider posts from the same locale as the current post.
     - Exclude the current post itself.

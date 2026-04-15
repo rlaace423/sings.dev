@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { transform } from "@astrojs/compiler";
@@ -11,10 +11,29 @@ const repoSeriesNavUrl = new URL("../src/components/PostSeriesNav.astro", import
 const repoRelatedReadingUrl = new URL("../src/components/RelatedReading.astro", import.meta.url);
 const repoReadingFlowUrl = new URL("../src/components/PostReadingFlow.astro", import.meta.url);
 const repoUiUrl = new URL("../src/i18n/ui.ts", import.meta.url).href;
+const repoBlogUrl = new URL("../src/utils/blog.ts", import.meta.url).href;
+const repoPostReadingUrl = new URL("../src/utils/postReading.ts", import.meta.url).href;
 const astroRuntimeUrl = new URL(
 	"../node_modules/astro/dist/runtime/server/index.js",
 	import.meta.url,
 ).href;
+
+const serializePosts = (posts) => JSON.stringify(posts);
+
+const makePost = (id, overrides = {}) => ({
+	id,
+	slug: id.split("/").at(-1) ?? id,
+	body: "## Intro\n\nReading flow body.",
+	collection: "blog",
+	data: {
+		title: "Default Title",
+		pubDate: new Date("2026-01-01T00:00:00.000Z"),
+		description: "Default description",
+		category: "Guides",
+		tags: ["astro"],
+		...overrides,
+	},
+});
 
 async function renderAstroComponent(sourceUrl, props = {}, replacements = []) {
 	const source = await readFile(sourceUrl, "utf8");
@@ -55,6 +74,40 @@ async function renderAstroComponent(sourceUrl, props = {}, replacements = []) {
 	} finally {
 		await rm(tempDir, { recursive: true, force: true });
 	}
+}
+
+async function compileAstroStub(tempDir, name, source, runtimeStubPath) {
+	const sourcePath = join(tempDir, `${name}.astro`);
+	const compiledPath = join(tempDir, `${name}.ts`);
+
+	await writeFile(sourcePath, source);
+
+	const compiled = await transform(source, {
+		filename: sourcePath,
+		internalURL: "astro/runtime/server/index.js",
+	});
+
+	await writeFile(
+		compiledPath,
+		compiled.code.replaceAll(
+			"astro/runtime/server/index.js",
+			pathToFileURL(runtimeStubPath).href,
+		),
+	);
+
+	return compiledPath;
+}
+
+async function compileAstroSource(source, filename, runtimeStubPath) {
+	const compiled = await transform(source, {
+		filename,
+		internalURL: "astro/runtime/server/index.js",
+	});
+
+	return compiled.code.replaceAll(
+		"astro/runtime/server/index.js",
+		pathToFileURL(runtimeStubPath).href,
+	);
 }
 
 async function renderPostReadingFlow(props = {}) {
@@ -125,16 +178,234 @@ async function renderPostReadingFlow(props = {}) {
 	}
 }
 
-test("PostSeriesNav renders the series label, position, navigation, and ordered list", async () => {
+async function renderPostDetailPage(sourceUrl, props, posts) {
+	const source = await readFile(sourceUrl, "utf8");
+	const compiled = await transform(source, {
+		filename: sourceUrl.pathname,
+		internalURL: "astro/runtime/server/index.js",
+	});
+
+	const tempDir = await mkdtemp(join(tmpdir(), "post-reading-flow-page-"));
+	const runtimeStubPath = join(tempDir, "astro-runtime-stub.ts");
+	const i18nStubPath = join(tempDir, "astro-i18n-stub.ts");
+	const contentStubPath = join(tempDir, "astro-content-stub.ts");
+	const isEnglishPage = sourceUrl.pathname.includes("/src/pages/en/");
+	const pageDirectory = isEnglishPage
+		? join(tempDir, "src", "pages", "en", "posts")
+		: join(tempDir, "src", "pages", "posts");
+	const pagePath = join(pageDirectory, "page.ts");
+	const layoutStubPath = join(tempDir, "src", "layouts", "Layout.ts");
+	const postHeaderStubPath = join(tempDir, "src", "components", "PostHeader.ts");
+	const postReadingFlowStubPath = join(tempDir, "src", "components", "PostReadingFlow.ts");
+	const tocStubPath = join(tempDir, "src", "components", "TOC.ts");
+	const authorStubPath = join(tempDir, "src", "components", "AuthorProfile.ts");
+	const commentsStubPath = join(tempDir, "src", "components", "Comments.ts");
+	const blogUtilsStubPath = join(tempDir, "src", "utils", "blog.ts");
+	const postReadingUtilsStubPath = join(tempDir, "src", "utils", "postReading.ts");
+	const blogUtilsNoExtPath = join(tempDir, "src", "utils", "blog");
+	const postReadingUtilsNoExtPath = join(tempDir, "src", "utils", "postReading");
+
+	try {
+		await mkdir(dirname(layoutStubPath), { recursive: true });
+		await mkdir(dirname(postHeaderStubPath), { recursive: true });
+		await mkdir(dirname(blogUtilsStubPath), { recursive: true });
+		await mkdir(pageDirectory, { recursive: true });
+		await writeFile(
+			runtimeStubPath,
+			[
+				`export * from ${JSON.stringify(astroRuntimeUrl)};`,
+				"export const createMetadata = () => ({})",
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			i18nStubPath,
+			[
+				"export const getRelativeLocaleUrl = (locale, path) => `/${locale}/${path}/`;",
+				"",
+			].join("\n"),
+		);
+
+		const contentComponentPath = await compileAstroStub(
+			tempDir,
+			"ContentStub",
+			[
+				"---",
+				"---",
+				"<div data-content>Rendered body</div>",
+				"",
+			].join("\n"),
+			runtimeStubPath,
+		);
+		await writeFile(
+			layoutStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"<div data-layout><slot /></div>",
+					"",
+				].join("\n"),
+				join(tempDir, "LayoutStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			postHeaderStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"<div data-post-header />",
+					"",
+				].join("\n"),
+				join(tempDir, "PostHeaderStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			postReadingFlowStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"const { series = null, items = [] } = Astro.props;",
+					"---",
+					'<div data-reading-flow data-series-title={series?.title ?? ""} data-series-labels={(series?.items ?? []).map((item) => item.label).join("|")} data-related-titles={items.map((item) => item.title).join("|")} />',
+					"",
+				].join("\n"),
+				join(tempDir, "PostReadingFlowStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			tocStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"<div data-toc />",
+					"",
+				].join("\n"),
+				join(tempDir, "TOCStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			authorStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"<div data-author-profile />",
+					"",
+				].join("\n"),
+				join(tempDir, "AuthorProfileStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			commentsStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"<div data-comments />",
+					"",
+				].join("\n"),
+				join(tempDir, "CommentsStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			blogUtilsStubPath,
+			[`export * from ${JSON.stringify(repoBlogUrl)};`, ""].join("\n"),
+		);
+		await writeFile(
+			blogUtilsNoExtPath,
+			[`export * from ${JSON.stringify(repoBlogUrl)};`, ""].join("\n"),
+		);
+		await writeFile(
+			postReadingUtilsStubPath,
+			[`export * from ${JSON.stringify(repoPostReadingUrl)};`, ""].join("\n"),
+		);
+		await writeFile(
+			postReadingUtilsNoExtPath,
+			[`export * from ${JSON.stringify(repoPostReadingUrl)};`, ""].join("\n"),
+		);
+
+		await writeFile(
+			contentStubPath,
+			[
+				`import Content from ${JSON.stringify(pathToFileURL(contentComponentPath).href)};`,
+				`const posts = JSON.parse(${JSON.stringify(serializePosts(posts))}).map((entry) => ({`,
+				"  ...entry,",
+				"  data: {",
+				"    ...entry.data,",
+				"    pubDate: new Date(entry.data.pubDate),",
+				"  },",
+				"}));",
+				"export const getCollection = async (_name, filter) =>",
+				"  posts.filter((entry) => (filter ? filter(entry) : true));",
+				"export const render = async () => ({",
+				"  Content,",
+				"  headings: [{ depth: 2, slug: 'intro', text: 'Introduction' }],",
+				"});",
+				"",
+			].join("\n"),
+		);
+
+		let rewritten = compiled.code.replaceAll(
+			"astro/runtime/server/index.js",
+			pathToFileURL(runtimeStubPath).href,
+		);
+		rewritten = rewritten.replaceAll("astro:i18n", pathToFileURL(i18nStubPath).href);
+		rewritten = rewritten.replaceAll(
+			"astro:content",
+			pathToFileURL(contentStubPath).href,
+		);
+
+		for (const [find, replaceWith] of [
+			["../../layouts/Layout.astro", "../../layouts/Layout.ts"],
+			["../../../layouts/Layout.astro", "../../../layouts/Layout.ts"],
+			["../../components/PostHeader.astro", "../../components/PostHeader.ts"],
+			["../../../components/PostHeader.astro", "../../../components/PostHeader.ts"],
+			["../../components/PostReadingFlow.astro", "../../components/PostReadingFlow.ts"],
+			["../../../components/PostReadingFlow.astro", "../../../components/PostReadingFlow.ts"],
+			["../../components/TOC.astro", "../../components/TOC.ts"],
+			["../../../components/TOC.astro", "../../../components/TOC.ts"],
+			["../../components/AuthorProfile.astro", "../../components/AuthorProfile.ts"],
+			["../../../components/AuthorProfile.astro", "../../../components/AuthorProfile.ts"],
+			["../../components/Comments.astro", "../../components/Comments.ts"],
+			["../../../components/Comments.astro", "../../../components/Comments.ts"],
+			["../../utils/blog.ts", "../../utils/blog.ts"],
+			["../../../utils/blog.ts", "../../../utils/blog.ts"],
+			["../../utils/postReading.ts", "../../utils/postReading.ts"],
+			["../../../utils/postReading.ts", "../../../utils/postReading.ts"],
+		]) {
+			rewritten = rewritten.replaceAll(find, replaceWith);
+		}
+
+		await writeFile(pagePath, rewritten);
+
+		const component = await import(pathToFileURL(pagePath).href);
+		const container = await AstroContainer.create();
+
+		return await container.renderToString(component.default, { props });
+	} finally {
+		await rm(tempDir, { recursive: true, force: true });
+	}
+}
+
+test("PostSeriesNav renders the series title, position, navigation, and ordered list", async () => {
 	const rendered = await renderAstroComponent(repoSeriesNavUrl, {
 		lang: "en",
 		series: {
-			title: "Quiet Reading Flow",
+			title: "Routing Story",
 			currentIndex: 1,
 			items: [
-				{ title: "Opening", href: "/posts/opening/" },
-				{ title: "Middle", href: "/posts/middle/" },
-				{ title: "Closing", href: "/posts/closing/" },
+				{ label: "1/3: Opening", href: "/posts/opening/" },
+				{ label: "2/3: Middle", href: "/posts/middle/" },
+				{ label: "3/3: Closing", href: "/posts/closing/" },
 			],
 		},
 	}, [
@@ -142,11 +413,14 @@ test("PostSeriesNav renders the series label, position, navigation, and ordered 
 	]);
 
 	assert.match(rendered, /In This Series/);
-	assert.match(rendered, /Quiet Reading Flow/);
-	assert.match(rendered, /2 \/ 3/);
+	assert.match(rendered, /Routing Story/);
+	assert.match(rendered, /Current chapter/);
+	assert.match(rendered, />\s*2\s*\/\s*3\s*</);
 	assert.match(rendered, /href="\/posts\/opening\/"/);
 	assert.match(rendered, /href="\/posts\/closing\/"/);
-	assert.match(rendered, /<ol[\s\S]*<li[\s\S]*Opening[\s\S]*<li[\s\S]*Middle[\s\S]*<li[\s\S]*Closing/);
+	assert.match(rendered, /<ol[\s\S]*<li[\s\S]*1\/3: Opening[\s\S]*<li[\s\S]*2\/3: Middle[\s\S]*<li[\s\S]*3\/3: Closing/);
+	assert.doesNotMatch(rendered, />\s*1\s*<\/span>\s*<span>1\/3: Opening/);
+	assert.doesNotMatch(rendered, />\s*2\s*<\/span>\s*<span>2\/3: Middle/);
 });
 
 test("RelatedReading renders a quiet list of short follow-up items", async () => {
@@ -154,13 +428,13 @@ test("RelatedReading renders a quiet list of short follow-up items", async () =>
 		lang: "ko",
 		items: [
 			{
-				title: "다음 글",
+				title: "Routing Story (2/3): Defining Boundaries First",
 				href: "/posts/next/",
 				description: "짧은 설명입니다.",
 				meta: "3분 읽기",
 			},
 			{
-				title: "이어 읽기",
+				title: "Another Follow-up",
 				href: "/posts/continue/",
 				description: "또 다른 짧은 설명입니다.",
 				meta: "5분 읽기",
@@ -172,6 +446,7 @@ test("RelatedReading renders a quiet list of short follow-up items", async () =>
 
 	assert.match(rendered, /다음 읽을거리/);
 	assert.match(rendered, /<li[\s\S]*<a href="\/posts\/next\/"/);
+	assert.match(rendered, /Routing Story \(2\/3\): Defining Boundaries First/);
 	assert.match(rendered, /짧은 설명입니다\./);
 	assert.match(rendered, /3분 읽기/);
 });
@@ -186,9 +461,9 @@ test("PostReadingFlow wraps the series and related sections when content exists"
 	const rendered = await renderPostReadingFlow({
 		lang: "en",
 		series: {
-			title: "Quiet Reading Flow",
+			title: "Routing Story",
 			currentIndex: 0,
-			items: [{ title: "Opening", href: "/posts/opening/" }],
+			items: [{ label: "1/1: Opening", href: "/posts/opening/" }],
 		},
 		items: [
 			{
@@ -201,30 +476,75 @@ test("PostReadingFlow wraps the series and related sections when content exists"
 	});
 
 	assert.match(rendered, /data-series-stub/);
+	assert.match(rendered, /Routing Story/);
 	assert.match(rendered, /data-related-stub/);
 	assert.match(rendered, /border-t/);
 });
 
-test("post detail pages wire post reading flow before the author and comments footer", async () => {
-	const koPage = await readFile(new URL("../src/pages/posts/[...slug].astro", import.meta.url), "utf8");
-	const enPage = await readFile(new URL("../src/pages/en/posts/[...slug].astro", import.meta.url), "utf8");
+test("post detail pages render PostReadingFlow with helper-built labels before the footer", async () => {
+	const currentPost = makePost("ko/routing-middle", {
+		title: "Routing Story",
+		pubDate: new Date("2026-04-10T00:00:00.000Z"),
+		description: "The middle chapter.",
+		tags: ["astro", "routing"],
+		series: { id: "routing", index: 2, total: 3, subtitle: "Middle" },
+	});
+	const pagePosts = [
+		currentPost,
+		makePost("ko/routing-opening", {
+			title: "Routing Story",
+			pubDate: new Date("2026-04-01T00:00:00.000Z"),
+			tags: ["astro", "routing"],
+			series: { id: "routing", index: 1, total: 3, subtitle: "Opening" },
+		}),
+		makePost("ko/routing-closing", {
+			title: "Routing Story",
+			pubDate: new Date("2026-04-20T00:00:00.000Z"),
+			tags: ["astro", "routing"],
+			series: { id: "routing", index: 3, total: 3, subtitle: "Closing" },
+		}),
+		makePost("ko/pattern-library", {
+			title: "Pattern Library",
+			pubDate: new Date("2026-04-18T00:00:00.000Z"),
+			tags: ["astro", "routing"],
+			series: { id: "patterns", index: 2, total: 4, subtitle: "Spacing Rhythm" },
+		}),
+		makePost("ko/accessibility-checklist", {
+			title: "Accessibility Checklist",
+			pubDate: new Date("2026-04-12T00:00:00.000Z"),
+			tags: ["astro"],
+		}),
+	];
 
-	for (const page of [koPage, enPage]) {
-		assert.match(page, /import PostReadingFlow from .*\/components\/PostReadingFlow\.astro";/);
-		assert.match(page, /import \{ getRelativeLocaleUrl \} from "astro:i18n";/);
-		assert.match(page, /import \{ getRelatedPosts, getSeriesNavigation \} from .*\/utils\/postReading";/);
-		assert.match(page, /const localePosts = sortPostsByDate\([\s\S]*await getCollection\("blog",/);
-		assert.match(page, /const seriesNavigation = getSeriesNavigation\(localePosts, post\);/);
-		assert.match(page, /const relatedPosts = getRelatedPosts\(localePosts, post\);/);
-		assert.match(page, /<PostReadingFlow[\s\S]*series=\{seriesData\}[\s\S]*items=\{relatedItems\}/);
+	const koRendered = await renderPostDetailPage(
+		new URL("../src/pages/posts/[...slug].astro", import.meta.url),
+		{ post: currentPost },
+		pagePosts,
+	);
+	const enCurrentPost = { ...currentPost, id: "en/routing-middle" };
+	const enRendered = await renderPostDetailPage(
+		new URL("../src/pages/en/posts/[...slug].astro", import.meta.url),
+		{ post: enCurrentPost },
+		pagePosts.map((post) =>
+			post.id.startsWith("ko/") ? { ...post, id: post.id.replace(/^ko\//, "en/") } : post
+		),
+	);
+
+	for (const rendered of [koRendered, enRendered]) {
+		assert.match(rendered, /data-series-title="Routing Story"/);
+		assert.match(rendered, /data-series-labels="1\/3: Opening\|2\/3: Middle\|3\/3: Closing"/);
+		assert.match(
+			rendered,
+			/data-related-titles="Pattern Library \(2\/4\): Spacing Rhythm\|Accessibility Checklist"/,
+		);
+		assert.doesNotMatch(rendered, /data-related-titles="[^"]*Routing Story/);
 		assert.ok(
-			page.indexOf("<PostReadingFlow") < page.indexOf("<AuthorProfile"),
-			"post reading flow should render before the author footer",
+			rendered.indexOf("data-reading-flow") < rendered.indexOf("data-author-profile"),
+			"PostReadingFlow should render before AuthorProfile",
+		);
+		assert.ok(
+			rendered.indexOf("data-reading-flow") < rendered.indexOf("data-comments"),
+			"PostReadingFlow should render before Comments",
 		);
 	}
-
-	assert.match(koPage, /matchesLocale\(id, "ko"\)/);
-	assert.match(koPage, /getRelativeLocaleUrl\("ko", `posts\/\$\{stripLocaleFromId\(entry\.id\)\}`\)/);
-	assert.match(enPage, /matchesLocale\(id, "en"\)/);
-	assert.match(enPage, /getRelativeLocaleUrl\("en", `posts\/\$\{stripLocaleFromId\(entry\.id\)\}`\)/);
 });

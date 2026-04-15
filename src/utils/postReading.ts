@@ -5,7 +5,7 @@ type BlogPost = CollectionEntry<"blog">;
 
 type SeriesItem = {
 	post: BlogPost;
-	order: number;
+	index: number;
 };
 
 export type SeriesNavigation = {
@@ -16,13 +16,13 @@ export type SeriesNavigation = {
 };
 
 const sameSeries = (left: BlogPost, right: BlogPost) =>
-	left.data.series?.slug === right.data.series?.slug;
+	left.data.series?.id === right.data.series?.id;
 
 const sameLocale = (left: BlogPost, right: BlogPost) =>
 	left.id.split("/")[0] === right.id.split("/")[0];
 
 const compareBySeriesOrder = (left: SeriesItem, right: SeriesItem) =>
-	left.order - right.order ||
+	left.index - right.index ||
 	left.post.id.localeCompare(right.post.id);
 
 const getSharedTagCount = (left: BlogPost, right: BlogPost) => {
@@ -51,7 +51,7 @@ export const getSeriesNavigation = (
 		.filter((post) => sameSeries(post, currentPost))
 		.map((post) => ({
 			post,
-			order: post.data.series!.order,
+			index: post.data.series!.index,
 		}))
 		.sort(compareBySeriesOrder)
 		.map(({ post }) => post);

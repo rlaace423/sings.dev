@@ -28,15 +28,21 @@ const makePost = (
 
 test("returns series navigation ordered by series order and centered on the current post", () => {
 	const currentPost = makePost("en/current", {
-		series: { slug: "writing", title: "Writing", order: 2 },
+		series: { id: "writing", index: 2, total: 3, subtitle: "Middle" },
 	});
 	const posts = [
-		makePost("en/third", { series: { slug: "writing", title: "Writing", order: 3 } }),
-		makePost("en/current", {
-			series: { slug: "writing", title: "Writing", order: 2 },
+		makePost("en/third", {
+			series: { id: "writing", index: 3, total: 3, subtitle: "Closing" },
 		}),
-		makePost("en/first", { series: { slug: "writing", title: "Writing", order: 1 } }),
-		makePost("en/unrelated", { series: { slug: "other", title: "Other", order: 1 } }),
+		makePost("en/current", {
+			series: { id: "writing", index: 2, total: 3, subtitle: "Middle" },
+		}),
+		makePost("en/first", {
+			series: { id: "writing", index: 1, total: 3, subtitle: "Opening" },
+		}),
+		makePost("en/unrelated", {
+			series: { id: "other", index: 1, total: 1, subtitle: "Standalone" },
+		}),
 	];
 
 	const navigation = getSeriesNavigation(posts, currentPost);
@@ -56,7 +62,7 @@ test("returns null series navigation for posts without series metadata", () => {
 	const posts = [
 		currentPost,
 		makePost("en/other", {
-			series: { slug: "writing", title: "Writing", order: 1 },
+			series: { id: "writing", index: 1, total: 2, subtitle: "Opening" },
 		}),
 	];
 
@@ -68,7 +74,7 @@ test("returns related posts ranked by category, tag overlap, and recency while e
 		category: "Essay",
 		tags: ["astro", "notes"],
 		pubDate: new Date("2026-01-10"),
-		series: { slug: "writing", title: "Writing", order: 2 },
+		series: { id: "writing", index: 2, total: 3, subtitle: "Middle" },
 	});
 	const posts = [
 		makePost("en/same-category-older", {
@@ -90,7 +96,7 @@ test("returns related posts ranked by category, tag overlap, and recency while e
 			category: "Essay",
 			tags: ["astro"],
 			pubDate: new Date("2026-01-04"),
-			series: { slug: "writing", title: "Writing", order: 1 },
+			series: { id: "writing", index: 1, total: 3, subtitle: "Opening" },
 		}),
 		makePost("en/no-match", {
 			category: "Misc",
@@ -179,15 +185,15 @@ test("keeps series navigation and related posts within the current locale", () =
 	const currentPost = makePost("en/current", {
 		category: "Essay",
 		tags: ["astro"],
-		series: { slug: "writing", title: "Writing", order: 2 },
+		series: { id: "writing", index: 2, total: 2, subtitle: "Middle" },
 	});
 	const posts = [
 		currentPost,
 		makePost("en/first", {
-			series: { slug: "writing", title: "Writing", order: 1 },
+			series: { id: "writing", index: 1, total: 2, subtitle: "Opening" },
 		}),
 		makePost("ko/first", {
-			series: { slug: "writing", title: "Writing", order: 1 },
+			series: { id: "writing", index: 1, total: 2, subtitle: "도입" },
 		}),
 		makePost("en/related", {
 			category: "Essay",
@@ -209,5 +215,32 @@ test("keeps series navigation and related posts within the current locale", () =
 	assert.deepEqual(
 		relatedPosts.map((post) => post.id),
 		["en/related"],
+	);
+});
+
+test("groups series navigation by series id even when subtitles differ", () => {
+	const currentPost = makePost("en/current", {
+		series: { id: "writing", index: 2, total: 3, subtitle: "Different subtitle" },
+	});
+	const posts = [
+		makePost("en/first", {
+			series: { id: "writing", index: 1, total: 3, subtitle: "Opening" },
+		}),
+		makePost("en/current", {
+			series: { id: "writing", index: 2, total: 3, subtitle: "Different subtitle" },
+		}),
+		makePost("en/third", {
+			series: { id: "writing", index: 3, total: 3, subtitle: "Closing" },
+		}),
+		makePost("en/other-series", {
+			series: { id: "other", index: 1, total: 1, subtitle: "Unrelated" },
+		}),
+	];
+
+	const navigation = getSeriesNavigation(posts, currentPost);
+
+	assert.deepEqual(
+		navigation?.orderedItems.map((post) => post.id),
+		["en/first", "en/current", "en/third"],
 	);
 });
