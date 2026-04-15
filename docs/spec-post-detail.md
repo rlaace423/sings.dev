@@ -21,6 +21,15 @@
   - Render a shared related-reading block for all posts when there are strong related candidates.
   - Place both reading-flow elements between the prose body and the author/comments footer.
   - Keep the reading-flow UI text-first and quiet. No thumbnails, cards, or portal-style recommendation chrome.
+  - Treat related reading as deterministic metadata-based linking, not a personalized recommendation system.
+  - Related-reading selection rules:
+    - Only consider posts from the same locale as the current post.
+    - Exclude the current post itself.
+    - If the current post belongs to a series, exclude posts from the same series from the related-reading pool.
+    - Prefer posts in the same category.
+    - Then prefer posts with more overlapping normalized tags.
+    - Break ties by newer publication date.
+    - Show at most 3 related posts.
 - **Layout Change for Post Detail**:
   - **Desktop (`md:` and above)**:
     - Use a 2-column layout.

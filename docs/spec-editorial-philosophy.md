@@ -18,6 +18,7 @@
   - Search is a direct lookup tool and should remain separate from taxonomy browsing.
 - **Editorial Aids**:
   - Metadata, TOC, related links, and other reading aids should improve scanning without flattening the writing.
+  - Related-reading links are calm, metadata-driven reading aids, not personalized recommendations or engagement surfaces.
   - TL;DR-style summary blocks are optional aids for long or structured posts, not a required template for every post.
 - **What To Avoid**:
   - Portal-like or dashboard-like layouts
