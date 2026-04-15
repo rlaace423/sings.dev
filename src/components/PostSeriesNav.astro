@@ -3,13 +3,13 @@ import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
 
 interface SeriesItem {
 	href: string;
-	title: string;
+	label: string;
 }
 
 interface Series {
 	currentIndex: number;
 	items: SeriesItem[];
-	title: string;
+	label: string;
 }
 
 interface Props {
@@ -40,7 +40,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 ---
 
 {
-	series?.title && items.length > 0 && (
+	series?.label && items.length > 0 && (
 		<section class="space-y-4">
 			<div class="space-y-2">
 				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
@@ -48,10 +48,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 				</p>
 				<div class="space-y-1">
 					<p class="text-lg font-medium tracking-tight text-stone-950 dark:text-stone-50">
-						{series.title}
-					</p>
-					<p class="text-sm text-stone-500 dark:text-stone-400">
-						{currentIndex + 1} / {items.length}
+						{series.label}
 					</p>
 				</div>
 			</div>
@@ -66,7 +63,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
 								{labels.previous}
 							</span>
-							<span>{previousItem.title}</span>
+							<span>{previousItem.label}</span>
 						</a>
 					)
 				}
@@ -79,7 +76,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
 								{labels.next}
 							</span>
-							<span>{nextItem.title}</span>
+							<span>{nextItem.label}</span>
 						</a>
 					)
 				}
@@ -96,7 +93,7 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 							<span class="mr-2 text-xs tabular-nums text-stone-400 dark:text-stone-500">
 								{index + 1}
 							</span>
-							<span>{item.title}</span>
+							<span>{item.label}</span>
 							{index === currentIndex && (
 								<span class="sr-only">{labels.current}</span>
 							)}
