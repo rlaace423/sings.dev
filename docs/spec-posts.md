@@ -18,13 +18,16 @@
       - `total` (positive integer)
       - `subtitle` (string, optional)
   - `series` metadata is opt-in and should only be added to posts that belong to an explicit ordered series.
-  - `title` remains the canonical title field for every post, including posts that belong to a series.
+  - `title` remains the canonical title field for every post.
+  - For non-series posts, `title` is the final visible post title.
+  - For series posts, `title` stores the series-level title, and `series.subtitle` stores the entry-level subheading only when one is needed.
   - `series.id` is an internal grouping key only; it is not reader-facing copy.
   - Do not infer series membership from title text such as `(1/3)`.
   - Shared display-title rules:
     - non-series: `title`
     - series without subtitle: `title (1/3)`
     - series with subtitle: `title (1/3): subtitle`
+  - Search visibility for series subtitles depends on these shared assembled titles being rendered into real pages and list surfaces, not on Pagefind reading raw frontmatter.
 - **Content Structure**:
   - Korean posts live under `src/content/blog/ko/`.
   - English posts live under `src/content/blog/en/`.

@@ -9,7 +9,9 @@
   - Render the shared assembled display title, description, and full frontmatter tag list.
   - Include the bottom divider above the article body.
 - **Shared Series Title Rules**:
-  - Use `title` as the canonical post title everywhere.
+  - Use `title` as the canonical authoring field everywhere.
+  - For non-series posts, `title` is the final visible title.
+  - For series posts, `title` stores the series-level title and the final visible title is assembled through shared helpers.
   - Shared display-title rules:
     - non-series: `title`
     - series without subtitle: `title (1/3)`
@@ -32,7 +34,9 @@
   - Place both reading-flow elements between the prose body and the author/comments footer.
   - Keep the reading-flow UI text-first and quiet. No thumbnails, cards, or portal-style recommendation chrome.
   - Treat related reading as deterministic metadata-based linking, not a personalized recommendation system.
+  - The top of the series-navigation block should show the series title plus a quiet current-position line such as `2 / 3`.
   - Series navigation should use the compact series-list labels rather than raw post titles.
+  - Previous/next links inside the series block should also use the compact series-list labels.
   - Related-reading items should use the shared assembled display title so series subtitles stay visible outside the detail header.
   - Related-reading selection rules:
     - Only consider posts from the same locale as the current post.
@@ -42,6 +46,7 @@
     - Then prefer posts with more overlapping normalized tags.
     - Break ties by newer publication date.
     - Show at most 3 related posts.
+  - Search indexing should continue to rely on the rendered assembled titles that appear in the detail page and reading-flow UI, not on raw frontmatter fields.
 - **Layout Change for Post Detail**:
   - **Desktop (`md:` and above)**:
     - Use a 2-column layout.

@@ -20,6 +20,7 @@
   - Each archive must only use posts from the matching locale.
 - **Post List Items**:
   - Show category, date, title, description, and tags.
+  - Taxonomy list surfaces should render the shared assembled display title rather than raw frontmatter title text.
   - The archive filter controls at the top are selection controls.
   - The category and tag badges inside each post item remain links to taxonomy pages.
 - **Category Pages**:

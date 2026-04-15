@@ -23,3 +23,4 @@
     - A short hero/introduction section.
     - A recent posts section showing the latest 3 to 5 posts.
   - Reuse the same quiet, text-first list style as the archive page.
+  - Recent-post titles on the home page should use the same shared assembled display-title helper as the archive and taxonomy lists.

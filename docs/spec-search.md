@@ -1,6 +1,6 @@
 # Spec: Global Search Modal (Pagefind)
 
-- **Goal**: Implement a site-wide global search that opens in a focused, Spotlight-like modal overlay.
+- **Goal**: Implement a site-wide global search that opens in a focused, text-first modal overlay for direct lookup.
 - **Reference Philosophy**: Search is a direct lookup tool, not a replacement for taxonomy browsing. Follow `docs/spec-editorial-philosophy.md`.
 - **Library Requirements**: 
   - Install `pagefind` as a dev dependency.
@@ -9,7 +9,7 @@
   1. **`src/components/SearchModal.astro`**:
      - **Layout**: Use Tailwind to create a full-screen modal layer with a dark backdrop and a centered dialog card.
      - **Backdrop**: The backdrop should be a clickable element that closes the modal.
-     - **Modal Box**: Use a roomy centered container suitable for a Spotlight-like search experience.
+     - **Modal Box**: Use a roomy but restrained centered container that feels editorial rather than app-like.
      - **Pagefind UI**: Render the default `pagefind-ui` widget inside the modal.
      - **Lazy Init**: Load the Pagefind UI script and stylesheet only when the modal is opened for the first time.
      - **i18n**: Filter results to the current language (`ko` or `en`) with Pagefind filtering so Korean pages search Korean posts and English pages search English posts only.
@@ -32,3 +32,4 @@
   - Keep the initial JS near zero by initializing Pagefind only when needed.
   - Keep search focused on direct retrieval. Do not merge it with category/tag browsing or turn it into a discovery dashboard.
   - Do not expose extra filter UI or advanced search chrome that breaks the minimalist reading experience.
+  - Search results should reflect the same assembled display titles that readers see elsewhere on the site, so series subtitles remain searchable through rendered HTML and Pagefind indexing.

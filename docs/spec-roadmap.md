@@ -11,6 +11,8 @@
 
 - The core editorial identity, base layout, archive structure, post detail structure, search, and i18n foundation are already in place.
 - Discovery work has started and its first major step is complete: `/posts` now acts as a calmer archive hub with category-first browsing.
+- The post-to-post reading flow is now in place: series-aware navigation and related reading appear below articles without making the site feel heavier.
+- Shared assembled-title rules for series posts are now in place across detail pages, lists, related reading, and search-visible surfaces.
 - The remaining work should continue to deepen the blog's usability without making it feel heavier, louder, or more product-like.
 
 ## Priority Areas
@@ -22,10 +24,11 @@
   - Archive hub work is in place.
   - Category pages now act as shallow landing pages.
   - Tags remain secondary browse links.
+  - Post-to-post reading flow is in place.
 - **Next Likely Work**:
-  - Strengthen post-to-post reading flow after finishing an article.
   - Add lighter browse entry points from the home page.
-  - Continue refining browse structure without merging it with search.
+  - Continue refining category/tag browse structure without merging it with search.
+  - Polish discovery wording and signposting only when it makes the site feel clearer without making it louder.
 - **Avoid**:
   - Popularity widgets
   - Tag clouds
@@ -54,7 +57,7 @@
   - Article structure cues
   - Image captions and figure handling
   - Optional summary aids for suitable posts
-  - Additional reading guidance inside long technical posts
+  - Additional reading guidance inside long technical posts where the current flow is still too thin
 - **Direction**:
   - Prefer lightweight editorial aids over rigid templates.
   - Keep summaries optional rather than mandatory for every post.
