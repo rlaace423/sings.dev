@@ -169,7 +169,6 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 	const postHeaderStubPath = join(tempDir, "src", "components", "PostHeader.ts");
 	const postReadingFlowStubPath = join(tempDir, "src", "components", "PostReadingFlow.ts");
 	const tocStubPath = join(tempDir, "src", "components", "TOC.ts");
-	const authorStubPath = join(tempDir, "src", "components", "AuthorProfile.ts");
 	const commentsStubPath = join(tempDir, "src", "components", "Comments.ts");
 	const blogUtilsStubPath = join(tempDir, "src", "utils", "blog.ts");
 	const postReadingUtilsStubPath = join(tempDir, "src", "utils", "postReading.ts");
@@ -265,20 +264,6 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			),
 		);
 		await writeFile(
-			authorStubPath,
-			await compileAstroSource(
-				[
-					"---",
-					"const { lang = 'en' } = Astro.props;",
-					"---",
-					'<div data-author-profile={lang} />',
-					"",
-				].join("\n"),
-				join(tempDir, "AuthorProfileStub.astro"),
-				runtimeStubPath,
-			),
-		);
-		await writeFile(
 			commentsStubPath,
 			await compileAstroSource(
 				[
@@ -349,8 +334,6 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			["../../../components/PostReadingFlow.astro", "../../../components/PostReadingFlow.ts"],
 			["../../components/TOC.astro", "../../components/TOC.ts"],
 			["../../../components/TOC.astro", "../../../components/TOC.ts"],
-			["../../components/AuthorProfile.astro", "../../components/AuthorProfile.ts"],
-			["../../../components/AuthorProfile.astro", "../../../components/AuthorProfile.ts"],
 			["../../components/Comments.astro", "../../components/Comments.ts"],
 			["../../../components/Comments.astro", "../../../components/Comments.ts"],
 			["../../utils/blog.ts", "../../utils/blog.ts"],
