@@ -15,6 +15,7 @@
 - Shared assembled-title rules for series posts are now in place across detail pages, lists, related reading, and search-visible surfaces.
 - The remaining work should continue to deepen the blog's usability without making it feel heavier, louder, or more product-like.
 - `/about` now carries structured identity metadata (photo, summary, social links, experience) while the rest of the site stays text-first.
+- The home page now has a quiet Categories browse entry point; `관심사` / `Focus` prose is removed in favor of `/about` carrying identity copy.
 
 ## Priority Areas
 
@@ -26,8 +27,8 @@
   - Category pages now act as shallow landing pages.
   - Tags remain secondary browse links.
   - Post-to-post reading flow is in place.
+  - The home page now carries a quiet Categories block as a browse entry point (see `docs/spec-home-categories.md`).
 - **Next Likely Work**:
-  - Add lighter browse entry points from the home page.
   - Continue refining category/tag browse structure without merging it with search.
   - Polish discovery wording and signposting only when it makes the site feel clearer without making it louder.
 - **Avoid**:
