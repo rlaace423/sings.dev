@@ -14,6 +14,7 @@
 - The post-to-post reading flow is now in place: series-aware navigation and related reading appear below articles without making the site feel heavier.
 - Shared assembled-title rules for series posts are now in place across detail pages, lists, related reading, and search-visible surfaces.
 - The remaining work should continue to deepen the blog's usability without making it feel heavier, louder, or more product-like.
+- `/about` now carries structured identity metadata (photo, summary, social links, experience) while the rest of the site stays text-first.
 
 ## Priority Areas
 
@@ -42,9 +43,13 @@
   - Home page introduction
   - About page
   - Author presence around posts
+- **Current Status**:
+  - `/about` has landed as a structured identity + job-search surface with photo, summary, socials, and experience (see `docs/spec-about.md`).
+  - Home hero and Header identity treatment are not yet revised.
 - **Direction**:
   - Strengthen personality and authorship without drifting into branding or self-promotion.
   - Keep identity editorial and human, not corporate or portfolio-like.
+  - Home remains the "quiet front door"; resume-flavored content stays scoped to `/about`.
 - **Avoid**:
   - Marketing-style hero sections
   - Resume-site energy on the home page
