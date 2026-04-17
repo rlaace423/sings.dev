@@ -171,6 +171,14 @@ test("AboutIdentity uses the Korean experience heading for ko and the English on
 	assert.match(en, /Experience/);
 });
 
+test("AboutIdentity marks external social links with rel=me noopener and leaves mailto bare", async () => {
+	const rendered = await renderAboutIdentity(baseProps());
+	assert.match(rendered, /<a href="https:\/\/github\.com\/example"[^>]*rel="me noopener"/);
+	assert.match(rendered, /<a href="https:\/\/linkedin\.com\/in\/example"[^>]*rel="me noopener"/);
+	assert.match(rendered, /<a href="https:\/\/instagram\.com\/example"[^>]*rel="me noopener"/);
+	assert.doesNotMatch(rendered, /<a href="mailto:hello@example.com"[^>]*rel=/);
+});
+
 async function renderAboutPage(sourceUrl, pageEntry) {
 	const source = await readFile(sourceUrl, "utf8");
 	const compiled = await transform(source, {
