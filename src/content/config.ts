@@ -26,6 +26,35 @@ const pages = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string().optional(),
+		identity: z
+			.object({
+				summary: z.string(),
+				photo: z.object({
+					src: z.string(),
+					alt: z.string(),
+				}),
+				socials: z
+					.array(
+						z.object({
+							type: z.enum(["github", "email", "linkedin", "instagram"]),
+							href: z.string(),
+							label: z.string().optional(),
+						}),
+					)
+					.default([]),
+				experience: z
+					.array(
+						z.object({
+							company: z.string(),
+							role: z.string(),
+							start: z.string(),
+							end: z.string(),
+							description: z.string(),
+						}),
+					)
+					.default([]),
+			})
+			.optional(),
 	}),
 });
 
