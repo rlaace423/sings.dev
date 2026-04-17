@@ -74,6 +74,11 @@ export const getReadingTimeMinutes = (source: string) => {
 export const formatReadingTime = (minutes: number, lang: Locale) =>
 	lang === "ko" ? `${minutes}분 읽기` : `${minutes} min read`;
 
+export const getCountLabel = (count: number, lang: Locale) =>
+	lang === "ko"
+		? `${count}개의 글`
+		: `${count} ${count === 1 ? "post" : "posts"}`;
+
 export const slugifyTaxonomy = (value: string | null | undefined) =>
 	(value ?? "")
 		.toLowerCase()
