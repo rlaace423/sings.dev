@@ -30,14 +30,14 @@ Give the blog a first-class way to render images inside posts as captioned `<fig
 
 ### In scope
 
-- New remark plugin at `src/utils/remark-post-figure.mjs`, matching the existing `src/utils/` convention for non-component code (see `src/utils/blog.ts`).
+- New remark plugin at `src/utils/remarkPostFigure.ts`, matching the existing `src/utils/` convention for non-component code (see `src/utils/blog.ts`).
 - Plug the new plugin into `astro.config.mjs` under `markdown.remarkPlugins`.
 - Figure styling: a small block in `src/styles/global.css` covering `.prose figure`, `.prose figcaption`, and `.prose figure[data-width="wide"]`. Tailwind's `prose-*:` utilities cannot express the `data-width` attribute selector, so a CSS block is unavoidable.
 - Migrate all 22 existing posts under `src/content/blog/{ko,en}/` from `slug.md` to `slug/index.md`. Contents of each post are unchanged.
 - New example post `src/content/blog/ko/iam-policy-checklist/index.md` and `src/content/blog/en/iam-policy-checklist/index.md` with matching mock screenshot assets colocated in the same folder. The exact slug may be refined during implementation; this spec uses `iam-policy-checklist` as the canonical slug.
 - Tests:
-  - `tests/remark-post-figure.test.mjs` — exercise the plugin's four input cases (standalone captioned image, standalone wide image, standalone empty-alt image, inline image inside a paragraph) against their expected HTML.
-  - `tests/post-figures-showcase.test.mjs` — render the example post through Astro and assert that all four figure cases, the three code-block languages, the inline link, and the blockquote appear in the expected output shape.
+  - `tests/remark-post-figure.test.ts` — exercise the plugin's four input cases (standalone captioned image, standalone wide image, standalone empty-alt image, inline image inside a paragraph) against their expected HTML.
+  - `tests/post-figures-showcase.test.ts` — render the example post through Astro and assert that all four figure cases, the three code-block languages, the inline link, and the blockquote appear in the expected output shape.
   - Keep `tests/post-detail-structure.test.mjs` green under the new `slug/index.md` layout; adjust only if a path-based assertion breaks.
 - Documentation:
   - Update `docs/spec-post-detail.md` with a new "Figures" section describing the authoring syntax, width variants, and visual treatment.
@@ -219,8 +219,8 @@ A mockup of the light and dark V2 treatments was reviewed during brainstorming; 
 
 ## Test Plan
 
-- **`tests/remark-post-figure.test.mjs`** (new): construct small markdown inputs covering the four cases, run them through the plugin, and assert the resulting HTML matches the expected structure. Match by string regex where the output is stable (presence of `<figure>`, presence/absence of `<figcaption>`, presence/absence of `data-width="wide"`, fragment stripped from `src`, inline image left inside `<p>`).
-- **`tests/post-figures-showcase.test.mjs`** (new): use the same `@astrojs/compiler` + `experimental_AstroContainer` pattern already in the repo (see `tests/post-detail-structure.test.mjs`) to compile and render the example post's `[...slug]` route. Assert: four figure cases present in the correct shapes, three code-block `<pre>` elements with language classes, one blockquote, one `<a href>` pointing outside the site, and one `<a href>` pointing to another post's URL.
+- **`tests/remark-post-figure.test.ts`** (new): construct small markdown inputs covering the four cases, run them through the plugin, and assert the resulting HTML matches the expected structure. Match by string regex where the output is stable (presence of `<figure>`, presence/absence of `<figcaption>`, presence/absence of `data-width="wide"`, fragment stripped from `src`, inline image left inside `<p>`).
+- **`tests/post-figures-showcase.test.ts`** (new): use the same `@astrojs/compiler` + `experimental_AstroContainer` pattern already in the repo (see `tests/post-detail-structure.test.mjs`) to compile and render the example post's `[...slug]` route. Assert: four figure cases present in the correct shapes, three code-block `<pre>` elements with language classes, one blockquote, one `<a href>` pointing outside the site, and one `<a href>` pointing to another post's URL.
 - **`tests/post-detail-structure.test.mjs`** (existing): must stay green. If any file-path assertion inside it breaks because of the directory migration, update to the new layout; do not change what the test is validating.
 - **Smoke**: `npm run build` succeeds; `pagefind --site dist` re-indexes without error; the newly built site includes the example post in both locales' sitemaps.
 
