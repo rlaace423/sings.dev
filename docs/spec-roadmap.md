@@ -16,6 +16,7 @@
 - The remaining work should continue to deepen the blog's usability without making it feel heavier, louder, or more product-like.
 - `/about` now carries structured identity metadata (photo, summary, social links, experience) while the rest of the site stays text-first.
 - The home page now has a quiet Categories browse entry point; `관심사` / `Focus` prose is removed in favor of `/about` carrying identity copy.
+- Site-shell identity pass is in place: `SiteLogo` mark in the header, identity-forward hero eyebrow on the home pages, and a `Singing Developer` signature in the footer.
 
 ## Priority Areas
 
@@ -46,7 +47,8 @@
   - Author presence around posts
 - **Current Status**:
   - `/about` has landed as a structured identity + job-search surface with photo, summary, socials, and experience (see `docs/spec-about.md`).
-  - Home hero and Header identity treatment are not yet revised.
+  - The header now carries the `SiteLogo` microphone mark next to the `sings.dev` text, and the footer carries a `Singing Developer` signature (see `docs/spec-site-identity.md`).
+  - The home hero eyebrow has been repurposed as an identity + primary topic areas line; hero headline and body prose refinement is still outstanding.
 - **Direction**:
   - Strengthen personality and authorship without drifting into branding or self-promotion.
   - Keep identity editorial and human, not corporate or portfolio-like.
