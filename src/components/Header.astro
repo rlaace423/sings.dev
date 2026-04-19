@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import SiteLogo from "./SiteLogo.astro";
 import {
 	defaultLocale,
 	type Locale,
@@ -39,20 +40,21 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 	<div class="mx-auto flex w-full max-w-4xl items-center justify-between gap-6 px-4 py-6 sm:px-6">
 		<a
 			href={homeHref}
-			class="text-base font-semibold tracking-tight text-stone-950 transition-colors hover:text-stone-700 dark:text-stone-50 dark:hover:text-stone-300"
+			class="inline-flex items-center gap-2 text-base font-semibold tracking-tight text-stone-950 transition-colors hover:text-stone-700 dark:text-stone-50 dark:hover:text-stone-300"
 		>
-			sings.dev
+			<SiteLogo />
+			<span>sings.dev</span>
 		</a>
 
-		<div class="flex items-center gap-3">
+		<div class="flex items-center gap-2 sm:gap-3">
 			<nav aria-label="Primary">
-				<ul class="flex items-center gap-5 text-sm text-stone-600 dark:text-stone-300">
+				<ul class="flex items-center gap-4 sm:gap-5 text-sm text-stone-600 dark:text-stone-300">
 					{
 						navItems.map((item) => (
 							<li>
 								<a
 									href={item.href}
-									class="transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="whitespace-nowrap transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
 									{item.label}
 								</a>
