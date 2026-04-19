@@ -20,7 +20,7 @@
   - Each locale fetches recent posts from its matching content folder only.
   - The page should orient a reader gently and quickly, with the writing remaining more important than any hero treatment.
   - Each home page contains, in order:
-    - A short hero/introduction section.
+    - A short hero/introduction section. The hero eyebrow reads as an identity + primary topic areas line (e.g., `Singing Developer — Backend · MPC · Infrastructure`); the exact copy may be refined in future hero passes. See `docs/spec-site-identity.md`.
     - A Categories block (`src/components/HomeCategories.astro`) acting as a quiet browse entry point into category pages. See `docs/spec-home-categories.md`.
     - A recent posts section showing the latest 3 to 5 posts.
   - Reuse the same quiet, text-first list style as the archive page.
