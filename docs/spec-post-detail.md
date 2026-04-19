@@ -56,3 +56,22 @@
     - Use a single-column layout.
     - Render the TOC above the article body in a native `<details>` / `<summary>` block.
     - Start the article body below the header with `mt-10` spacing.
+
+## Figures in Post Bodies
+
+- **Authoring convention**:
+  - `![caption text](./image.png)` on its own line renders as a `<figure>` with the caption text used as both the `alt` attribute and the `<figcaption>` content.
+  - `![caption text](./image.png#wide)` renders the same figure but with `data-width="wide"`, which at `md:` and up bleeds roughly 64px outside the prose column on each side. Below `md:` the figure falls back to column width.
+  - `![](./image.png)` (empty alt) renders a bare decorative `<img alt="">` with no `<figure>` wrapping and no caption.
+  - An image that shares a paragraph with other text (an inline image) is left untouched and stays inside that paragraph.
+- **File layout**:
+  - Every post lives as `src/content/blog/<locale>/<slug>/index.md`.
+  - Images for a post live in the same folder as `index.md`, referenced with relative paths like `./image.png` from the post body.
+- **Visual treatment**:
+  - Images get a 1px `stone-200` (light) / `stone-800` (dark) border and a 6px radius. No shadow, no background tint.
+  - Captions are italic, `text-sm`, center-aligned, with `stone-500` (light) / `stone-400` (dark) text.
+  - Dark mode does not invert or dim the image itself — the frame alone handles contrast.
+- **Implementation location**:
+  - The authoring-to-HTML transformation happens in `src/utils/remarkPostFigure.ts`, wired in through `astro.config.mjs`'s `markdown.remarkPlugins`.
+  - The visual rules live in `src/styles/global.css` as `.prose figure`, `.prose figure img`, `.prose figcaption`, and `.prose figure[data-width="wide"]`.
+  - Post ID normalization for folder-form posts happens in `stripLocaleFromId` (`src/utils/blog.ts`), which strips the trailing `/index` segment so URLs stay the same as the flat-file layout.
