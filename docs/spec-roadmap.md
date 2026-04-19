@@ -17,6 +17,7 @@
 - `/about` now carries structured identity metadata (photo, summary, social links, experience) while the rest of the site stays text-first.
 - The home page now has a quiet Categories browse entry point; `관심사` / `Focus` prose is removed in favor of `/about` carrying identity copy.
 - Site-shell identity pass is in place: `SiteLogo` mark in the header, identity-forward hero eyebrow on the home pages, and a `Singing Developer` signature in the footer.
+- Post bodies now support captioned figures: standalone markdown images are promoted to `<figure>` with the alt text reused as the caption, a `#wide` url fragment bleeds the figure outside the prose column on desktop, and every post now lives as a folder so images can co-locate with their post. See `docs/spec-post-detail.md` for the full figure rules.
 
 ## Priority Areas
 
@@ -61,9 +62,10 @@
 ### 3. In-Post Reading Experience
 
 - **Intent**: Make long posts easier to scan, understand, and stay with while preserving the writing's rhythm.
-- **Likely Surfaces**:
+- **Current Status**:
+  - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment, and `src/content/blog/{ko,en}/iam-policy-checklist/` for a coverage-fixture example post.
+- **Remaining Surfaces**:
   - Article structure cues
-  - Image captions and figure handling
   - Optional summary aids for suitable posts
   - Additional reading guidance inside long technical posts where the current flow is still too thin
 - **Direction**:
