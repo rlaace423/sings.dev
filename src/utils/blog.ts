@@ -29,7 +29,11 @@ export const matchesLocale = (id: string, locale: Locale) =>
 	id.startsWith(`${locale}/`);
 
 export const stripLocaleFromId = (id: string) =>
-	id.split("/").slice(1).join("/");
+	id
+		.split("/")
+		.slice(1)
+		.join("/")
+		.replace(/\/index$/, "");
 
 const getSeriesMetadata = (post: BlogPost): SeriesMetadata | null =>
 	post.data.series ?? null;
