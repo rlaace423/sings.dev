@@ -50,17 +50,6 @@ function findSoleImage(paragraph: ParagraphLike): ImageLike | null {
 	return image;
 }
 
-function renderDecorative(src: string): string {
-	return `<img src="${escapeHtml(src)}" alt="">`;
-}
-
-function renderFigure(src: string, alt: string, isWide: boolean): string {
-	const attrs = isWide ? ' data-width="wide"' : "";
-	const safeSrc = escapeHtml(src);
-	const safeAlt = escapeHtml(alt);
-	return `<figure${attrs}><img src="${safeSrc}" alt="${safeAlt}"><figcaption>${safeAlt}</figcaption></figure>`;
-}
-
 export default function remarkPostFigure() {
 	return function transform(tree: RootLike): void {
 		const children = tree.children;
@@ -73,23 +62,34 @@ export default function remarkPostFigure() {
 			const alt = typeof image.alt === "string" ? image.alt : "";
 			const rawUrl = typeof image.url === "string" ? image.url : "";
 
-			let url = rawUrl;
+			// Strip the #wide fragment so Astro's asset pipeline receives a clean path.
 			let isWide = false;
+			let cleanUrl = rawUrl;
 			const hashIndex = rawUrl.indexOf("#");
-			if (hashIndex !== -1) {
-				const fragment = rawUrl.slice(hashIndex + 1);
-				if (fragment === "wide") {
-					isWide = true;
-					url = rawUrl.slice(0, hashIndex);
-				}
+			if (hashIndex !== -1 && rawUrl.slice(hashIndex + 1) === "wide") {
+				isWide = true;
+				cleanUrl = rawUrl.slice(0, hashIndex);
+			}
+			image.url = cleanUrl;
+
+			if (alt === "") {
+				// Decorative: replace the paragraph with the image alone. No figure wrap.
+				children.splice(i, 1, image);
+				// Index stays the same — we replaced one node with one node.
+				continue;
 			}
 
-			const value = alt === "" ? renderDecorative(url) : renderFigure(url, alt, isWide);
+			// Figure: wrap the image between two raw-HTML siblings so Astro still
+			// resolves the image's url through the asset pipeline.
+			const openTag = isWide ? '<figure data-width="wide">' : "<figure>";
+			const closeFragment = `<figcaption>${escapeHtml(alt)}</figcaption></figure>`;
+			const openNode: MdastNode = { type: "html", value: openTag };
+			const closeNode: MdastNode = { type: "html", value: closeFragment };
 
-			children[i] = {
-				type: "html",
-				value,
-			};
+			children.splice(i, 1, openNode, image, closeNode);
+			// We replaced one node with three; advance the index by 2 extra so the
+			// next iteration lands on the node after the inserted sequence.
+			i += 2;
 		}
 	};
 }
