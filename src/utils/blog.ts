@@ -25,6 +25,11 @@ export const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 export const sortPostsByDate = (posts: BlogPost[]) =>
 	[...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
+export const isVisiblePost = (
+	post: BlogPost,
+	isDev: boolean = Boolean(import.meta.env?.DEV),
+): boolean => isDev || post.data.draft !== true;
+
 export const matchesLocale = (id: string, locale: Locale) =>
 	id.startsWith(`${locale}/`);
 
