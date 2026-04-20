@@ -6,6 +6,7 @@ import PostList from "../../components/PostList.astro";
 import { getArchiveBrowseConfig, getCategoryDescription } from "../../data/archiveBrowse";
 import { getCollection } from "astro:content";
 import {
+	isVisiblePost,
 	matchesLocale,
 	normalizeTaxonomyTags,
 	sortPostsByDate,
@@ -14,7 +15,7 @@ import {
 } from "../../utils/blog";
 
 const posts = sortPostsByDate(
-	await getCollection("blog", ({ id }) => matchesLocale(id, "ko")),
+	await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post)),
 );
 const browseConfig = getArchiveBrowseConfig("ko");
 const categoryCounts = posts.reduce((counts, post) => {

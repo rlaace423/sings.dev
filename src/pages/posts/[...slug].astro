@@ -11,6 +11,7 @@ import {
 	getDisplayTitle,
 	getReadingTimeMinutes,
 	getSeriesListLabel,
+	isVisiblePost,
 	matchesLocale,
 	sortPostsByDate,
 	stripLocaleFromId,
@@ -18,7 +19,7 @@ import {
 import { getRelatedPosts, getSeriesNavigation } from "../../utils/postReading";
 
 export async function getStaticPaths() {
-	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
+	const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
 
 	return posts.map((post) => ({
 		params: { slug: stripLocaleFromId(post.id) },
@@ -30,7 +31,7 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTimeMinutes = getReadingTimeMinutes(post.body);
 const localePosts = sortPostsByDate(
-	await getCollection("blog", ({ id }) => matchesLocale(id, "ko")),
+	await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post)),
 );
 const seriesNavigation = getSeriesNavigation(localePosts, post);
 const relatedPosts = getRelatedPosts(localePosts, post);

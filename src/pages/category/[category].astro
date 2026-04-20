@@ -6,6 +6,7 @@ import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
 import {
 	getTopTagsForPosts,
+	isVisiblePost,
 	matchesLocale,
 	normalizeTaxonomyTags,
 	slugifyTaxonomy,
@@ -14,7 +15,7 @@ import {
 } from "../../utils/blog";
 
 export async function getStaticPaths() {
-	const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
+	const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
 	const categories = uniqueCategories(posts);
 
 	return categories.map((category) => ({

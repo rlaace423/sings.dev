@@ -5,13 +5,14 @@ import HomeCategories from "../components/HomeCategories.astro";
 import Layout from "../layouts/Layout.astro";
 import {
 	getDisplayTitle,
+	isVisiblePost,
 	matchesLocale,
 	sortPostsByDate,
 	stripLocaleFromId,
 	uniqueCategories,
 } from "../utils/blog";
 
-const posts = await getCollection("blog", ({ id }) => matchesLocale(id, "ko"));
+const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
 const recentPosts = sortPostsByDate(posts).slice(0, 5);
 const categoryCounts = posts.reduce((counts, post) => {
 	const category = post.data.category;
