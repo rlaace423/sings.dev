@@ -12,6 +12,7 @@
     - `description` (string)
     - `category` (string, required)
     - `tags` (array of strings, optional)
+    - `draft` (boolean, optional, defaults to `false`) — see `docs/spec-drafts.md`
     - `series` (object, optional)
       - `id` (string)
       - `index` (positive integer)
