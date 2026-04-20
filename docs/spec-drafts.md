@@ -1,0 +1,22 @@
+# Spec: Draft Mode
+
+- **Goal**: Let the author stage blog posts in-repo without publishing them. A post with `draft: true` renders under `astro dev` and is fully hidden under `astro build`.
+- **Reference Philosophy**: Follow `docs/spec-editorial-philosophy.md`. Drafts must stay silent in production; the site exposes no "draft" badge, no preview route, and no affordance that hints at their existence to readers.
+- **Schema**:
+  - `draft` is an optional boolean field on the `blog` collection schema (`src/content/config.ts`).
+  - Default is `false`, so existing posts that do not set the field continue to ship as published.
+- **Dev vs Build Contract**:
+  - Under `astro dev` (`import.meta.env.DEV === true`), drafts render everywhere — home recent list, archive, category and tag pages, post detail route, related reading suggestions, and series navigation.
+  - Under `astro build` (production), drafts are excluded from every public surface. Their detail routes are not emitted by `getStaticPaths`, which in turn keeps them out of Pagefind and `@astrojs/sitemap` without any integration-level configuration.
+  - There is no third mode, preview token, or auth-gated `/drafts` route.
+- **Implementation Surface**:
+  - Shared helper `isVisiblePost(post, isDev?)` in `src/utils/blog.ts`. Defaults `isDev` to `import.meta.env.DEV` and returns `true` when either the build is dev or the post is not a draft.
+  - Every blog-reading page calls `getCollection("blog", (post) => matchesLocale(post.id, <lang>) && isVisiblePost(post))`. Downstream helpers (`sortPostsByDate`, `uniqueCategories`, `uniqueTags`, `getRelatedPosts`, `getSeriesNavigation`, category-count reducers) consume the already-filtered list.
+- **Editorial Guardrails**:
+  - Do not render a "DRAFT" badge, banner, or label anywhere, including under `astro dev`. The author reviews drafts in their real reading presentation.
+  - Do not introduce a production preview route, link, or query parameter that reveals drafts.
+  - Do not move drafts into a separate content directory. The frontmatter field is the only marker.
+- **What To Avoid**:
+  - A `DRAFT_PREVIEW=1` env flag that leaks drafts into production.
+  - A separate preview build target or deploy pipeline for drafts.
+  - Silently unpublishing existing posts by changing the default to `true`.
