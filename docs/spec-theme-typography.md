@@ -22,6 +22,7 @@
   - Fallback chain: `"Pretendard Std Variable", "Pretendard Std", "Pretendard", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif`.
   - Loading: `font-display: swap`; preloaded in `src/layouts/Layout.astro` so first paint swaps to Pretendard as early as the network allows.
   - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
+  - Exception: `.prose figcaption` in dark mode uses `night-300` (#737aa2) rather than the `night-400` (#565f89) that the Color Mapping Table would derive from `stone-500`. `night-400` on `night-800` body achieves only ~3:1 contrast — insufficient for WCAG AA on small italic text — whereas `night-300` reaches ~4.5:1 and passes AA. The deviation is intentional for accessibility.
 - **Guardrails**:
   - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
   - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.

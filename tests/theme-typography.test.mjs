@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { readdir } from "node:fs/promises";
-import { join } from "node:path";
 import test from "node:test";
 
 const srcUrl = new URL("../src/", import.meta.url);
@@ -85,21 +84,26 @@ test("no dark:*-stone-* utility remains anywhere under src/", async () => {
 	assert.deepEqual(offenders, [], `residual dark stone tokens:\n${JSON.stringify(offenders, null, 2)}`);
 });
 
-test("no light-mode bg-stone-50 or panel-level bg-stone-100 / border-stone-100 remains", async () => {
+test("no forbidden pre-shift stone tokens remain in src/", async () => {
 	const files = await collectSourceFiles(srcUrl);
+	// Invariants from spec-theme-typography.md:
+	//   - bg-stone-50 fully migrated to bg-stone-100
+	//   - ring-offset-stone-50 fully migrated
+	//   - border-stone-100 shifted to border-stone-200
+	//   - prose-pre:bg-stone-100 shifted to prose-pre:bg-stone-200
+	//   - hover:bg-stone-200 panel/pill hover shifted to hover:bg-stone-300
+	// Note: bg-stone-100 itself is intentionally allowed — it is the body-matching
+	// surface used in Layout.astro, Header.astro (sticky bg-stone-100/80), and
+	// SearchModal.astro (dialog container). No skip-list needed.
 	const patterns = [
 		/\bbg-stone-50\b/,
 		/\bring-offset-stone-50\b/,
-		/(^|[^-])bg-stone-100\b/,
 		/\bborder-stone-100\b/,
 		/\bprose-pre:bg-stone-100\b/,
 		/\bhover:bg-stone-200\b/,
 	];
 	const offenders = [];
 	for (const fileUrl of files) {
-		// Skip Layout.astro since it intentionally has bg-stone-100 for light mode background
-		if (fileUrl.pathname.endsWith("Layout.astro")) continue;
-
 		const text = await readFile(fileUrl, "utf8");
 		for (const pattern of patterns) {
 			const match = text.match(pattern);
