@@ -54,7 +54,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 												`category/${slugifyTaxonomy(post.data.category)}`,
 											)
 								}
-								class="rounded-full border border-stone-200 px-3 py-1 text-stone-700 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-200 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+								class="rounded-full border border-stone-200 px-3 py-1 text-stone-700 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-200 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 							>
 								{post.data.category ?? "Uncategorized"}
 							</a>
@@ -69,7 +69,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 									lang,
 									`posts/${stripLocaleFromId(post.id)}`,
 								)}
-								class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-300 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+								class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-300 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 							>
 								{getDisplayTitle(post)}
 							</a>
@@ -93,7 +93,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 																`tags/${slugifyTaxonomy(tag)}`,
 															)
 												}
-												class="inline-flex rounded-full bg-stone-100 px-3 py-1 text-sm text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+												class="inline-flex rounded-full bg-stone-200 px-3 py-1 text-sm text-stone-600 transition-colors hover:bg-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 											>
 												#{tag}
 											</a>

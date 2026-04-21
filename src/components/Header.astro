@@ -35,7 +35,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 
 <header
 	data-smart-header
-	class="sticky top-0 z-40 border-b border-stone-200 bg-stone-50/80 backdrop-blur-md transition-transform duration-300 dark:border-stone-800 dark:bg-stone-950/80"
+	class="sticky top-0 z-40 border-b border-stone-200 bg-stone-200/80 backdrop-blur-md transition-transform duration-300 dark:border-stone-800 dark:bg-stone-950/80"
 >
 	<div class="mx-auto flex w-full max-w-4xl items-center justify-between gap-6 px-4 py-6 sm:px-6">
 		<a
@@ -54,7 +54,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 							<li>
 								<a
 									href={item.href}
-									class="whitespace-nowrap transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="whitespace-nowrap transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
 									{item.label}
 								</a>
@@ -70,7 +70,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 				aria-haspopup="dialog"
 				aria-controls="global-search-modal"
 				aria-label={t("nav.search")}
-				class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 			>
 				<svg
 					class="h-4 w-4"
@@ -89,7 +89,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 
 			<a
 				href={switchHref}
-				class="inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-stone-200 px-3 text-xs font-semibold tracking-[0.14em] text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+				class="inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-stone-200 px-3 text-xs font-semibold tracking-[0.14em] text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 				aria-label={`Switch language to ${labels[targetLocale]}`}
 			>
 				{targetLocale.toUpperCase()}
@@ -100,7 +100,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 				data-theme-toggle
 				aria-pressed="false"
 				aria-label="Switch to dark mode"
-				class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 			>
 				<span class="sr-only" data-theme-label>Switch to dark mode</span>
 				<svg

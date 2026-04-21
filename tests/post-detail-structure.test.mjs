@@ -404,7 +404,7 @@ test("TOC renders a quieter, easier-to-scan list", async () => {
 	);
 	assert.match(
 		rendered,
-		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="block leading-6 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
+		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="block leading-6 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
 	);
 });
 

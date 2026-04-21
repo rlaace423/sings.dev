@@ -57,10 +57,10 @@ const getTagLink = (tag: string) =>
 				<ul class="space-y-3">
 					{
 						categories.map((category) => (
-							<li class="border-b border-stone-100 pb-3 last:border-0 last:pb-0 dark:border-stone-800/80">
+							<li class="border-b border-stone-200 pb-3 last:border-0 last:pb-0 dark:border-stone-800/80">
 								<a
 									href={getCategoryLink(category.name)}
-									class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
 									<div class="space-y-1">
 										<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-stone-50 dark:group-hover:text-stone-200">
@@ -93,7 +93,7 @@ const getTagLink = (tag: string) =>
 							<li>
 								<a
 									href={getTagLink(tag)}
-									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
 								>
 									#{tag}
 								</a>
