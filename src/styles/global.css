@@ -57,3 +57,25 @@
 		margin-right: -4rem;
 	}
 }
+
+/*
+ * Shiki dual-theme class-based dark mode override.
+ * Astro's default markdown highlighter (Shiki) applies the configured light
+ * theme inline on pre/span elements and exposes the dark theme through
+ * --shiki-dark-* CSS custom properties. Because this site uses a `.dark`
+ * class on <html> (not prefers-color-scheme media queries) to switch modes,
+ * we re-apply the dark theme tokens via explicit rules whenever that class
+ * is present. Target both `.astro-code` (Astro's wrapper class) and `.shiki`
+ * (Shiki's own class) so the override stays robust across highlighter
+ * configurations.
+ */
+html.dark .astro-code,
+html.dark .astro-code span,
+html.dark .shiki,
+html.dark .shiki span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+	font-style: var(--shiki-dark-font-style) !important;
+	font-weight: var(--shiki-dark-font-weight) !important;
+	text-decoration: var(--shiki-dark-text-decoration) !important;
+}

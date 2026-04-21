@@ -15,6 +15,12 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkPostFigure],
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "tokyo-night",
+      },
+    },
   },
   vite: {
     plugins: [tailwindcss()],

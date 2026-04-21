@@ -22,6 +22,12 @@
   - Fallback chain: `"Pretendard Std Variable", "Pretendard Std", "Pretendard", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif`.
   - Loading: `font-display: swap`; preloaded in `src/layouts/Layout.astro` so first paint swaps to Pretendard as early as the network allows.
   - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
+- **Code Block Syntax Highlighting**:
+  - Astro's built-in Shiki highlighter is configured in `astro.config.mjs` with a dual-theme pair.
+  - Light theme: `github-light` — neutral, widely recognized, pairs cleanly with the warm `stone-100` body without competing for attention.
+  - Dark theme: `tokyo-night` — Shiki's built-in Tokyo Night theme; the same palette family the site's dark UI already uses, so code blocks and surrounding chrome read as one surface.
+  - `src/styles/global.css` carries a `.dark .astro-code` / `.dark .shiki` override that re-applies the dark theme tokens via the `--shiki-dark-*` CSS variables, since the site toggles dark mode through a `.dark` class on `<html>` rather than `prefers-color-scheme`.
+  - Unknown language fences render as plain `<pre><code>` (no highlighting, no build error); any of Shiki's ~250 supported language IDs can be used by name without further configuration.
 - **Guardrails**:
   - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
   - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.
