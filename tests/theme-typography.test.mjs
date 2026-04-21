@@ -24,7 +24,7 @@ test("global.css @theme block declares font-sans and the eleven night tokens", a
 		["100", "#a9b1d6"],
 		["200", "#9aa5ce"],
 		["300", "#737aa2"],
-		["400", "#565f89"],
+		["400", "#8891b8"],
 		["500", "#414868"],
 		["600", "#3b4261"],
 		["700", "#292e42"],
@@ -41,7 +41,33 @@ test("global.css @theme block declares font-sans and the eleven night tokens", a
 test("global.css :where(.dark) figure rules reference night colors", async () => {
 	const css = await readFile(globalCssUrl, "utf8");
 	assert.match(css, /:where\(\.dark\) \.prose figure img[^}]*border-color:\s*rgb\(59 66 97 \/ 1\)/);
-	assert.match(css, /:where\(\.dark\) \.prose figcaption[^}]*color:\s*rgb\(115 122 162 \/ 1\)/);
+	assert.match(css, /:where\(\.dark\) \.prose figcaption[^}]*color:\s*rgb\(136 145 184 \/ 1\)/);
+});
+
+test("dark-mode muted text (night-400) clears WCAG AA 4.5:1 on night-800 body", async () => {
+	const css = await readFile(globalCssUrl, "utf8");
+	function hexFromToken(token) {
+		const match = css.match(new RegExp(`--color-${token}:\\s*(#[0-9a-f]{6})`, "i"));
+		assert.ok(match, `missing --color-${token}`);
+		return match[1];
+	}
+	function relLum(hex) {
+		const n = parseInt(hex.replace("#", ""), 16);
+		const channels = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255);
+		const lin = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+		return 0.2126 * lin(channels[0]) + 0.7152 * lin(channels[1]) + 0.0722 * lin(channels[2]);
+	}
+	function contrast(a, b) {
+		const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
+		return (hi + 0.05) / (lo + 0.05);
+	}
+	const muted = hexFromToken("night-400");
+	const body = hexFromToken("night-800");
+	const ratio = contrast(muted, body);
+	assert.ok(
+		ratio >= 4.5,
+		`night-400 (${muted}) on night-800 (${body}) is ${ratio.toFixed(2)}:1; needs >= 4.5:1 for WCAG AA on normal text`,
+	);
 });
 
 test("Layout.astro preloads the Pretendard font and uses the new palette + sans stack", async () => {

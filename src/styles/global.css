@@ -20,7 +20,7 @@
 	--color-night-100: #a9b1d6;
 	--color-night-200: #9aa5ce;
 	--color-night-300: #737aa2;
-	--color-night-400: #565f89;
+	--color-night-400: #8891b8;
 	--color-night-500: #414868;
 	--color-night-600: #3b4261;
 	--color-night-700: #292e42;
@@ -49,7 +49,7 @@
 	color: rgb(120 113 108 / 1); /* stone-500 */
 }
 :where(.dark) .prose figcaption {
-	color: rgb(115 122 162 / 1); /* night-300 */
+	color: rgb(136 145 184 / 1); /* night-400 */
 }
 @media (min-width: 768px) {
 	.prose figure[data-width="wide"] {

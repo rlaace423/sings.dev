@@ -12,7 +12,7 @@
   - Secondary surfaces (cards, panels, post-reading blocks, filter inactive state): `night-900` (#1f2335).
   - Hover bg for interactive panels: `night-700` (#292e42).
   - Deepest tone (`night-950`, #16161e) reserved for rare emphasis; not used by default in this iteration.
-  - Text: `night-50` (#c0caf5) primary, `night-200` (#9aa5ce) secondary, `night-400` (#565f89) muted.
+  - Text: `night-50` (#c0caf5) primary, `night-200` (#9aa5ce) secondary, `night-400` (#8891b8) muted. `night-400` deviates from Tokyo Night Storm's canonical `#565f89` so that muted small text (eyebrows, labels, figcaptions) reaches ~4.7:1 on the `night-800` body and clears WCAG AA for normal-size text. The Storm value is only ~2.4:1 on the same body and fails AA for everything except decorative chrome. All other `night` tones stay on Storm canon.
   - Border and hairline: `night-600` (#3b4261).
   - Focus ring: `night-500` (#414868).
   - Filter-toggle inversion highlight: `night-50` bg with `night-900` text (mirrors the light-mode flip that uses `stone-900` bg with `stone-50` text).
@@ -22,7 +22,6 @@
   - Fallback chain: `"Pretendard Std Variable", "Pretendard Std", "Pretendard", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif`.
   - Loading: `font-display: swap`; preloaded in `src/layouts/Layout.astro` so first paint swaps to Pretendard as early as the network allows.
   - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
-  - Exception: `.prose figcaption` in dark mode uses `night-300` (#737aa2) rather than the `night-400` (#565f89) that the Color Mapping Table would derive from `stone-500`. `night-400` on `night-800` body achieves only ~3:1 contrast — insufficient for WCAG AA on small italic text — whereas `night-300` reaches ~4.5:1 and passes AA. The deviation is intentional for accessibility.
 - **Guardrails**:
   - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
   - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.
