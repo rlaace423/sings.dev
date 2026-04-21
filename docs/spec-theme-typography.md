@@ -1,0 +1,33 @@
+# Spec: Theme and Typography
+
+- **Goal**: Describe the site's palette and typeface choices so future theme or font work stays aligned with the editorial voice.
+- **Reference Philosophy**: Follow `docs/spec-editorial-philosophy.md`. Both palettes and the typeface must reinforce the "quiet, text-first" feel — no pure white, no pure black, no loud accent colors.
+- **Light Palette**:
+  - Body background: `stone-100` (#f5f5f4). Chosen over `stone-50` so the reading surface feels like paper rather than a bright screen.
+  - Text: `stone-900` primary, `stone-600` secondary, `stone-500` muted.
+  - Border and hairline: `stone-200`.
+  - Panel surfaces (tag pills, code blocks, filter toggles, ArchiveBrowse row borders): `stone-200` bg with `stone-300` hover so they remain visibly distinct against the `stone-100` body.
+- **Dark Palette**: custom `night` family declared in `src/styles/global.css` via `@theme`. Inspired by the Tokyo Night Storm variant.
+  - Primary body bg: `night-800` (#24283b). `night-800` is the lightest "dark" tone in the family; Storm uses it as the main writing surface.
+  - Secondary surfaces (cards, panels, post-reading blocks, filter inactive state): `night-900` (#1f2335).
+  - Hover bg for interactive panels: `night-700` (#292e42).
+  - Deepest tone (`night-950`, #16161e) reserved for rare emphasis; not used by default in this iteration.
+  - Text: `night-50` (#c0caf5) primary, `night-200` (#9aa5ce) secondary, `night-400` (#565f89) muted.
+  - Border and hairline: `night-600` (#3b4261).
+  - Focus ring: `night-500` (#414868).
+  - Filter-toggle inversion highlight: `night-50` bg with `night-900` text (mirrors the light-mode flip that uses `stone-900` bg with `stone-50` text).
+- **Typeface**:
+  - Primary sans stack: self-hosted `Pretendard Std Variable` (variable woff2, 285 KB, KS X 1001 Korean coverage, hybrid Latin design).
+  - Monospace stack: Tailwind default (`ui-monospace, ...`); retained for `<code>` and `<pre>` only.
+  - Fallback chain: `"Pretendard Std Variable", "Pretendard Std", "Pretendard", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif`.
+  - Loading: `font-display: swap`; preloaded in `src/layouts/Layout.astro` so first paint swaps to Pretendard as early as the network allows.
+  - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
+- **Guardrails**:
+  - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
+  - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.
+  - No inline `style="color: ..."` overrides. All palette values flow through Tailwind utilities or the `@theme` tokens.
+  - Do not remap `stone-200` / `stone-500` / `stone-900` usages in light mode. The single `stone-50 → stone-100` body shift plus the panel side-effect shifts are the entire light-mode delta.
+- **What To Avoid**:
+  - Adding a CDN font (jsDelivr, Google Fonts) — the project self-hosts Pretendard and has no runtime external font dependency.
+  - Introducing a `font-serif` utility or class anywhere; body copy stays on the sans stack.
+  - Adding more tones to the `night` family than the eleven already declared. If a specific element needs a tone we don't have, first verify it's not solvable by an existing token at a different step.
