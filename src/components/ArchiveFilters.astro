@@ -20,11 +20,11 @@ const {
 } = Astro.props;
 ---
 
-<section class="mt-8 space-y-4 border-t border-stone-200 pt-6 dark:border-stone-800">
+<section class="mt-8 space-y-4 border-t border-stone-200 pt-6 dark:border-night-600">
 	<div class="max-w-sm space-y-2">
 		<label
 			for="category-filter"
-			class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500"
+			class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-night-400"
 		>
 			{categoryLabel}
 		</label>
@@ -33,7 +33,7 @@ const {
 				id="category-filter"
 				data-category-filter
 				aria-label={categoryAriaLabel}
-				class="w-full appearance-none rounded-xl border border-stone-200 bg-white px-3 py-2.5 pr-10 text-sm text-stone-700 outline-none transition-colors focus:border-stone-300 dark:border-stone-800 dark:bg-stone-950 dark:text-stone-200 dark:focus:border-stone-700"
+				class="w-full appearance-none rounded-xl border border-stone-200 bg-white px-3 py-2.5 pr-10 text-sm text-stone-700 outline-none transition-colors focus:border-stone-300 dark:border-night-600 dark:bg-night-800 dark:text-night-200 dark:focus:border-night-500"
 			>
 				<option value="">{allCategoriesLabel}</option>
 				{
@@ -43,7 +43,7 @@ const {
 				}
 			</select>
 			<svg
-				class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500 dark:text-stone-500"
+				class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500 dark:text-night-400"
 				viewBox="0 0 20 20"
 				fill="currentColor"
 				aria-hidden="true"
@@ -58,7 +58,7 @@ const {
 	</div>
 
 	<div class="space-y-3">
-		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
 			{tagsLabel}
 		</p>
 		<ul class="flex flex-wrap gap-2">
@@ -69,7 +69,7 @@ const {
 							type="button"
 							data-tag-filter={slugifyTaxonomy(tag)}
 							aria-pressed="false"
-							class="inline-flex rounded-full bg-stone-200 px-2.5 py-1 text-xs text-stone-600 transition-colors hover:bg-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+							class="inline-flex rounded-full bg-stone-200 px-2.5 py-1 text-xs text-stone-600 transition-colors hover:bg-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:bg-night-900 dark:text-night-200 dark:hover:bg-night-700 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
 							#{tag}
 						</button>

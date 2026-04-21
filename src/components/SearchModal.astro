@@ -30,24 +30,24 @@ const t = useTranslations(lang);
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="global-search-title"
-			class="overflow-hidden rounded-3xl border border-stone-200 bg-stone-200 shadow-2xl shadow-black/20 dark:border-stone-800 dark:bg-stone-950"
+			class="overflow-hidden rounded-3xl border border-stone-200 bg-stone-200 shadow-2xl shadow-black/20 dark:border-night-600 dark:bg-night-800"
 		>
-			<div class="flex items-center justify-between gap-4 border-b border-stone-200 px-5 py-4 dark:border-stone-800">
+			<div class="flex items-center justify-between gap-4 border-b border-stone-200 px-5 py-4 dark:border-night-600">
 				<div class="space-y-1">
 					<h2
 						id="global-search-title"
-						class="text-lg font-semibold tracking-tight text-stone-950 dark:text-stone-50"
+						class="text-lg font-semibold tracking-tight text-stone-950 dark:text-night-50"
 					>
 						{t("search.title")}
 					</h2>
-					<p class="text-sm text-stone-500 dark:text-stone-400">{t("search.hint")}</p>
+					<p class="text-sm text-stone-500 dark:text-night-300">{t("search.hint")}</p>
 				</div>
 
 				<button
 					type="button"
 					data-search-close
 					aria-label={t("search.close")}
-					class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+					class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-night-600 dark:text-night-200 dark:hover:border-night-500 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 				>
 					<svg
 						class="h-4 w-4"
@@ -67,7 +67,7 @@ const t = useTranslations(lang);
 
 			<div class="px-5 py-5 sm:px-6 sm:py-6">
 				<p
-					class="hidden text-sm text-stone-500 dark:text-stone-400"
+					class="hidden text-sm text-stone-500 dark:text-night-300"
 					data-search-status
 					aria-live="polite"
 				></p>

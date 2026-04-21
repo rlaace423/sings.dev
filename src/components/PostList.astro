@@ -29,7 +29,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 
 {
 	posts.length > 0 ? (
-		<ul class="divide-y divide-stone-200 border-t border-stone-200 dark:divide-stone-800 dark:border-stone-800">
+		<ul class="divide-y divide-stone-200 border-t border-stone-200 dark:divide-night-600 dark:border-night-600">
 			{posts.map((post) => (
 				<li
 					class="py-8"
@@ -54,28 +54,28 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 												`category/${slugifyTaxonomy(post.data.category)}`,
 											)
 								}
-								class="rounded-full border border-stone-200 px-3 py-1 text-stone-700 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-stone-800 dark:text-stone-200 dark:hover:border-stone-700 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+								class="rounded-full border border-stone-200 px-3 py-1 text-stone-700 transition-colors hover:border-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:border-night-600 dark:text-night-200 dark:hover:border-night-500 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 							>
 								{post.data.category ?? "Uncategorized"}
 							</a>
-							<p class="text-stone-500 dark:text-stone-500">
+							<p class="text-stone-500 dark:text-night-400">
 								{formatDate(post.data.pubDate)}
 							</p>
 						</div>
 
-						<h2 class="text-2xl font-semibold tracking-tight text-stone-950 dark:text-stone-50">
+						<h2 class="text-2xl font-semibold tracking-tight text-stone-950 dark:text-night-50">
 							<a
 								href={getRelativeLocaleUrl(
 									lang,
 									`posts/${stripLocaleFromId(post.id)}`,
 								)}
-								class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-300 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+								class="transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-night-200 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 							>
 								{getDisplayTitle(post)}
 							</a>
 						</h2>
 
-						<p class="max-w-2xl leading-8 text-stone-600 dark:text-stone-300">
+						<p class="max-w-2xl leading-8 text-stone-600 dark:text-night-200">
 							{post.data.description}
 						</p>
 
@@ -93,7 +93,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 																`tags/${slugifyTaxonomy(tag)}`,
 															)
 												}
-												class="inline-flex rounded-full bg-stone-200 px-3 py-1 text-sm text-stone-600 transition-colors hover:bg-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+												class="inline-flex rounded-full bg-stone-200 px-3 py-1 text-sm text-stone-600 transition-colors hover:bg-stone-300 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:bg-night-900 dark:text-night-200 dark:hover:bg-night-700 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 											>
 												#{tag}
 											</a>
@@ -107,7 +107,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 			))}
 		</ul>
 	) : (
-		<div class="border-t border-stone-200 py-8 text-stone-600 dark:border-stone-800 dark:text-stone-300">
+		<div class="border-t border-stone-200 py-8 text-stone-600 dark:border-night-600 dark:text-night-200">
 			<p>{emptyMessage}</p>
 		</div>
 	)

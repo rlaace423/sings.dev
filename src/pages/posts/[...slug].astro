@@ -65,11 +65,11 @@ const relatedItems = relatedPosts.map((entry) => ({
 	>
 		<div class="md:flex md:items-start md:gap-16">
 			<div class="min-w-0 md:w-3/4">
-				<details class="mb-10 rounded-lg border border-stone-200 px-4 py-3 dark:border-stone-800 md:hidden">
-					<summary class="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-300">
+				<details class="mb-10 rounded-lg border border-stone-200 px-4 py-3 dark:border-night-600 md:hidden">
+					<summary class="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.18em] text-stone-600 dark:text-night-200">
 						목차
 					</summary>
-					<div class="mt-4 border-t border-stone-200 pt-4 dark:border-stone-800">
+					<div class="mt-4 border-t border-stone-200 pt-4 dark:border-night-600">
 						<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
 					</div>
 				</details>
@@ -85,20 +85,20 @@ const relatedItems = relatedPosts.map((entry) => ({
 				/>
 
 				<div
-					class="prose prose-stone mt-10 max-w-none prose-headings:tracking-tight prose-a:text-stone-900 prose-a:decoration-stone-300 prose-a:underline-offset-4 prose-blockquote:border-stone-200 prose-blockquote:text-stone-600 prose-code:text-stone-900 prose-pre:border prose-pre:border-stone-200 prose-pre:bg-stone-200 dark:prose-invert dark:prose-a:text-stone-100 dark:prose-a:decoration-stone-500 dark:prose-blockquote:border-stone-700 dark:prose-blockquote:text-stone-300 dark:prose-code:text-stone-100 dark:prose-pre:border-stone-700 dark:prose-pre:bg-stone-900"
+					class="prose prose-stone mt-10 max-w-none prose-headings:tracking-tight prose-a:text-stone-900 prose-a:decoration-stone-300 prose-a:underline-offset-4 prose-blockquote:border-stone-200 prose-blockquote:text-stone-600 prose-code:text-stone-900 prose-pre:border prose-pre:border-stone-200 prose-pre:bg-stone-200 dark:prose-invert dark:prose-a:text-night-100 dark:prose-a:decoration-night-400 dark:prose-blockquote:border-night-500 dark:prose-blockquote:text-night-200 dark:prose-code:text-night-100 dark:prose-pre:border-night-500 dark:prose-pre:bg-night-900"
 				>
 					<Content />
 				</div>
 
 				<PostReadingFlow lang="ko" series={seriesData} items={relatedItems} />
 
-				<div class="mt-16 border-t border-stone-200 pt-10 dark:border-stone-800">
+				<div class="mt-16 border-t border-stone-200 pt-10 dark:border-night-600">
 					<Comments lang="ko" />
 				</div>
 			</div>
 
 			<aside class="hidden md:block md:w-1/4">
-				<div class="sticky top-20 border-l border-stone-200 pl-6 dark:border-stone-800">
+				<div class="sticky top-20 border-l border-stone-200 pl-6 dark:border-night-600">
 					<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
 				</div>
 			</aside>

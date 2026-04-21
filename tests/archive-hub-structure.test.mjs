@@ -234,7 +234,7 @@ test("archive browse renders category counts, manual descriptions, and represent
 
 	assert.match(
 		rendered,
-		/<section class="mt-10(?: space-y-6)? border-t border-stone-200 pt-8 dark:border-stone-800">/,
+		/<section class="mt-10(?: space-y-6)? border-t border-stone-200 pt-8 dark:border-night-600">/,
 	);
 	assert.match(rendered, /href="\/en\/category\/development"/);
 	assert.match(rendered, /href="\/en\/category\/operations"/);
@@ -296,7 +296,7 @@ test("archive browse omits empty descriptions and uses default locale links", as
 
 	assert.match(rendered, /href="\/category\/development\//);
 	assert.match(rendered, /href="\/tags\/architecture\//);
-	assert.doesNotMatch(rendered, /<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">\s*<\/p>/);
+	assert.doesNotMatch(rendered, /<p class="text-sm leading-6 text-stone-600 dark:text-night-200">\s*<\/p>/);
 });
 
 test("category pages hide related tags when there is no repeated signal", async () => {
@@ -391,7 +391,7 @@ test("category pages render locale-aware related tag hrefs when there is repeate
 		],
 	);
 
-	assert.match(rendered, /<p class="text-sm font-medium text-stone-600 dark:text-stone-300">\s*Related tags\s*<\/p>/);
+	assert.match(rendered, /<p class="text-sm font-medium text-stone-600 dark:text-night-200">\s*Related tags\s*<\/p>/);
 	assert.match(rendered, /href="\/en\/tags\/architecture"/);
 	assert.match(rendered, /href="\/en\/tags\/docs"/);
 	assert.match(rendered, /<div data-post-list>3<\/div>/);

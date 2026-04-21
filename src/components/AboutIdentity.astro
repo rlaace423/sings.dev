@@ -49,12 +49,12 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 			alt={photo.alt}
 			width="96"
 			height="96"
-			class="h-24 w-24 shrink-0 rounded-full bg-stone-200 object-cover ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-800"
+			class="h-24 w-24 shrink-0 rounded-full bg-stone-200 object-cover ring-1 ring-stone-200 dark:bg-night-700 dark:ring-night-600"
 		/>
 		<div class="space-y-4">
 			<p
 				data-about-summary
-				class="max-w-2xl text-lg leading-8 text-stone-700 dark:text-stone-200"
+				class="max-w-2xl text-lg leading-8 text-stone-700 dark:text-night-200"
 			>
 				{summary}
 			</p>
@@ -66,14 +66,14 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 			<ul
 				data-about-socials
 				aria-label={socialsLabel}
-				class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-stone-600 dark:text-stone-300"
+				class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-stone-600 dark:text-night-200"
 			>
 				{socials.map((item) => (
 					<li>
 						<a
 							href={item.href}
 							rel={item.type === "email" ? undefined : "me noopener"}
-							class="inline-flex items-center gap-2 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+							class="inline-flex items-center gap-2 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
 							<SocialIcon type={item.type} class="h-4 w-4" />
 							<span>{item.label ?? item.type}</span>
@@ -87,28 +87,28 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 	{
 		experience.length > 0 && (
 			<section class="space-y-6">
-				<h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-500">
+				<h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-night-400">
 					{experienceHeading}
 				</h2>
 				<ol
 					data-about-experience
-					class="divide-y divide-stone-200 border-t border-stone-200 dark:divide-stone-800 dark:border-stone-800"
+					class="divide-y divide-stone-200 border-t border-stone-200 dark:divide-night-600 dark:border-night-600"
 				>
 					{experience.map((entry) => (
 						<li class="grid gap-4 py-6 sm:grid-cols-[minmax(7rem,auto)_1fr] sm:gap-8">
-							<p class="text-sm tabular-nums text-stone-500 dark:text-stone-500">
+							<p class="text-sm tabular-nums text-stone-500 dark:text-night-400">
 								<span>{entry.start}</span>
 								<span aria-hidden="true"> — </span>
 								<span>{entry.end}</span>
 							</p>
 							<div class="space-y-1">
-								<p class="text-base font-semibold text-stone-950 dark:text-stone-50">
+								<p class="text-base font-semibold text-stone-950 dark:text-night-50">
 									{entry.company}
 								</p>
-								<p class="text-sm text-stone-600 dark:text-stone-300">
+								<p class="text-sm text-stone-600 dark:text-night-200">
 									{entry.role}
 								</p>
-								<p class="mt-3 max-w-2xl leading-7 text-stone-600 dark:text-stone-300">
+								<p class="mt-3 max-w-2xl leading-7 text-stone-600 dark:text-night-200">
 									{entry.description}
 								</p>
 							</div>

@@ -36,7 +36,7 @@ const hasRelated = visibleItems.length > 0;
 
 {
 	(hasSeries || hasRelated) && (
-		<section class="mt-16 border-t border-stone-200 pt-10 dark:border-stone-800">
+		<section class="mt-16 border-t border-stone-200 pt-10 dark:border-night-600">
 			<div class="space-y-10">
 				{hasSeries && <PostSeriesNav lang={lang} series={series} />}
 				{hasRelated && <RelatedReading lang={lang} items={visibleItems} />}

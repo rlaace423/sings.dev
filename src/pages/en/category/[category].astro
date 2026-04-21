@@ -44,19 +44,19 @@ const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
 	lang="en"
 >
 	<section class="space-y-4">
-		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
 			Category
 		</p>
-		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-night-50 sm:text-5xl">
 			{category}
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-night-200">
 			{categoryDescription || "A filtered view of posts collected under this category."}
 		</p>
 		{
 			relatedTags.length > 0 ? (
 				<div class="space-y-3">
-					<p class="text-sm font-medium text-stone-600 dark:text-stone-300">
+					<p class="text-sm font-medium text-stone-600 dark:text-night-200">
 						Related tags
 					</p>
 					<ul class="flex flex-wrap gap-x-3 gap-y-2">
@@ -67,7 +67,7 @@ const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
 										"en",
 										`tags/${slugifyTaxonomy(tag)}`,
 									)}
-									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 								>
 									#{tag}
 								</a>
@@ -80,7 +80,7 @@ const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
 	</section>
 
 	<div class="mt-12 space-y-6">
-		<p class="text-sm text-stone-600 dark:text-stone-300">
+		<p class="text-sm text-stone-600 dark:text-night-200">
 			{posts.length} posts in {category}
 		</p>
 		<PostList

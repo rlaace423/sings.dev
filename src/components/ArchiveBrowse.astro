@@ -44,36 +44,36 @@ const getTagLink = (tag: string) =>
 		: getRelativeLocaleUrl(lang, `tags/${slugifyTaxonomy(tag)}`);
 ---
 
-<section class="mt-10 space-y-6 border-t border-stone-200 pt-8 dark:border-stone-800">
+<section class="mt-10 space-y-6 border-t border-stone-200 pt-8 dark:border-night-600">
 	<div class="space-y-2">
-		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
 			{browseTitle}
 		</p>
 		<div class="space-y-8">
 			<div class="space-y-3">
-				<p class="text-sm font-medium text-stone-600 dark:text-stone-300">
+				<p class="text-sm font-medium text-stone-600 dark:text-night-200">
 					{categoriesHeading}
 				</p>
 				<ul class="space-y-3">
 					{
 						categories.map((category) => (
-							<li class="border-b border-stone-200 pb-3 last:border-0 last:pb-0 dark:border-stone-800/80">
+							<li class="border-b border-stone-200 pb-3 last:border-0 last:pb-0 dark:border-night-600/80">
 								<a
 									href={getCategoryLink(category.name)}
-									class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 								>
 									<div class="space-y-1">
-										<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-stone-50 dark:group-hover:text-stone-200">
+										<h2 class="text-lg font-medium text-stone-950 transition-colors group-hover:text-stone-700 dark:text-night-50 dark:group-hover:text-night-200">
 											{category.name}
 										</h2>
 										{
 											category.description ? (
-												<p class="text-sm leading-6 text-stone-600 dark:text-stone-300">
+												<p class="text-sm leading-6 text-stone-600 dark:text-night-200">
 													{category.description}
 												</p>
 											) : null
 										}
-										<p class="text-xs font-medium uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
+										<p class="text-xs font-medium uppercase tracking-[0.18em] text-stone-500 dark:text-night-300">
 											{getCountLabel(category.count, lang)}
 										</p>
 									</div>
@@ -84,7 +84,7 @@ const getTagLink = (tag: string) =>
 				</ul>
 			</div>
 			<div class="space-y-3">
-				<p class="text-sm font-medium text-stone-600 dark:text-stone-300">
+				<p class="text-sm font-medium text-stone-600 dark:text-night-200">
 					{tagsHeading}
 				</p>
 				<ul class="flex flex-wrap gap-x-3 gap-y-2">
@@ -93,7 +93,7 @@ const getTagLink = (tag: string) =>
 							<li>
 								<a
 									href={getTagLink(tag)}
-									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-stone-300 dark:hover:text-stone-50 dark:focus-visible:ring-stone-700 dark:focus-visible:ring-offset-stone-950"
+									class="inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 								>
 									#{tag}
 								</a>

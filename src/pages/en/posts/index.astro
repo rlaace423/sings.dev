@@ -43,13 +43,13 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 	lang="en"
 >
 	<section class="space-y-4">
-		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-stone-500">
+		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
 			Archive
 		</p>
-		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl">
+		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-night-50 sm:text-5xl">
 			Posts
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-stone-300">
+		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-night-200">
 			A quiet list of essays, notes, and project logs.
 		</p>
 	</section>
@@ -71,14 +71,14 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 
 	<div class="mt-12 space-y-6" data-posts-archive>
 		<p
-			class="text-sm text-stone-600 dark:text-stone-300"
+			class="text-sm text-stone-600 dark:text-night-200"
 			data-results-count
 		>
 			{posts.length} posts in the archive
 		</p>
 		<PostList posts={posts} filterable lang="en" />
 		<p
-			class="hidden text-sm text-stone-600 dark:text-stone-300"
+			class="hidden text-sm text-stone-600 dark:text-night-200"
 			data-empty-results
 		>
 			No posts match the current filters.
@@ -106,18 +106,18 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 			const activeClasses = [
 				"bg-stone-900",
 				"text-stone-50",
-				"dark:bg-stone-100",
-				"dark:text-stone-950",
+				"dark:bg-night-50",
+				"dark:text-night-900",
 			];
 			const inactiveClasses = [
 				"bg-stone-200",
 				"text-stone-600",
 				"hover:bg-stone-300",
 				"hover:text-stone-950",
-				"dark:bg-stone-900",
-				"dark:text-stone-300",
-				"dark:hover:bg-stone-800",
-				"dark:hover:text-stone-50",
+				"dark:bg-night-900",
+				"dark:text-night-200",
+				"dark:hover:bg-night-700",
+				"dark:hover:text-night-50",
 			];
 
 			const syncTagButton = (button) => {
@@ -127,8 +127,8 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 				button.setAttribute("aria-pressed", String(active));
 				button.classList.toggle("bg-stone-900", active);
 				button.classList.toggle("text-stone-50", active);
-				button.classList.toggle("dark:bg-stone-100", active);
-				button.classList.toggle("dark:text-stone-950", active);
+				button.classList.toggle("dark:bg-night-50", active);
+				button.classList.toggle("dark:text-night-900", active);
 
 				activeClasses.forEach((className) => {
 					if (!active) button.classList.remove(className);
