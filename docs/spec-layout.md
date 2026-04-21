@@ -12,6 +12,7 @@
   - Accept a `lang` prop in `src/layouts/Layout.astro` and apply it to `<html lang={lang}>`.
   - Support localized `title` and `description` metadata when needed.
   - Support both light and dark mode.
+  - Apply the light stone / dark night palette and the Pretendard Std Variable sans stack at the html and body level. See `docs/spec-theme-typography.md`.
 - **Header**:
   - Left: a single link combining the `SiteLogo` microphone SVG mark and the `sings.dev` text, pointing at the locale-aware home page. See `docs/spec-site-identity.md`.
   - Right: minimalist navigation links for `Posts` and `About`.
