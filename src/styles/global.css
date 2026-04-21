@@ -2,6 +2,33 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 
+@font-face {
+	font-family: "Pretendard Std Variable";
+	src: url("/fonts/PretendardStdVariable.woff2") format("woff2-variations");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+	--font-sans:
+		"Pretendard Std Variable", "Pretendard Std", "Pretendard",
+		ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		"Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+
+	--color-night-50: #c0caf5;
+	--color-night-100: #a9b1d6;
+	--color-night-200: #9aa5ce;
+	--color-night-300: #737aa2;
+	--color-night-400: #565f89;
+	--color-night-500: #414868;
+	--color-night-600: #3b4261;
+	--color-night-700: #292e42;
+	--color-night-800: #24283b;
+	--color-night-900: #1f2335;
+	--color-night-950: #16161e;
+}
+
 .prose figure {
 	margin-top: 1.5rem;
 	margin-bottom: 1.5rem;
@@ -12,7 +39,7 @@
 	border: 1px solid rgb(231 229 228 / 1); /* stone-200 */
 }
 :where(.dark) .prose figure img {
-	border-color: rgb(41 37 36 / 1); /* stone-800 */
+	border-color: rgb(59 66 97 / 1); /* night-600 */
 }
 .prose figcaption {
 	margin-top: 0.75rem;
@@ -22,7 +49,7 @@
 	color: rgb(120 113 108 / 1); /* stone-500 */
 }
 :where(.dark) .prose figcaption {
-	color: rgb(168 162 158 / 1); /* stone-400 */
+	color: rgb(115 122 162 / 1); /* night-300 */
 }
 @media (min-width: 768px) {
 	.prose figure[data-width="wide"] {
