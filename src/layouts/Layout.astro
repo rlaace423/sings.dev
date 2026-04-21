@@ -33,11 +33,12 @@ const resolvedDescription = resolveLocalizedValue(description);
 ---
 
 <!doctype html>
-<html lang={lang} class="bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
+<html lang={lang} class="bg-stone-100 text-stone-900 dark:bg-night-800 dark:text-night-100">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="preload" href="/fonts/PretendardStdVariable.woff2" as="font" type="font/woff2" crossorigin />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={resolvedDescription} />
@@ -70,7 +71,7 @@ const resolvedDescription = resolveLocalizedValue(description);
 		</head>
 		<body
 			data-pagefind-filter={`language:${lang}`}
-			class="flex min-h-screen flex-col bg-stone-50 font-serif text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
+			class="flex min-h-screen flex-col bg-stone-100 text-stone-900 antialiased dark:bg-night-800 dark:text-night-100"
 		>
 			<Header lang={lang} />
 			<div class="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 sm:px-6">
