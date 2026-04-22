@@ -8,6 +8,11 @@
   - Render a compact metadata line above the title with category, publication date, and reading time.
   - Render the shared assembled display title, description, and full frontmatter tag list.
   - Include the bottom divider above the article body.
+- **Optional Summary (`src/components/PostSummary.astro`)**:
+  - A post may declare an opt-in `summary: string` field in its frontmatter.
+  - When present, the summary renders between the shared post header and the prose body as a quiet left-bordered block with a small locale-aware `요약` / `Summary` eyebrow.
+  - Treat the summary as a lightweight editorial aid, not a mandatory template. Posts without a summary render exactly as before — no empty box, no placeholder label.
+  - The summary is plain string frontmatter; markdown inside the value is not rendered. Use YAML block scalars (`>` or `|`) when the summary needs to span multiple lines.
 - **Shared Series Title Rules**:
   - Use `title` as the canonical authoring field everywhere.
   - For non-series posts, `title` is the final visible title.

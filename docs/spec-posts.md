@@ -12,6 +12,7 @@
     - `description` (string)
     - `category` (string, required)
     - `tags` (array of strings, optional)
+    - `summary` (string, optional) — opt-in TL;DR block rendered above the post body; see `docs/spec-post-detail.md`
     - `draft` (boolean, optional, defaults to `false`) — see `docs/spec-drafts.md`
     - `series` (object, optional)
       - `id` (string)

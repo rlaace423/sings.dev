@@ -1,0 +1,28 @@
+---
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface Props {
+	lang?: Locale;
+	summary?: string;
+}
+
+const { lang: langProp, summary } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const label = lang === "ko" ? "요약" : "Summary";
+---
+
+{
+	summary && (
+		<section
+			data-post-summary
+			class="mt-10 border-l-2 border-stone-300 pl-5 dark:border-night-500"
+		>
+			<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-night-300">
+				{label}
+			</p>
+			<p class="mt-2 max-w-2xl text-base leading-8 text-stone-700 dark:text-night-200">
+				{summary}
+			</p>
+		</section>
+	)
+}
