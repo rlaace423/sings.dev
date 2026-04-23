@@ -2,13 +2,20 @@
 
 - **Goal**: Describe the site's palette and typeface choices so future theme or font work stays aligned with the editorial voice.
 - **Reference Philosophy**: Follow `docs/spec-editorial-philosophy.md`. Both palettes and the typeface must reinforce the "quiet, text-first" feel — no pure white, no pure black, no loud accent colors.
-- **Light Palette**:
-  - Body background: `stone-100` (#f5f5f4). Chosen over `stone-50` so the reading surface feels like paper rather than a bright screen.
-  - Text: `stone-900` primary, `stone-600` secondary, `stone-500` muted.
-  - Border and hairline: `stone-200`.
-  - Panel surfaces (tag pills, code blocks, filter toggles, ArchiveBrowse row borders): `stone-200` bg with `stone-300` hover so they remain visibly distinct against the `stone-100` body.
+- **Light Palette**: custom `dawn` family declared in `src/styles/global.css` via `@theme`. Warm paper tones at the light end slide into cool ink at the dark end, so the body feels like ivory paper while the text reads as a muted blue-gray near-black.
+  - Primary body bg: `dawn-100` (#f5f3ee). Warmer than pure white; pairs with Pretendard Korean glyphs like old essay-collection paper.
+  - Secondary surfaces (tag pills, code blocks, figure panels): `dawn-200` (#e8e3d9).
+  - Hover bg for interactive surfaces: `dawn-300` (#dcd6cc).
+  - Border and hairline: `dawn-300` (#dcd6cc).
+  - Text: `dawn-800` (#24283b) primary, `dawn-700` (#414868) secondary, `dawn-600` (#565f89) muted. `dawn-800` is the same hex as `night-800`, creating a single-hue bridge that ties light and dark modes together — the color that is the dark body bg is reused here as the body text ink. `dawn-600` gives muted small text ~7.4:1 on `dawn-100` (clears WCAG AA).
+  - Focus ring: `dawn-300` (#dcd6cc), ring offset: `dawn-100` (#f5f3ee).
+  - Inverted highlight (active tag-filter bg): `dawn-800` bg with `dawn-50` text.
+- **Accent**:
+  - Link color: `terracotta-600` (#a04e2a). Single-shade custom token. Deeper cousin of Tokyo Night's syntax-orange (`#ff9e64`), warm-on-warm against the `dawn-100` body, reads visibly as "link" without pulling the page toward a generic web-blue hyperlink.
+  - Applied only to `prose-a` utilities (post body links and about-page links). UI affordances such as category badges, tag pills, and navigation items keep the stone/dawn-neutral treatment they had.
+  - Link underline uses `terracotta-600/40` (40% alpha) to stay quiet in the reading rhythm.
 - **Dark Palette**: custom `night` family declared in `src/styles/global.css` via `@theme`. Inspired by the Tokyo Night Storm variant.
-  - Primary body bg: `night-800` (#24283b). `night-800` is the lightest "dark" tone in the family; Storm uses it as the main writing surface.
+  - Primary body bg: `night-800` (#24283b). `night-800` is the lightest "dark" tone in the family; Storm uses it as the main writing surface. The same hex also serves as `dawn-800` — the primary text color in light mode — creating a single-hue bridge between the two modes (see Light Palette above).
   - Secondary surfaces (cards, panels, post-reading blocks, filter inactive state): `night-900` (#1f2335).
   - Hover bg for interactive panels: `night-700` (#292e42).
   - Deepest tone (`night-950`, #16161e) reserved for rare emphasis; not used by default in this iteration.
@@ -28,11 +35,19 @@
   - Dark theme: `tokyo-night` — Shiki's built-in Tokyo Night theme; the same palette family the site's dark UI already uses, so code blocks and surrounding chrome read as one surface.
   - `src/styles/global.css` carries a `.dark .astro-code` / `.dark .shiki` override that re-applies the dark theme tokens via the `--shiki-dark-*` CSS variables, since the site toggles dark mode through a `.dark` class on `<html>` rather than `prefers-color-scheme`.
   - Unknown language fences render as plain `<pre><code>` (no highlighting, no build error); any of Shiki's ~250 supported language IDs can be used by name without further configuration.
+- **Theme Transition**:
+  - `src/styles/global.css` declares a scoped `html.theme-transition` rule that applies a 250ms color fade to every element (background-color, color, border-color, fill, stroke).
+  - The class is added to `<html>` only by the two theme-toggle handlers in `src/layouts/Layout.astro` (manual click and `prefers-color-scheme` change) immediately before `applyTheme()`, and removed via a 300ms `setTimeout`.
+  - Initial page load stays instant: the head-level FOUC-prevention script and the body-level `applyTheme(getPreferredTheme())` both run without adding the class.
+  - Hover and focus state changes also stay instant because `.theme-transition` is absent outside the toggle window.
+  - The `!important` on the transition declaration ensures the Shiki dark-override rule (which itself uses `!important`) also participates in the fade so code blocks swap themes alongside the page chrome.
 - **Guardrails**:
   - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
   - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.
   - No inline `style="color: ..."` overrides. All palette values flow through Tailwind utilities or the `@theme` tokens.
   - Do not remap `stone-200` / `stone-500` / `stone-900` usages in light mode. The single `stone-50 → stone-100` body shift plus the panel side-effect shifts are the entire light-mode delta.
+  - Do not extend the `terracotta` scale beyond the single `-600` shade unless a new accent role requires it. One shade covers link color; more shades would invite accent creep.
+  - Do not apply the `.theme-transition` class anywhere other than the two theme-toggle handlers. Applying it globally would animate every hover and focus change; applying it at page load would produce a flash on first render.
 - **What To Avoid**:
   - Adding a CDN font (jsDelivr, Google Fonts) — the project self-hosts Pretendard and has no runtime external font dependency.
   - Introducing a `font-serif` utility or class anywhere; body copy stays on the sans stack.
