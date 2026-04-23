@@ -385,7 +385,7 @@ test("shared post header renders meta line, full tags, and intro divider", async
 
 	assert.match(
 		rendered,
-		/<header class="space-y-6 border-b border-stone-200 pb-10 dark:border-night-600">/,
+		/<header class="space-y-6 border-b border-dawn-300 pb-10 dark:border-night-600">/,
 	);
 	assert.match(
 		rendered,
@@ -393,7 +393,7 @@ test("shared post header renders meta line, full tags, and intro divider", async
 	);
 	assert.match(
 		rendered,
-		/<div class="space-y-4">[\s\S]*<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-night-50 sm:text-5xl">[\s\S]*Post Header[\s\S]*<\/h1>[\s\S]*<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-night-200">[\s\S]*A short intro for readers\.[\s\S]*<\/p>[\s\S]*<\/div>/,
+		/<div class="space-y-4">[\s\S]*<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">[\s\S]*Post Header[\s\S]*<\/h1>[\s\S]*<p class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200">[\s\S]*A short intro for readers\.[\s\S]*<\/p>[\s\S]*<\/div>/,
 	);
 	assert.match(
 		rendered,
@@ -413,15 +413,15 @@ test("TOC renders a quieter, easier-to-scan list", async () => {
 
 	assert.match(
 		rendered,
-		/<nav aria-label="Table of contents" class="text-sm text-stone-600 dark:text-night-200">/,
+		/<nav aria-label="Table of contents" class="text-sm text-dawn-700 dark:text-night-200">/,
 	);
 	assert.match(
 		rendered,
-		/<p class="mb-3 text-xs font-semibold uppercase tracking-\[0\.2em\] text-stone-500 dark:text-night-400">[\s\S]*Contents[\s\S]*<\/p>/,
+		/<p class="mb-3 text-xs font-semibold uppercase tracking-\[0\.2em\] text-dawn-600 dark:text-night-400">[\s\S]*Contents[\s\S]*<\/p>/,
 	);
 	assert.match(
 		rendered,
-		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="block leading-6 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
+		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="block leading-6 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
 	);
 });
 

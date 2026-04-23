@@ -85,8 +85,8 @@ test("PostSummary renders the English label for en locale", async () => {
 test("PostSummary carries the quiet editorial treatment classes", async () => {
 	const rendered = await renderSummary({ lang: "ko", summary: "짧은 요약." });
 	assert.match(rendered, /border-l-2/);
-	assert.match(rendered, /border-stone-400/);
+	assert.match(rendered, /border-dawn-600/);
 	assert.match(rendered, /dark:border-night-500/);
-	assert.match(rendered, /text-stone-700/);
+	assert.match(rendered, /text-dawn-700/);
 	assert.match(rendered, /dark:text-night-200/);
 });

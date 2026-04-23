@@ -38,6 +38,32 @@ test("global.css @theme block declares font-sans and the eleven night tokens", a
 	}
 });
 
+test("global.css @theme block declares the eleven dawn tokens and the terracotta accent", async () => {
+	const css = await readFile(globalCssUrl, "utf8");
+	assert.match(css, /--color-dawn-50:\s*#faf8f2/i);
+	assert.match(css, /--color-dawn-100:\s*#f5f3ee/i);
+	assert.match(css, /--color-dawn-200:\s*#e8e3d9/i);
+	assert.match(css, /--color-dawn-300:\s*#dcd6cc/i);
+	assert.match(css, /--color-dawn-400:\s*#b8aea1/i);
+	assert.match(css, /--color-dawn-500:\s*#7c8196/i);
+	assert.match(css, /--color-dawn-600:\s*#565f89/i);
+	assert.match(css, /--color-dawn-700:\s*#414868/i);
+	assert.match(css, /--color-dawn-800:\s*#24283b/i);
+	assert.match(css, /--color-dawn-900:\s*#1a1d2c/i);
+	assert.match(css, /--color-dawn-950:\s*#10121b/i);
+	assert.match(css, /--color-terracotta-600:\s*#a04e2a/i);
+});
+
+test("global.css declares the theme-transition rule with the expected properties", async () => {
+	const css = await readFile(globalCssUrl, "utf8");
+	assert.match(css, /html\.theme-transition,\s*\n\s*html\.theme-transition \*/);
+	assert.match(css, /background-color\s+250ms\s+ease/);
+	assert.match(css, /color\s+250ms\s+ease/);
+	assert.match(css, /border-color\s+250ms\s+ease/);
+	assert.match(css, /fill\s+250ms\s+ease/);
+	assert.match(css, /stroke\s+250ms\s+ease/);
+});
+
 test("global.css :where(.dark) figure rules reference night colors", async () => {
 	const css = await readFile(globalCssUrl, "utf8");
 	assert.match(css, /:where\(\.dark\) \.prose figure img[^}]*border-color:\s*rgb\(59 66 97 \/ 1\)/);
@@ -76,9 +102,21 @@ test("Layout.astro preloads the Pretendard font and uses the new palette + sans 
 		layout,
 		/<link rel="preload" href="\/fonts\/PretendardStdVariable\.woff2" as="font" type="font\/woff2" crossorigin/,
 	);
-	assert.match(layout, /<html [^>]*class="bg-stone-100 text-stone-900 dark:bg-night-800 dark:text-night-100"/);
-	assert.match(layout, /<body[\s\S]*?class="[^"]*bg-stone-100[^"]*dark:bg-night-800[^"]*"/);
+	assert.match(layout, /<html [^>]*class="bg-dawn-100 text-dawn-800 dark:bg-night-800 dark:text-night-100"/);
+	assert.match(layout, /<body[\s\S]*?class="[^"]*bg-dawn-100[^"]*text-dawn-800[^"]*dark:bg-night-800[^"]*"/);
 	assert.doesNotMatch(layout, /font-serif/);
+});
+
+test("Layout.astro theme toggle handlers add and remove the theme-transition class around applyTheme", async () => {
+	const layout = await readFile(layoutUrl, "utf8");
+	assert.ok(
+		/root\.classList\.add\("theme-transition"\);\s*\n\s*applyTheme\(nextTheme\);\s*\n\s*setTimeout\(\(\) => root\.classList\.remove\("theme-transition"\), 300\);/.test(layout),
+		"manual click handler should add theme-transition before applyTheme and remove it after 300ms",
+	);
+	assert.ok(
+		/root\.classList\.add\("theme-transition"\);\s*\n\s*applyTheme\(event\.matches \? "dark" : "light"\);\s*\n\s*setTimeout\(\(\) => root\.classList\.remove\("theme-transition"\), 300\);/.test(layout),
+		"system-preference handler should add theme-transition before applyTheme and remove it after 300ms",
+	);
 });
 
 async function collectSourceFiles(dirUrl) {
@@ -110,33 +148,15 @@ test("no dark:*-stone-* utility remains anywhere under src/", async () => {
 	assert.deepEqual(offenders, [], `residual dark stone tokens:\n${JSON.stringify(offenders, null, 2)}`);
 });
 
-test("no forbidden pre-shift stone tokens remain in src/", async () => {
+test("no light-mode *-stone-* utility remains anywhere under src/", async () => {
 	const files = await collectSourceFiles(srcUrl);
-	// Invariants from spec-theme-typography.md:
-	//   - bg-stone-50 fully migrated to bg-stone-100
-	//   - ring-offset-stone-50 fully migrated
-	//   - border-stone-100 shifted to border-stone-200
-	//   - prose-pre:bg-stone-100 shifted to prose-pre:bg-stone-200
-	//   - hover:bg-stone-200 panel/pill hover shifted to hover:bg-stone-300
-	// Note: bg-stone-100 itself is intentionally allowed — it is the body-matching
-	// surface used in Layout.astro, Header.astro (sticky bg-stone-100/80), and
-	// SearchModal.astro (dialog container). No skip-list needed.
-	const patterns = [
-		/\bbg-stone-50\b/,
-		/\bring-offset-stone-50\b/,
-		/\bborder-stone-100\b/,
-		/\bprose-pre:bg-stone-100\b/,
-		/\bhover:bg-stone-200\b/,
-	];
 	const offenders = [];
 	for (const fileUrl of files) {
 		const text = await readFile(fileUrl, "utf8");
-		for (const pattern of patterns) {
-			const match = text.match(pattern);
-			if (match) {
-				offenders.push({ file: fileUrl.pathname, pattern: pattern.source, match: match[0] });
-			}
+		const matches = text.match(/(?<!["'`])(?<!-)\bstone-[0-9]+/g);
+		if (matches) {
+			offenders.push({ file: fileUrl.pathname, matches: Array.from(new Set(matches)) });
 		}
 	}
-	assert.deepEqual(offenders, [], `residual stone tokens:\n${JSON.stringify(offenders, null, 2)}`);
+	assert.deepEqual(offenders, [], `residual light-mode stone tokens:\n${JSON.stringify(offenders, null, 2)}`);
 });
