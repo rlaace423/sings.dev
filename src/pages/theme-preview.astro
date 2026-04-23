@@ -100,6 +100,54 @@ const themes: Theme[] = [
 		notes:
 			"Warmest pick with a distinct personality. The pink-leaning panel tone adds atmosphere but narrows the neutral space. Risk: rose can feel whimsical; reward: uniquely recognizable.",
 	},
+	{
+		name: "H1 — Warm paper + cool-tinted ink",
+		tagline: "Custom build. Warm ivory bg, body text uses Tokyo Night's bg color (#24283b) as the ink.",
+		palette: {
+			bg: "#f5f3ee",
+			textPrimary: "#24283b",
+			textSecondary: "#4d5166",
+			textMuted: "#7c8196",
+			border: "#dcd6cc",
+			panel: "#e8e3d9",
+			accent: "#24283b",
+			codeBg: "#e8e3d9",
+		},
+		notes:
+			"The single bridge to dark mode: the hue that is the dark body bg (#24283b) is reused here as the body text ink. Secondary and muted tones stay on neutral-warm grays, so the page still reads as warm paper overall — only the 'ink' quietly echoes the night sky.",
+	},
+	{
+		name: "H2 — H1 + blue accent link",
+		tagline: "Same warm paper, same cool-tinted ink, but link/accent now comes from the night family too.",
+		palette: {
+			bg: "#f5f3ee",
+			textPrimary: "#24283b",
+			textSecondary: "#4d5166",
+			textMuted: "#7c8196",
+			border: "#dcd6cc",
+			panel: "#e8e3d9",
+			accent: "#414868",
+			codeBg: "#e8e3d9",
+		},
+		notes:
+			"Adds a second bridge color: link accent is night-500 (#414868), a muted navy from Tokyo Night. Two shared colors (#24283b primary text + #414868 accent) strengthen the 'same palette family' feel between modes, at the cost of slightly more blue showing through in links.",
+	},
+	{
+		name: "H3 — H2 + cool muted/secondary",
+		tagline: "Commits fully: warm paper (bg/border/panel) + cool ink (every text tone). The cleanest day/night mirror.",
+		palette: {
+			bg: "#f5f3ee",
+			textPrimary: "#24283b",
+			textSecondary: "#414868",
+			textMuted: "#565f89",
+			border: "#dcd6cc",
+			panel: "#e8e3d9",
+			accent: "#414868",
+			codeBg: "#e8e3d9",
+		},
+		notes:
+			"Every text tone (primary/secondary/muted) is pulled from Tokyo Night's family: #24283b / #414868 / #565f89. Metadata lines, eyebrows, figcaptions, footer signature all carry a subtle blue undertone now. The warm paper base + all-cool ink creates a consistent, slightly more literary 'blue ink on ivory paper' feel, and ties the two modes together most tightly.",
+	},
 ];
 
 const codeSample = `const splitByBoundary = (items) =>
