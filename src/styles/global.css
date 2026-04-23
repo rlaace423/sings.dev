@@ -91,3 +91,23 @@ html.dark .shiki span {
 	font-weight: var(--shiki-dark-font-weight) !important;
 	text-decoration: var(--shiki-dark-text-decoration) !important;
 }
+
+/*
+ * Light/dark theme toggle transition.
+ * The .theme-transition class is added to <html> only during an active
+ * toggle (via the script in Layout.astro), applies a 250ms color fade
+ * to every element, then is removed. That way:
+ *   - Initial page load stays instant (no FOUC-adjacent flash).
+ *   - Hover/focus state changes stay instant (responsive feel).
+ *   - Only the moment of toggle animates, which is what the user sees
+ *     when they consciously click the theme button.
+ */
+html.theme-transition,
+html.theme-transition * {
+	transition:
+		background-color 250ms ease,
+		color 250ms ease,
+		border-color 250ms ease,
+		fill 250ms ease,
+		stroke 250ms ease !important;
+}

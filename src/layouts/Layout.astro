@@ -130,7 +130,10 @@ const resolvedDescription = resolveLocalizedValue(description);
 						if (!button) return;
 
 						const nextTheme = root.classList.contains("dark") ? "light" : "dark";
+
+						root.classList.add("theme-transition");
 						applyTheme(nextTheme);
+						setTimeout(() => root.classList.remove("theme-transition"), 300);
 
 						try {
 							localStorage.setItem(storageKey, nextTheme);
@@ -142,7 +145,9 @@ const resolvedDescription = resolveLocalizedValue(description);
 							if (localStorage.getItem(storageKey)) return;
 						} catch {}
 
+						root.classList.add("theme-transition");
 						applyTheme(event.matches ? "dark" : "light");
+						setTimeout(() => root.classList.remove("theme-transition"), 300);
 					};
 
 					if (typeof media.addEventListener === "function") {
