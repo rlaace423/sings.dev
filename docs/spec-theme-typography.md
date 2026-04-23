@@ -22,7 +22,7 @@
   - Text: `night-50` (#c0caf5) primary, `night-200` (#9aa5ce) secondary, `night-400` (#8891b8) muted. `night-400` deviates from Tokyo Night Storm's canonical `#565f89` so that muted small text (eyebrows, labels, figcaptions) reaches ~4.7:1 on the `night-800` body and clears WCAG AA for normal-size text. The Storm value is only ~2.4:1 on the same body and fails AA for everything except decorative chrome. All other `night` tones stay on Storm canon.
   - Border and hairline: `night-600` (#3b4261).
   - Focus ring: `night-500` (#414868).
-  - Filter-toggle inversion highlight: `night-50` bg with `night-900` text (mirrors the light-mode flip that uses `stone-900` bg with `stone-50` text).
+  - Filter-toggle inversion highlight: `night-50` bg with `night-900` text (mirrors the light-mode flip that uses `dawn-800` bg with `dawn-50` text).
 - **Typeface**:
   - Primary sans stack: self-hosted `Pretendard Std Variable` (variable woff2, 285 KB, KS X 1001 Korean coverage, hybrid Latin design).
   - Monospace stack: Tailwind default (`ui-monospace, ...`); retained for `<code>` and `<pre>` only.
@@ -31,7 +31,7 @@
   - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
 - **Code Block Syntax Highlighting**:
   - Astro's built-in Shiki highlighter is configured in `astro.config.mjs` with a dual-theme pair.
-  - Light theme: `github-light` — neutral, widely recognized, pairs cleanly with the warm `stone-100` body without competing for attention.
+  - Light theme: `github-light` — neutral, widely recognized, pairs cleanly with the warm `dawn-100` body without competing for attention.
   - Dark theme: `tokyo-night` — Shiki's built-in Tokyo Night theme; the same palette family the site's dark UI already uses, so code blocks and surrounding chrome read as one surface.
   - `src/styles/global.css` carries a `.dark .astro-code` / `.dark .shiki` override that re-applies the dark theme tokens via the `--shiki-dark-*` CSS variables, since the site toggles dark mode through a `.dark` class on `<html>` rather than `prefers-color-scheme`.
   - Unknown language fences render as plain `<pre><code>` (no highlighting, no build error); any of Shiki's ~250 supported language IDs can be used by name without further configuration.
@@ -45,7 +45,7 @@
   - No vivid Tokyo Night accent colors (the signature purple, green, yellow, orange from the terminal theme's syntax highlighting) anywhere in the dark palette. Only the muted Storm background/text tones come across.
   - No third typeface. Headings, captions, and body share the same sans stack; variation comes from weight and tracking.
   - No inline `style="color: ..."` overrides. All palette values flow through Tailwind utilities or the `@theme` tokens.
-  - Do not remap `stone-200` / `stone-500` / `stone-900` usages in light mode. The single `stone-50 → stone-100` body shift plus the panel side-effect shifts are the entire light-mode delta.
+  - Do not reintroduce `*-stone-*` utilities in light-mode classes. The H2 migration moved every light surface to the `dawn` palette; new light-mode UI should use `dawn-*` tokens (and `terracotta-600` for accent links).
   - Do not extend the `terracotta` scale beyond the single `-600` shade unless a new accent role requires it. One shade covers link color; more shades would invite accent creep.
   - Do not apply the `.theme-transition` class anywhere other than the two theme-toggle handlers. Applying it globally would animate every hover and focus change; applying it at page load would produce a flash on first render.
 - **What To Avoid**:

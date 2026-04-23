@@ -14,7 +14,7 @@
      - **Lazy Init**: Load the Pagefind UI script and stylesheet only when the modal is opened for the first time.
      - **i18n**: Filter results to the current language (`ko` or `en`) with Pagefind filtering so Korean pages search Korean posts and English pages search English posts only.
      - **Hidden Filter UI**: Keep the language filter active in the background, but do not show Pagefind's visible filter panel in the UI.
-     - **Styling**: Tweak CSS variables (`--pagefind-ui-*`) to match the site's serif, stone-toned, dark-mode-aware aesthetic.
+     - **Styling**: Tweak CSS variables (`--pagefind-ui-*`) to match the site's serif, dawn-toned, dark-mode-aware aesthetic.
   2. **Update Header (`src/components/Header.astro`)**:
      - Add a simple magnifying glass icon button to the right-side controls, positioned to the **LEFT** of the Language Toggle.
      - Keep the header button itself lightweight. It only needs a stable hook such as a data attribute for opening the modal.

@@ -21,7 +21,7 @@
   - Every nav link uses `whitespace-nowrap` so Korean labels cannot split mid-word when the header compresses on narrow viewports. Nav and control gaps use `gap-4 sm:gap-5` and `gap-2 sm:gap-3` respectively to keep the logo, nav, and controls on a single row down to iPhone-SE width.
   - Apply a smart sticky header treatment:
     - The header is `sticky top-0 z-40`.
-    - Use a semi-transparent stone-toned background with `backdrop-blur`.
+    - Use a semi-transparent dawn-toned background with `backdrop-blur`.
     - Let the header background and bottom border run full-bleed across the viewport, while keeping the logo, navigation, and controls aligned to the centered inner container.
     - On desktop (`md` and up), keep the header always visible.
     - On mobile, hide the header while scrolling down and reveal it again while scrolling up.

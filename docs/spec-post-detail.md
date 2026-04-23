@@ -73,8 +73,8 @@
   - Every post lives as `src/content/blog/<locale>/<slug>/index.md`.
   - Images for a post live in the same folder as `index.md`, referenced with relative paths like `./image.png` from the post body.
 - **Visual treatment**:
-  - Images get a 1px `stone-200` (light) / `stone-800` (dark) border and a 6px radius. No shadow, no background tint.
-  - Captions are italic, `text-sm`, center-aligned, with `stone-500` (light) / `stone-400` (dark) text.
+  - Images get a 1px `dawn-300` (light) / `night-600` (dark) border and a 6px radius. No shadow, no background tint.
+  - Captions are italic, `text-sm`, center-aligned, with `dawn-600` (light) / `night-300` (dark) text.
   - Dark mode does not invert or dim the image itself — the frame alone handles contrast.
 - **Implementation location**:
   - The authoring-to-HTML transformation happens in `src/utils/remarkPostFigure.ts`, wired in through `astro.config.mjs`'s `markdown.remarkPlugins`.
