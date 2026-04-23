@@ -101,8 +101,8 @@ const themes: Theme[] = [
 			"Warmest pick with a distinct personality. The pink-leaning panel tone adds atmosphere but narrows the neutral space. Risk: rose can feel whimsical; reward: uniquely recognizable.",
 	},
 	{
-		name: "H1 — Warm paper + cool-tinted ink",
-		tagline: "Custom build. Warm ivory bg, body text uses Tokyo Night's bg color (#24283b) as the ink.",
+		name: "H1 — Warm paper + muted ink-blue link",
+		tagline: "Warm ivory bg, cool-tinted body ink (Tokyo Night's #24283b), classical editorial hyperlink blue.",
 		palette: {
 			bg: "#f5f3ee",
 			textPrimary: "#24283b",
@@ -110,15 +110,15 @@ const themes: Theme[] = [
 			textMuted: "#7c8196",
 			border: "#dcd6cc",
 			panel: "#e8e3d9",
-			accent: "#24283b",
+			accent: "#2c5282",
 			codeBg: "#e8e3d9",
 		},
 		notes:
-			"The single bridge to dark mode: the hue that is the dark body bg (#24283b) is reused here as the body text ink. Secondary and muted tones stay on neutral-warm grays, so the page still reads as warm paper overall — only the 'ink' quietly echoes the night sky.",
+			"Primary text uses the dark mode's body bg hue (#24283b) as 'ink', so the two modes share one anchor color. Muted and secondary tones stay on neutral-warm grays — the muted text reads as quietly faded, matching what you said feels right. Link accent (#2c5282) is a deep ink blue: clearly 'this is a link' without shouting, and carries the book/web editorial hyperlink tradition.",
 	},
 	{
-		name: "H2 — H1 + blue accent link",
-		tagline: "Same warm paper, same cool-tinted ink, but link/accent now comes from the night family too.",
+		name: "H2 — Warm paper + terracotta link",
+		tagline: "Same warm paper + cool ink base, but link picks up a warm terracotta inspired by Tokyo Night's syntax orange.",
 		palette: {
 			bg: "#f5f3ee",
 			textPrimary: "#24283b",
@@ -126,27 +126,27 @@ const themes: Theme[] = [
 			textMuted: "#7c8196",
 			border: "#dcd6cc",
 			panel: "#e8e3d9",
-			accent: "#414868",
+			accent: "#a04e2a",
 			codeBg: "#e8e3d9",
 		},
 		notes:
-			"Adds a second bridge color: link accent is night-500 (#414868), a muted navy from Tokyo Night. Two shared colors (#24283b primary text + #414868 accent) strengthen the 'same palette family' feel between modes, at the cost of slightly more blue showing through in links.",
+			"Link accent (#a04e2a) is a muted terracotta — a desaturated, darker cousin of Tokyo Night's syntax orange (#ff9e64). Warm-on-warm pairs naturally with the ivory paper bg, and the color reads distinctly as 'link' without feeling like a generic blue web link. Gives the page a more literary/printed feel than ink-blue would.",
 	},
 	{
-		name: "H3 — H2 + cool muted/secondary",
-		tagline: "Commits fully: warm paper (bg/border/panel) + cool ink (every text tone). The cleanest day/night mirror.",
+		name: "H3 — Warm paper + deep teal link",
+		tagline: "Same warm paper + cool ink base, link accent is a deep teal from Tokyo Night's cyan family.",
 		palette: {
 			bg: "#f5f3ee",
 			textPrimary: "#24283b",
-			textSecondary: "#414868",
-			textMuted: "#565f89",
+			textSecondary: "#4d5166",
+			textMuted: "#7c8196",
 			border: "#dcd6cc",
 			panel: "#e8e3d9",
-			accent: "#414868",
+			accent: "#0e7490",
 			codeBg: "#e8e3d9",
 		},
 		notes:
-			"Every text tone (primary/secondary/muted) is pulled from Tokyo Night's family: #24283b / #414868 / #565f89. Metadata lines, eyebrows, figcaptions, footer signature all carry a subtle blue undertone now. The warm paper base + all-cool ink creates a consistent, slightly more literary 'blue ink on ivory paper' feel, and ties the two modes together most tightly.",
+			"Link accent (#0e7490) is Tokyo Night's signature cyan (#7dcfff) darkened for readability on a light warm bg. Cool-on-warm creates a subtle contrast pop — the link visibly 'is a link' and the cyan hue ties back to the syntax colors used inside Tokyo Night code blocks, so dark-mode readers encountering the link feel a familiar palette note.",
 	},
 ];
 
