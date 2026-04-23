@@ -35,19 +35,19 @@ const { tag, posts } = Astro.props;
 	lang="ko"
 >
 	<section class="space-y-4">
-		<p class="text-sm uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
+		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 			태그
 		</p>
-		<h1 class="text-4xl font-semibold tracking-tight text-stone-950 dark:text-night-50 sm:text-5xl">
+		<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 			#{tag}
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-stone-600 dark:text-night-200">
+		<p class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200">
 			같은 태그를 가진 글만 모아서 볼 수 있는 화면입니다.
 		</p>
 		<p>
 			<a
 				href={getRelativeLocaleUrl("ko", "posts")}
-				class="text-sm text-stone-600 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+				class="text-sm text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 			>
 				전체 글로 돌아가기
 			</a>
@@ -55,7 +55,7 @@ const { tag, posts } = Astro.props;
 	</section>
 
 	<div class="mt-12 space-y-6">
-		<p class="text-sm text-stone-600 dark:text-night-200">
+		<p class="text-sm text-dawn-700 dark:text-night-200">
 			#{tag} 태그가 달린 글 {posts.length}개
 		</p>
 		<PostList

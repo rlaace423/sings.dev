@@ -28,25 +28,25 @@ const visibleItems = items.slice(0, 3);
 {
 	visibleItems.length > 0 && (
 		<section class="space-y-4">
-			<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-night-400">
+			<p class="text-xs font-semibold uppercase tracking-[0.2em] text-dawn-600 dark:text-night-400">
 				{labels.heading}
 			</p>
-			<ul class="divide-y divide-stone-200 border-t border-stone-200 dark:divide-night-600 dark:border-night-600">
+			<ul class="divide-y divide-dawn-300 border-t border-dawn-300 dark:divide-night-600 dark:border-night-600">
 				{visibleItems.map((item) => (
 					<li class="space-y-1 py-5">
 						<a
 							href={item.href}
-							class="block text-base font-medium tracking-tight text-stone-950 transition-colors hover:text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-50 dark:hover:text-night-200 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="block text-base font-medium tracking-tight text-dawn-800 transition-colors hover:text-dawn-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-50 dark:hover:text-night-200 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
 							{item.title}
 						</a>
 						{item.description && (
-							<p class="max-w-2xl text-sm leading-6 text-stone-600 dark:text-night-300">
+							<p class="max-w-2xl text-sm leading-6 text-dawn-700 dark:text-night-300">
 								{item.description}
 							</p>
 						)}
 						{item.meta && (
-							<p class="text-[0.72rem] uppercase tracking-[0.18em] text-stone-400 dark:text-night-400">
+							<p class="text-[0.72rem] uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 								{item.meta}
 							</p>
 						)}

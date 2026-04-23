@@ -43,14 +43,14 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 	series?.title && items.length > 0 && (
 		<section class="space-y-4">
 			<div class="space-y-2">
-				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-night-400">
+				<p class="text-xs font-semibold uppercase tracking-[0.2em] text-dawn-600 dark:text-night-400">
 					{labels.heading}
 				</p>
 				<div class="space-y-1">
-					<p class="text-lg font-medium tracking-tight text-stone-950 dark:text-night-50">
+					<p class="text-lg font-medium tracking-tight text-dawn-800 dark:text-night-50">
 						{series.title}
 					</p>
-					<p class="text-xs tabular-nums uppercase tracking-[0.18em] text-stone-400 dark:text-night-400">
+					<p class="text-xs tabular-nums uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 						{currentIndex + 1} / {items.length}
 					</p>
 				</div>
@@ -61,9 +61,9 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 					previousItem && (
 						<a
 							href={previousItem.href}
-							class="inline-flex items-center gap-2 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="inline-flex items-center gap-2 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
-							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-night-400">
+							<span class="text-xs uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 								{labels.previous}
 							</span>
 							<span>{previousItem.label}</span>
@@ -74,9 +74,9 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 					nextItem && (
 						<a
 							href={nextItem.href}
-							class="inline-flex items-center gap-2 text-stone-700 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="inline-flex items-center gap-2 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
-							<span class="text-xs uppercase tracking-[0.18em] text-stone-400 dark:text-night-400">
+							<span class="text-xs uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 								{labels.next}
 							</span>
 							<span>{nextItem.label}</span>
@@ -85,13 +85,13 @@ const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : und
 				}
 			</div>
 
-			<ol class="space-y-2 border-l border-stone-200 pl-4 text-sm text-stone-600 dark:border-night-600 dark:text-night-200">
+			<ol class="space-y-2 border-l border-dawn-300 pl-4 text-sm text-dawn-700 dark:border-night-600 dark:text-night-200">
 				{items.map((item, index) => (
-					<li class:list={[index === currentIndex && "text-stone-950 dark:text-night-50"]}>
+					<li class:list={[index === currentIndex && "text-dawn-800 dark:text-night-50"]}>
 						<a
 							href={item.href}
 							aria-current={index === currentIndex ? "page" : undefined}
-							class="block leading-6 transition-colors hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="block leading-6 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
 							<span>{item.label}</span>
 							{index === currentIndex && (

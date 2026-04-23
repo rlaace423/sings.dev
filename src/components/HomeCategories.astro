@@ -27,22 +27,22 @@ const getCategoryLink = (category: string) =>
 	categories.length > 0 && (
 		<section
 			data-home-categories
-			class="mt-16 space-y-6 border-t border-stone-200 pt-10 dark:border-night-600"
+			class="mt-16 space-y-6 border-t border-dawn-300 pt-10 dark:border-night-600"
 		>
-			<p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-night-400">
+			<p class="text-xs font-semibold uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 				{heading}
 			</p>
-			<ul class="divide-y divide-stone-200 dark:divide-night-600">
+			<ul class="divide-y divide-dawn-300 dark:divide-night-600">
 				{categories.map((category) => (
 					<li>
 						<a
 							href={getCategoryLink(category.name)}
-							class="group flex items-baseline justify-between gap-6 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="group flex items-baseline justify-between gap-6 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
-							<span class="text-base text-stone-950 transition-colors group-hover:text-stone-700 dark:text-night-50 dark:group-hover:text-night-200">
+							<span class="text-base text-dawn-800 transition-colors group-hover:text-dawn-700 dark:text-night-50 dark:group-hover:text-night-200">
 								{category.name}
 							</span>
-							<span class="text-sm tabular-nums text-stone-500 dark:text-night-300">
+							<span class="text-sm tabular-nums text-dawn-600 dark:text-night-300">
 								{getCountLabel(category.count, lang)}
 							</span>
 						</a>
