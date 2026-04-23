@@ -27,6 +27,18 @@
 	--color-night-800: #24283b;
 	--color-night-900: #1f2335;
 	--color-night-950: #16161e;
+	--color-dawn-50: #faf8f2;
+	--color-dawn-100: #f5f3ee;
+	--color-dawn-200: #e8e3d9;
+	--color-dawn-300: #dcd6cc;
+	--color-dawn-400: #b8aea1;
+	--color-dawn-500: #7c8196;
+	--color-dawn-600: #565f89;
+	--color-dawn-700: #414868;
+	--color-dawn-800: #24283b;
+	--color-dawn-900: #1a1d2c;
+	--color-dawn-950: #10121b;
+	--color-terracotta-600: #a04e2a;
 }
 
 .prose figure {
