@@ -93,6 +93,21 @@ html.dark .shiki span {
 }
 
 /*
+ * The `prose-code:*` utilities on post bodies target every <code>, including
+ * the one Shiki nests inside <pre>. That gives the code-block wrapper a chip
+ * background + padding + radius, which then peeks through the line-height gaps
+ * between each `<span class="line">` and reads as horizontal bars behind the
+ * code. Reset those properties for <pre><code> so only the <pre> background
+ * shows.
+ */
+.prose pre code {
+	background-color: transparent !important;
+	padding: 0 !important;
+	border-radius: 0 !important;
+	color: inherit !important;
+}
+
+/*
  * Light/dark theme toggle transition.
  * The .theme-transition class is added to <html> only during an active
  * toggle (via the script in Layout.astro), applies a 250ms color fade
