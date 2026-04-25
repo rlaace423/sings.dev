@@ -12,7 +12,7 @@
   - The mark stays monochrome and thin-stroke to match the existing header icons (search, theme toggle, `SocialIcon`).
 - **Surfaces Carrying Author Identity**:
   1. Header logo link — `SiteLogo` mark immediately to the left of the `sings.dev` text.
-  2. Home page hero eyebrow — identity-plus-topics line (`Singing Developer — Backend · MPC · Infrastructure`); exact wording may be revised in later hero-prose passes.
+  2. Home page hero — eyebrow `Singing Developer — Backend · MPC · Infrastructure` and `h1` (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). The hero carries no body prose; the rest of the home page (Categories block, Recent Posts) does the work of showing what the blog covers. See `docs/spec-home-theme.md`.
   3. `/about` page — structured summary, photo, socials, experience. See `docs/spec-about.md`.
   4. Footer copyright line — `© <year> sings.dev — Singing Developer`.
 - **Guardrails**:

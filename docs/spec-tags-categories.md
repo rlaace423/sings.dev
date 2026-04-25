@@ -14,6 +14,12 @@
     - Tags are multi-select filters.
     - Multiple selected tags use **OR** logic.
     - Category and selected tags combine with **AND** logic.
+  - The filter section carries its own locale-aware eyebrow (`추리기` / `Filter`) so it reads as an in-page narrowing tool, distinct from the navigational `둘러보기` / `Browse` block above it.
+
+- **Representative Tags on `/posts`**:
+  - The `/posts` archive shows a small set of representative tags inside the `둘러보기` / `Browse` block.
+  - Representative tags are derived at build time from the locale's visible posts as the top N tags by frequency (with alphabetical tiebreaker), via `getTopTagsForPosts(posts, REPRESENTATIVE_TAG_LIMIT)`.
+  - The list is not curated by hand. As posts grow, the representative tags surface organically without needing manual review.
 - **Archive Routes**:
   - Korean archive: `src/pages/posts/index.astro`
   - English archive: `src/pages/en/posts/index.astro`
@@ -27,10 +33,12 @@
   - Korean: `src/pages/category/[category].astro`
   - English: `src/pages/en/category/[category].astro`
   - Category pages are shallow landing pages.
-  - Each category page shows a short description, related tags only when there is actual signal, and a reverse-chronological post list.
+  - Each category page shows a short description (only when one is configured), related tags only when there is actual signal, and a reverse-chronological post list.
+  - Descriptions live in `src/data/archiveBrowse.ts`. When a category has no configured description, the description paragraph is omitted entirely rather than falling back to filler copy.
 - **Tag Pages**:
   - Korean: `src/pages/tags/[tag].astro`
   - English: `src/pages/en/tags/[tag].astro`
-  - Tag pages remain lightweight result pages in this iteration.
+  - Tag pages remain lightweight result pages.
+  - Tag pages do not carry a descriptive lede paragraph. The page reads: eyebrow, `#tag` heading, a single back link to the archive, then the post list. Filler copy explaining what a tag page is should not be added.
 - **Post Detail Pages**:
   - The shared post header exposes taxonomy navigation for the category and the full frontmatter tag list.

@@ -39,9 +39,11 @@
   - `src/pages/en/posts/index.astro` serves the English archive and only reads `blog/en/*`.
   - Each archive remains reverse-chronological.
   - `/posts` is the site's main archive and browse hub, but it must still read primarily as an archive rather than a portal page.
-  - The page flow is `intro -> browse -> filter -> post list`.
-  - The browse section is a static navigation layer where categories are the primary browse entry and curated representative tags are a secondary aid.
+  - The page flow is `header -> browse -> filter -> post list`.
+  - The page header is a minimal eyebrow (`Archive`) and an `h1` (`포스트` / `Posts`); no descriptive lede paragraph sits below the title. The page's own `<head>` description handles SEO copy.
+  - The browse section is a static navigation layer where categories are the primary browse entry and a small set of build-time-derived representative tags are a secondary aid (see `docs/spec-tags-categories.md`).
   - Browse links are navigational taxonomy links; they do not modify the current archive state.
+  - The filter section sits below the browse section under its own locale-aware eyebrow (`추리기` / `Filter`) so the navigational vs in-page-filter distinction is visible at a glance.
   - Filter controls operate only within the current archive page.
   - Search, if present in this iteration, remains a separate concern from taxonomy browsing.
   - Keep the archive text-first and minimalist. No image cards or heavy visual UI.
