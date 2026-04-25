@@ -11,8 +11,8 @@ test("returns locale-aware browse metadata", () => {
 	const ko = getArchiveBrowseConfig("ko");
 	const en = getArchiveBrowseConfig("en");
 
-	assert.deepEqual(ko.representativeTags, ["architecture", "docs", "operations"]);
-	assert.deepEqual(en.representativeTags, ["architecture", "docs", "operations"]);
+	assert.ok(ko.categoryDescriptions);
+	assert.ok(en.categoryDescriptions);
 	assert.equal(
 		getCategoryDescription("ko", "Development"),
 		"구현과 설계의 선택을 차분하게 풀어낸 글입니다.",

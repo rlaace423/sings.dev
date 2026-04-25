@@ -41,9 +41,6 @@ const { tag, posts } = Astro.props;
 		<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 			#{tag}
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200">
-			같은 태그를 가진 글만 모아서 볼 수 있는 화면입니다.
-		</p>
 		<p>
 			<a
 				href={getRelativeLocaleUrl("ko", "posts")}

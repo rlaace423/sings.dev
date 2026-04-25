@@ -3,7 +3,6 @@ import { slugifyTaxonomy } from "../utils/blog.ts";
 
 type ArchiveBrowseConfig = {
 	categoryDescriptions: Record<string, string>;
-	representativeTags: string[];
 };
 
 const archiveBrowseConfig: Record<Locale, ArchiveBrowseConfig> = {
@@ -13,7 +12,6 @@ const archiveBrowseConfig: Record<Locale, ArchiveBrowseConfig> = {
 			operations: "운영 과정에서 드러나는 시스템의 결을 다룹니다.",
 			essay: "기술 작업의 태도와 감각을 짧게 정리한 글입니다.",
 		},
-		representativeTags: ["architecture", "docs", "operations"],
 	},
 	en: {
 		categoryDescriptions: {
@@ -21,7 +19,6 @@ const archiveBrowseConfig: Record<Locale, ArchiveBrowseConfig> = {
 			operations: "Writing about the shape of systems in real operation.",
 			essay: "Short technical essays about practice, tone, and judgment.",
 		},
-		representativeTags: ["architecture", "docs", "operations"],
 	},
 };
 

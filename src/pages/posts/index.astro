@@ -3,9 +3,10 @@ import ArchiveBrowse from "../../components/ArchiveBrowse.astro";
 import ArchiveFilters from "../../components/ArchiveFilters.astro";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
-import { getArchiveBrowseConfig, getCategoryDescription } from "../../data/archiveBrowse";
+import { getCategoryDescription } from "../../data/archiveBrowse";
 import { getCollection } from "astro:content";
 import {
+	getTopTagsForPosts,
 	isVisiblePost,
 	matchesLocale,
 	normalizeTaxonomyTags,
@@ -14,10 +15,11 @@ import {
 	uniqueTags,
 } from "../../utils/blog";
 
+const REPRESENTATIVE_TAG_LIMIT = 3;
+
 const posts = sortPostsByDate(
 	await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post)),
 );
-const browseConfig = getArchiveBrowseConfig("ko");
 const categoryCounts = posts.reduce((counts, post) => {
 	const category = post.data.category;
 	if (!category) return counts;
@@ -32,9 +34,7 @@ const browseCategories = categories.map((category) => ({
 	description: getCategoryDescription("ko", category),
 	count: categoryCounts.get(category) ?? 0,
 }));
-const browseTags = browseConfig.representativeTags.filter((tag) =>
-	tags.includes(tag),
-);
+const browseTags = getTopTagsForPosts(posts, REPRESENTATIVE_TAG_LIMIT);
 ---
 
 <Layout
@@ -49,10 +49,6 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 		<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 			포스트
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200">
-			백엔드 아키텍처, MPC 시스템, 인프라 운영에 대한 글을 차분하게 모아 둔
-			목록입니다.
-		</p>
 	</section>
 
 	<ArchiveBrowse
@@ -64,6 +60,7 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 	<ArchiveFilters
 		categories={categories}
 		tags={tags}
+		filterLabel="추리기"
 		categoryLabel="카테고리"
 		tagsLabel="태그"
 		allCategoriesLabel="전체 카테고리"

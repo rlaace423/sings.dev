@@ -4,6 +4,7 @@ import { slugifyTaxonomy } from "../utils/blog";
 interface Props {
 	categories: string[];
 	tags: string[];
+	filterLabel?: string;
 	categoryLabel?: string;
 	tagsLabel?: string;
 	allCategoriesLabel?: string;
@@ -13,6 +14,7 @@ interface Props {
 const {
 	categories,
 	tags,
+	filterLabel = "Filter",
 	categoryLabel = "Categories",
 	tagsLabel = "Tags",
 	allCategoriesLabel = "All categories",
@@ -21,61 +23,66 @@ const {
 ---
 
 <section class="mt-8 space-y-4 border-t border-dawn-300 pt-6 dark:border-night-600">
-	<div class="max-w-sm space-y-2">
-		<label
-			for="category-filter"
-			class="text-xs font-semibold uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400"
-		>
-			{categoryLabel}
-		</label>
-		<div class="relative">
-			<select
-				id="category-filter"
-				data-category-filter
-				aria-label={categoryAriaLabel}
-				class="w-full appearance-none rounded-xl border border-dawn-300 bg-white px-3 py-2.5 pr-10 text-sm text-dawn-700 outline-none transition-colors focus:border-dawn-300 dark:border-night-600 dark:bg-night-800 dark:text-night-200 dark:focus:border-night-500"
+	<p class="text-xs font-semibold uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
+		{filterLabel}
+	</p>
+	<div class="space-y-4">
+		<div class="max-w-sm space-y-2">
+			<label
+				for="category-filter"
+				class="text-sm font-medium text-dawn-700 dark:text-night-200"
 			>
-				<option value="">{allCategoriesLabel}</option>
+				{categoryLabel}
+			</label>
+			<div class="relative">
+				<select
+					id="category-filter"
+					data-category-filter
+					aria-label={categoryAriaLabel}
+					class="w-full appearance-none rounded-xl border border-dawn-300 bg-white px-3 py-2.5 pr-10 text-sm text-dawn-700 outline-none transition-colors focus:border-dawn-300 dark:border-night-600 dark:bg-night-800 dark:text-night-200 dark:focus:border-night-500"
+				>
+					<option value="">{allCategoriesLabel}</option>
+					{
+						categories.map((category) => (
+							<option value={slugifyTaxonomy(category)}>{category}</option>
+						))
+					}
+				</select>
+				<svg
+					class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-dawn-600 dark:text-night-400"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+					aria-hidden="true"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+			</div>
+		</div>
+
+		<div class="space-y-3">
+			<p class="text-sm font-medium text-dawn-700 dark:text-night-200">
+				{tagsLabel}
+			</p>
+			<ul class="flex flex-wrap gap-2">
 				{
-					categories.map((category) => (
-						<option value={slugifyTaxonomy(category)}>{category}</option>
+					tags.map((tag) => (
+						<li>
+							<button
+								type="button"
+								data-tag-filter={slugifyTaxonomy(tag)}
+								aria-pressed="false"
+								class="inline-flex rounded-full bg-dawn-200 px-2.5 py-1 text-xs text-dawn-700 transition-colors hover:bg-dawn-300 hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:bg-night-900 dark:text-night-200 dark:hover:bg-night-700 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							>
+								#{tag}
+							</button>
+						</li>
 					))
 				}
-			</select>
-			<svg
-				class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-dawn-600 dark:text-night-400"
-				viewBox="0 0 20 20"
-				fill="currentColor"
-				aria-hidden="true"
-			>
-				<path
-					fill-rule="evenodd"
-					d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z"
-					clip-rule="evenodd"
-				/>
-			</svg>
+			</ul>
 		</div>
-	</div>
-
-	<div class="space-y-3">
-		<p class="text-xs font-semibold uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
-			{tagsLabel}
-		</p>
-		<ul class="flex flex-wrap gap-2">
-			{
-				tags.map((tag) => (
-					<li>
-						<button
-							type="button"
-							data-tag-filter={slugifyTaxonomy(tag)}
-							aria-pressed="false"
-							class="inline-flex rounded-full bg-dawn-200 px-2.5 py-1 text-xs text-dawn-700 transition-colors hover:bg-dawn-300 hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:bg-night-900 dark:text-night-200 dark:hover:bg-night-700 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
-						>
-							#{tag}
-						</button>
-					</li>
-				))
-			}
-		</ul>
 	</div>
 </section>
