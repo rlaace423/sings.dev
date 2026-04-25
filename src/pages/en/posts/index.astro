@@ -3,9 +3,10 @@ import ArchiveBrowse from "../../../components/ArchiveBrowse.astro";
 import ArchiveFilters from "../../../components/ArchiveFilters.astro";
 import Layout from "../../../layouts/Layout.astro";
 import PostList from "../../../components/PostList.astro";
-import { getArchiveBrowseConfig, getCategoryDescription } from "../../../data/archiveBrowse";
+import { getCategoryDescription } from "../../../data/archiveBrowse";
 import { getCollection } from "astro:content";
 import {
+	getTopTagsForPosts,
 	isVisiblePost,
 	matchesLocale,
 	normalizeTaxonomyTags,
@@ -14,10 +15,11 @@ import {
 	uniqueTags,
 } from "../../../utils/blog";
 
+const REPRESENTATIVE_TAG_LIMIT = 3;
+
 const posts = sortPostsByDate(
 	await getCollection("blog", (post) => matchesLocale(post.id, "en") && isVisiblePost(post)),
 );
-const browseConfig = getArchiveBrowseConfig("en");
 const categoryCounts = posts.reduce((counts, post) => {
 	const category = post.data.category;
 	if (!category) return counts;
@@ -32,9 +34,7 @@ const browseCategories = categories.map((category) => ({
 	description: getCategoryDescription("en", category),
 	count: categoryCounts.get(category) ?? 0,
 }));
-const browseTags = browseConfig.representativeTags.filter((tag) =>
-	tags.includes(tag),
-);
+const browseTags = getTopTagsForPosts(posts, REPRESENTATIVE_TAG_LIMIT);
 ---
 
 <Layout
@@ -49,9 +49,6 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 		<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 			Posts
 		</h1>
-		<p class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200">
-			A quiet list of essays, notes, and project logs.
-		</p>
 	</section>
 
 	<ArchiveBrowse
@@ -63,6 +60,7 @@ const browseTags = browseConfig.representativeTags.filter((tag) =>
 	<ArchiveFilters
 		categories={categories}
 		tags={tags}
+		filterLabel="Filter"
 		categoryLabel="Categories"
 		tagsLabel="Tags"
 		allCategoriesLabel="All categories"

@@ -21,6 +21,8 @@
 - Draft mode is in place: posts with `draft: true` render under `astro dev` and disappear from every public surface under `astro build` (see `docs/spec-drafts.md`).
 - Reading-comfort polish is in place: the light body bg is now `stone-100`, the dark body bg is a Tokyo Night Storm-inspired custom `night-800`, and the primary sans typeface is self-hosted Pretendard Std Variable (see `docs/spec-theme-typography.md`).
 - Light-mode custom `dawn` palette + `terracotta-600` link accent + smooth theme-toggle transition landed. Body ink now bridges with dark mode via the shared hex `#24283b` (`dawn-800` / `night-800`); `.theme-transition` class produces a 250ms color fade only during toggle. See `docs/spec-theme-typography.md`.
+- Discovery polish pass landed: `/posts` header is now eyebrow + `h1` only (descriptive lede dropped), category pages omit the description paragraph entirely when no description is configured, tag pages drop their filler lede line, the `/posts` filter section carries its own `추리기` / `Filter` eyebrow so it reads as in-page narrowing rather than navigation, and the `둘러보기` block's representative tags are now derived at build time as the top N by frequency instead of being hand-curated. See `docs/spec-posts.md` and `docs/spec-tags-categories.md`.
+- Home hero refinement landed: the hero is now eyebrow + `h1` only (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). Both body paragraphs were removed; the home page leans on the Categories block and Recent Posts beneath the hero to convey what the blog covers, instead of having the hero re-list topics or comment on its own quietness. See `docs/spec-home-theme.md` and `docs/spec-site-identity.md`.
 
 ## Priority Areas
 
@@ -33,9 +35,9 @@
   - Tags remain secondary browse links.
   - Post-to-post reading flow is in place.
   - The home page now carries a quiet Categories block as a browse entry point (see `docs/spec-home-categories.md`).
+  - Discovery polish pass landed: filler lede paragraphs on `/posts`, category pages, and tag pages have been removed; the `/posts` filter section now reads as a distinct in-page narrowing tool via its own `추리기` / `Filter` eyebrow; representative tags on the `둘러보기` block are derived from actual post frequency at build time instead of being hand-curated.
 - **Next Likely Work**:
-  - Continue refining category/tag browse structure without merging it with search.
-  - Polish discovery wording and signposting only when it makes the site feel clearer without making it louder.
+  - Discovery is now in a steady state. Future tweaks should be reactive — only when a specific surface starts feeling unclear or noisy in real reading.
 - **Avoid**:
   - Popularity widgets
   - Tag clouds
@@ -52,7 +54,7 @@
 - **Current Status**:
   - `/about` has landed as a structured identity + job-search surface with photo, summary, socials, and experience (see `docs/spec-about.md`).
   - The header now carries the `SiteLogo` microphone mark next to the `sings.dev` text, and the footer carries a `Singing Developer` signature (see `docs/spec-site-identity.md`).
-  - The home hero eyebrow has been repurposed as an identity + primary topic areas line; hero headline and body prose refinement is still outstanding.
+  - Home hero is finalized at eyebrow + single `h1` (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`); body prose has been removed entirely so the page leans on the Categories block and Recent Posts to convey what the blog covers.
 - **Direction**:
   - Strengthen personality and authorship without drifting into branding or self-promotion.
   - Keep identity editorial and human, not corporate or portfolio-like.
@@ -82,9 +84,8 @@
 
 ## Recommended Order
 
-1. Continue the remaining discovery work from the archive-hub foundation.
-2. Strengthen identity once browse and navigation feel steady.
-3. Refine in-post reading experience after the outer navigation and site voice are more settled.
+1. Refine in-post reading experience — article structure cues and long-post reading guidance for technical posts.
+2. Treat discovery and identity as reactive only; further work happens only when a specific surface starts feeling unclear or noisy in real reading.
 
 ## Success Criteria
 
