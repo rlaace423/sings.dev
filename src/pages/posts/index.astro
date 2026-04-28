@@ -83,120 +83,13 @@ const browseTags = getTopTagsForPosts(posts, REPRESENTATIVE_TAG_LIMIT);
 		</p>
 	</div>
 
-	<script is:inline>
-		(() => {
-			const archive = document.querySelector("[data-posts-archive]");
-			if (!(archive instanceof HTMLElement)) return;
+	<script>
+		import { mountArchiveFilter } from "../../utils/archiveFilter";
 
-			const categorySelect = document.querySelector("[data-category-filter]");
-			if (!(categorySelect instanceof HTMLSelectElement)) return;
-
-			const tagButtons = Array.from(
-				document.querySelectorAll("[data-tag-filter]"),
-			).filter((button) => button instanceof HTMLButtonElement);
-			const items = Array.from(
-				archive.querySelectorAll("[data-post-item]"),
-			).filter((item) => item instanceof HTMLElement);
-			const count = archive.querySelector("[data-results-count]");
-			const empty = archive.querySelector("[data-empty-results]");
-			const selectedTags = new Set();
-			const countAll = "총";
-			const countUnit = "개의 글";
-			const filteredSuffix = "조건에 맞음";
-
-			const activeClasses = [
-				"bg-dawn-800",
-				"text-dawn-50",
-				"dark:bg-night-50",
-				"dark:text-night-900",
-			];
-			const inactiveClasses = [
-				"bg-dawn-200",
-				"text-dawn-700",
-				"hover:bg-dawn-300",
-				"hover:text-dawn-800",
-				"dark:bg-night-900",
-				"dark:text-night-200",
-				"dark:hover:bg-night-700",
-				"dark:hover:text-night-50",
-			];
-
-			const syncTagButton = (button) => {
-				const tag = button.dataset.tagFilter ?? "";
-				const active = selectedTags.has(tag);
-
-				button.setAttribute("aria-pressed", String(active));
-				button.classList.toggle("bg-dawn-800", active);
-				button.classList.toggle("text-dawn-50", active);
-				button.classList.toggle("dark:bg-night-50", active);
-				button.classList.toggle("dark:text-night-900", active);
-
-				activeClasses.forEach((className) => {
-					if (!active) button.classList.remove(className);
-				});
-
-				inactiveClasses.forEach((className) => {
-					button.classList.toggle(className, !active);
-				});
-			};
-
-			const updateCount = (visibleCount) => {
-				const hasFilters =
-					categorySelect.value.length > 0 || selectedTags.size > 0;
-
-				if (count) {
-					count.textContent = hasFilters
-						? `${countAll} ${visibleCount}${countUnit} ${filteredSuffix}`
-						: `${countAll} ${visibleCount}${countUnit}`;
-				}
-				if (empty instanceof HTMLElement) empty.hidden = visibleCount !== 0;
-			};
-
-			const applyFilters = () => {
-				const selectedCategory = categorySelect.value;
-				let visibleCount = 0;
-
-				items.forEach((item) => {
-					const itemCategory = item.dataset.category ?? "";
-					const itemTags = (item.dataset.tags ?? "")
-						.split(",")
-						.map((tag) => tag.trim())
-						.filter(Boolean);
-
-					const matchesCategory =
-						selectedCategory === "" || itemCategory === selectedCategory;
-					const matchesTags =
-						selectedTags.size === 0 ||
-						itemTags.some((tag) => selectedTags.has(tag));
-					const visible = matchesCategory && matchesTags;
-
-					item.hidden = !visible;
-					item.classList.toggle("hidden", !visible);
-					if (visible) visibleCount += 1;
-				});
-
-				updateCount(visibleCount);
-			};
-
-			tagButtons.forEach((button) => {
-				syncTagButton(button);
-				button.addEventListener("click", () => {
-					const tag = button.dataset.tagFilter ?? "";
-					if (!tag) return;
-
-					if (selectedTags.has(tag)) {
-						selectedTags.delete(tag);
-					} else {
-						selectedTags.add(tag);
-					}
-
-					syncTagButton(button);
-					applyFilters();
-				});
-			});
-
-			categorySelect.addEventListener("change", applyFilters);
-			applyFilters();
-		})();
+		mountArchiveFilter({
+			format: "ko",
+			archive: "총 %count%개의 글",
+			filtered: "총 %count%개의 글 조건에 맞음",
+		});
 	</script>
 </Layout>
