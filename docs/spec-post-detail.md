@@ -62,6 +62,27 @@
     - Render the TOC above the article body in a native `<details>` / `<summary>` block.
     - Start the article body below the header with `mt-10` spacing.
 
+## Callouts in Post Bodies
+
+- **Authoring convention** (GitHub-style admonitions):
+  - `> [!NOTE]` — neutral aside (`참고` / `NOTE` label).
+  - `> [!WARNING]` — caution / pitfall (`주의` / `WARNING` label, terracotta accent).
+  - `> [!TIP]` — recommendation or rule of thumb (`팁` / `TIP` label).
+  - The marker must be the very first text in the blockquote. The body can be on the same line as the marker, on subsequent `>` lines, or split across multiple `>` paragraphs separated by a blank `>` line.
+  - Markers are case-insensitive. Anything other than the three supported types (e.g. `[!CAUTION]`) leaves the blockquote untouched.
+  - Outside callouts, `> ...` still renders as a regular Markdown blockquote.
+- **Visual treatment**:
+  - Each callout renders as `<aside class="callout" data-callout-type="...">` with a small uppercase tracked label, a 2px left border, and no background tint or icon.
+  - `note` and `tip` share the neutral dawn / night palette; only the label text distinguishes them. `warning` uses the `terracotta-600` accent.
+  - Locale-aware labels (Korean: `참고` / `주의` / `팁`; English: `NOTE` / `WARNING` / `TIP`) are emitted at build time based on the post's locale folder (`src/content/blog/ko/...` vs `.../en/...`).
+- **Authoring guidance**:
+  - Treat callouts as lightweight editorial asides, not as a required element. Most posts will not need one.
+  - Prefer at most one to two callouts per post. More than that and the typographic rhythm starts to read as templated.
+  - When a sentence about prerequisites or "skip ahead if you already know X" is needed, a `> [!NOTE]` block is the right vehicle — there is no separate "prerequisites" UI block on this site.
+- **Implementation location**:
+  - Authoring-to-HTML transformation: `src/utils/remarkAdmonition.ts`, wired in through `astro.config.mjs`'s `markdown.remarkPlugins`.
+  - Visual rules: `src/styles/global.css` under the `.prose aside.callout` selectors.
+
 ## Figures in Post Bodies
 
 - **Authoring convention**:
