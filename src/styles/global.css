@@ -71,6 +71,69 @@
 }
 
 /*
+ * Callouts (admonitions).
+ * The `remarkAdmonition` plugin in `src/utils/remarkAdmonition.ts` rewrites
+ * GitHub-style `> [!NOTE]` / `> [!WARNING]` / `> [!TIP]` blockquotes into an
+ * `<aside class="callout" data-callout-type="...">` with a small uppercase
+ * label and the original blockquote body. The visual register here intentionally
+ * mirrors `PostSummary.astro`: a thin left border, an uppercase tracked label,
+ * no background tint, no icons. Tip and note share the same neutral palette so
+ * the only differentiator between them is the label text — the cooler-toned
+ * site stays calm even when several callouts appear in a single post.
+ */
+.prose aside.callout {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	border-left-width: 2px;
+	border-left-style: solid;
+	padding: 0.25rem 0 0.25rem 1.25rem;
+}
+.prose aside.callout .callout-label {
+	margin: 0 0 0.5rem 0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+}
+.prose aside.callout > p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.prose aside.callout > p + p {
+	margin-top: 0.75rem;
+}
+
+.prose aside.callout[data-callout-type="note"],
+.prose aside.callout[data-callout-type="tip"] {
+	border-color: rgb(86 95 137 / 1); /* dawn-600 */
+}
+.prose aside.callout[data-callout-type="note"] .callout-label,
+.prose aside.callout[data-callout-type="tip"] .callout-label {
+	color: rgb(86 95 137 / 1);
+}
+.prose aside.callout[data-callout-type="warning"] {
+	border-color: rgb(160 78 42 / 1); /* terracotta-600 */
+}
+.prose aside.callout[data-callout-type="warning"] .callout-label {
+	color: rgb(160 78 42 / 1);
+}
+
+:where(.dark) .prose aside.callout[data-callout-type="note"],
+:where(.dark) .prose aside.callout[data-callout-type="tip"] {
+	border-color: rgb(65 72 104 / 1); /* night-500 */
+}
+:where(.dark) .prose aside.callout[data-callout-type="note"] .callout-label,
+:where(.dark) .prose aside.callout[data-callout-type="tip"] .callout-label {
+	color: rgb(115 122 162 / 1); /* night-300 */
+}
+:where(.dark) .prose aside.callout[data-callout-type="warning"] {
+	border-color: rgb(160 78 42 / 1); /* terracotta-600 */
+}
+:where(.dark) .prose aside.callout[data-callout-type="warning"] .callout-label {
+	color: rgb(160 78 42 / 1);
+}
+
+/*
  * Shiki dual-theme class-based dark mode override.
  * Astro's default markdown highlighter (Shiki) applies the configured light
  * theme inline on pre/span elements and exposes the dark theme through
