@@ -1,0 +1,35 @@
+# Spec: Deploy & Operations
+
+- **Goal**: Document the deploy pipeline so the build outputs, deploy command, and runtime expectations stay aligned with the project's actual setup.
+- **Reference Philosophy**: The site is a pure static deploy. There is no Workers runtime, no SSR, no edge-function logic. Everything readers see comes from prebuilt HTML, CSS, JS, and the Pagefind search index.
+- **Deploy Target**:
+  - Cloudflare static assets, via [`wrangler deploy`](https://developers.cloudflare.com/workers/wrangler/).
+  - Project name: `sings-dev` (see `wrangler.jsonc`).
+  - Public URL: [https://sings.dev](https://sings.dev).
+  - Asset directory: `./dist` (the Astro build output).
+- **Build Pipeline**:
+  - `npm run build` runs `astro build && pagefind --site dist`.
+  - Astro produces static HTML / CSS / JS into `./dist`.
+  - Pagefind walks `./dist` and writes its index into `./dist/pagefind/`. The dev server still works without this index, but the search modal will return no results until a build runs.
+  - Sitemap generation runs as part of Astro's build via `@astrojs/sitemap`.
+- **Deploy Command**:
+  - From the repo root, after a successful build: `npx wrangler deploy`.
+  - There is no `deploy` script in `package.json`. Deploys are intentionally manual so that build verification happens explicitly each time.
+- **Runtime Expectations**:
+  - No Workers script, no functions, no environment variables required at runtime.
+  - All content is prerendered at build time. Publishing a new post requires a fresh build + deploy.
+  - Theme (light / dark) is resolved client-side from `localStorage` and `prefers-color-scheme`. Locale routing is fully static. No server contribution at request time.
+- **Pre-deploy Checklist**:
+  - `npm test` passes.
+  - `npm run build` completes without errors.
+  - `dist/pagefind/` exists and the build log shows locale filters for both `ko` and `en`.
+  - Locally previewed via `npm run preview` at least once when something user-visible has changed.
+- **Rollback**:
+  - Cloudflare retains previous deploy versions; rolling back is possible from the Cloudflare dashboard for the `sings-dev` project.
+  - From source, redeploying a known-good git ref also works: check out the ref, run `npm run build`, then `npx wrangler deploy`.
+  - There is no separate database or content store; everything ships in the bundle.
+- **Out of Scope for This Spec**:
+  - DNS / domain configuration. Domain ownership and DNS routing are managed outside the repo.
+  - CI/CD automation. There is no GitHub Actions workflow yet; deploys run from a developer machine.
+- **Future Work**:
+  - A GitHub Actions workflow that runs `npm test`, `npm run build`, and `npx wrangler deploy` on tagged commits could be added later. Until then, manual deploy stays the source of truth and the pre-deploy checklist above is the only gate.
