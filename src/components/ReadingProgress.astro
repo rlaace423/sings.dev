@@ -51,10 +51,14 @@
 				let progress = 0;
 				if (scrollable > 0) {
 					progress = (window.scrollY - proseTop) / scrollable;
-				} else if (window.scrollY >= proseTop) {
-					// Prose fits in the viewport; once the reader's scrollY reaches the
-					// prose's top, treat the post as fully seen.
-					progress = 1;
+				} else if (window.innerHeight > 0) {
+					// Prose fits in the viewport. Interpolate over the window where the
+					// prose enters the viewport so the bar fills smoothly instead of
+					// snapping from 0 to 1 at a single threshold.
+					const enterStart = proseTop - window.innerHeight;
+					progress = (window.scrollY - enterStart) / window.innerHeight;
+				} else {
+					progress = 0;
 				}
 				if (progress < 0) progress = 0;
 				if (progress > 1) progress = 1;
