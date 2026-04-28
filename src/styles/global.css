@@ -75,18 +75,25 @@
  * The `remarkAdmonition` plugin in `src/utils/remarkAdmonition.ts` rewrites
  * GitHub-style `> [!NOTE]` / `> [!WARNING]` / `> [!TIP]` blockquotes into an
  * `<aside class="callout" data-callout-type="...">` with a small uppercase
- * label and the original blockquote body. The visual register here intentionally
- * mirrors `PostSummary.astro`: a thin left border, an uppercase tracked label,
- * no background tint, no icons. Tip and note share the same neutral palette so
- * the only differentiator between them is the label text — the cooler-toned
- * site stays calm even when several callouts appear in a single post.
+ * label and the original blockquote body.
+ *
+ * Visual register: a thin four-sided frame with a slightly heavier left
+ * accent. The frame uses the site's existing hairline color (`dawn-300` /
+ * `night-600`, also used for figure borders) so the box feels structurally
+ * the same as other contained surfaces on the site. The left edge stays
+ * 2px in the type's accent color so the family resemblance with
+ * `PostSummary.astro` is preserved and the type differentiation reads
+ * without a label scan. Tip and note share the same neutral palette so the
+ * only differentiator between them is the label text. No background tint,
+ * no icons, no decorative chrome.
  */
 .prose aside.callout {
 	margin-top: 1.5rem;
 	margin-bottom: 1.5rem;
+	border: 1px solid;
 	border-left-width: 2px;
-	border-left-style: solid;
-	padding: 0.25rem 0 0.25rem 1.25rem;
+	border-radius: 0.25rem;
+	padding: 0.75rem 1rem 0.75rem 1.25rem;
 }
 .prose aside.callout .callout-label {
 	margin: 0 0 0.5rem 0;
@@ -105,14 +112,16 @@
 
 .prose aside.callout[data-callout-type="note"],
 .prose aside.callout[data-callout-type="tip"] {
-	border-color: rgb(86 95 137 / 1); /* dawn-600 */
+	border-color: rgb(220 214 204 / 1); /* dawn-300 frame */
+	border-left-color: rgb(86 95 137 / 1); /* dawn-600 accent */
 }
 .prose aside.callout[data-callout-type="note"] .callout-label,
 .prose aside.callout[data-callout-type="tip"] .callout-label {
 	color: rgb(86 95 137 / 1);
 }
 .prose aside.callout[data-callout-type="warning"] {
-	border-color: rgb(160 78 42 / 1); /* terracotta-600 */
+	border-color: rgb(220 214 204 / 1); /* dawn-300 frame */
+	border-left-color: rgb(160 78 42 / 1); /* terracotta-600 accent */
 }
 .prose aside.callout[data-callout-type="warning"] .callout-label {
 	color: rgb(160 78 42 / 1);
@@ -120,14 +129,16 @@
 
 :where(.dark) .prose aside.callout[data-callout-type="note"],
 :where(.dark) .prose aside.callout[data-callout-type="tip"] {
-	border-color: rgb(65 72 104 / 1); /* night-500 */
+	border-color: rgb(59 66 97 / 1); /* night-600 frame */
+	border-left-color: rgb(65 72 104 / 1); /* night-500 accent */
 }
 :where(.dark) .prose aside.callout[data-callout-type="note"] .callout-label,
 :where(.dark) .prose aside.callout[data-callout-type="tip"] .callout-label {
 	color: rgb(115 122 162 / 1); /* night-300 */
 }
 :where(.dark) .prose aside.callout[data-callout-type="warning"] {
-	border-color: rgb(160 78 42 / 1); /* terracotta-600 */
+	border-color: rgb(59 66 97 / 1); /* night-600 frame */
+	border-left-color: rgb(160 78 42 / 1); /* terracotta-600 accent */
 }
 :where(.dark) .prose aside.callout[data-callout-type="warning"] .callout-label {
 	color: rgb(160 78 42 / 1);
