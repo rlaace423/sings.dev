@@ -46,14 +46,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 					<article class="space-y-4">
 						<div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
 							<a
-								href={
-									lang === defaultLocale
-										? categoryHref(post.data.category)
-										: getRelativeLocaleUrl(
-												lang,
-												`category/${slugifyTaxonomy(post.data.category)}`,
-											)
-								}
+								href={categoryHref(post.data.category, lang)}
 								class="rounded-full border border-dawn-300 px-3 py-1 text-dawn-700 transition-colors hover:border-dawn-300 hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:border-night-600 dark:text-night-200 dark:hover:border-night-500 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 							>
 								{post.data.category ?? "Uncategorized"}
@@ -85,14 +78,7 @@ const lang = isLocale(langProp) ? langProp : defaultLocale;
 									{post.data.tags?.map((tag) => (
 										<li>
 											<a
-												href={
-													lang === defaultLocale
-														? tagHref(tag)
-														: getRelativeLocaleUrl(
-																lang,
-																`tags/${slugifyTaxonomy(tag)}`,
-															)
-												}
+												href={tagHref(tag, lang)}
 												class="inline-flex rounded-full bg-dawn-200 px-3 py-1 text-sm text-dawn-700 transition-colors hover:bg-dawn-300 hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:bg-night-900 dark:text-night-200 dark:hover:bg-night-700 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 											>
 												#{tag}

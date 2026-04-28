@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content";
-import type { Locale } from "../i18n/ui";
+import { defaultLocale, type Locale } from "../i18n/ui.ts";
 
 type BlogPost = CollectionEntry<"blog">;
 type SeriesMetadata = NonNullable<BlogPost["data"]["series"]>;
@@ -95,11 +95,18 @@ export const slugifyTaxonomy = (value: string | null | undefined) =>
 		.replace(/[^a-z0-9]+/g, "-")
 		.replace(/^-+|-+$/g, "") || "untitled";
 
-export const categoryHref = (category: string | null | undefined) =>
-	`/category/${slugifyTaxonomy(category)}/`;
+export const categoryHref = (
+	category: string | null | undefined,
+	lang?: Locale,
+) => {
+	const prefix = lang && lang !== defaultLocale ? `/${lang}` : "";
+	return `${prefix}/category/${slugifyTaxonomy(category)}/`;
+};
 
-export const tagHref = (tag: string | null | undefined) =>
-	`/tags/${slugifyTaxonomy(tag)}/`;
+export const tagHref = (tag: string | null | undefined, lang?: Locale) => {
+	const prefix = lang && lang !== defaultLocale ? `/${lang}` : "";
+	return `${prefix}/tags/${slugifyTaxonomy(tag)}/`;
+};
 
 export const normalizeTaxonomyTags = (
 	tags: Array<string | null | undefined>,
