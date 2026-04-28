@@ -66,8 +66,8 @@ test("global.css declares the theme-transition rule with the expected properties
 
 test("global.css :where(.dark) figure rules reference night colors", async () => {
 	const css = await readFile(globalCssUrl, "utf8");
-	assert.match(css, /:where\(\.dark\) \.prose figure img[^}]*border-color:\s*rgb\(59 66 97 \/ 1\)/);
-	assert.match(css, /:where\(\.dark\) \.prose figcaption[^}]*color:\s*rgb\(136 145 184 \/ 1\)/);
+	assert.match(css, /:where\(\.dark\) \.prose-site figure img[^}]*border-color:\s*rgb\(59 66 97 \/ 1\)/);
+	assert.match(css, /:where\(\.dark\) \.prose-site figcaption[^}]*color:\s*rgb\(136 145 184 \/ 1\)/);
 });
 
 test("dark-mode muted text (night-400) clears WCAG AA 4.5:1 on night-800 body", async () => {
