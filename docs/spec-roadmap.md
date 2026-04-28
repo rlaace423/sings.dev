@@ -23,6 +23,7 @@
 - Light-mode custom `dawn` palette + `terracotta-600` link accent + smooth theme-toggle transition landed. Body ink now bridges with dark mode via the shared hex `#24283b` (`dawn-800` / `night-800`); `.theme-transition` class produces a 250ms color fade only during toggle. See `docs/spec-theme-typography.md`.
 - Discovery polish pass landed: `/posts` header is now eyebrow + `h1` only (descriptive lede dropped), category pages omit the description paragraph entirely when no description is configured, tag pages drop their filler lede line, the `/posts` filter section carries its own `추리기` / `Filter` eyebrow so it reads as in-page narrowing rather than navigation, and the `둘러보기` block's representative tags are now derived at build time as the top N by frequency instead of being hand-curated. See `docs/spec-posts.md` and `docs/spec-tags-categories.md`.
 - Home hero refinement landed: the hero is now eyebrow + `h1` only (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). Both body paragraphs were removed; the home page leans on the Categories block and Recent Posts beneath the hero to convey what the blog covers, instead of having the hero re-list topics or comment on its own quietness. See `docs/spec-home-theme.md` and `docs/spec-site-identity.md`.
+- Optional summary aids landed: posts may declare an opt-in `summary` frontmatter field that renders as a quiet left-bordered block between the post header and the prose body, with a locale-aware `요약` / `Summary` eyebrow. Summaries stay editorial — not every post needs one, and posts without a summary render exactly as before. See `docs/spec-post-detail.md`.
 
 ## Priority Areas
 
@@ -69,9 +70,9 @@
 - **Intent**: Make long posts easier to scan, understand, and stay with while preserving the writing's rhythm.
 - **Current Status**:
   - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment, and `src/content/blog/{ko,en}/iam-policy-checklist/` for a coverage-fixture example post.
+  - Optional summary aids landed: posts opt in via a `summary` frontmatter field, which renders as a quiet left-bordered block between the post header and the prose body. See `docs/spec-post-detail.md`.
 - **Remaining Surfaces**:
   - Article structure cues
-  - Optional summary aids for suitable posts
   - Additional reading guidance inside long technical posts where the current flow is still too thin
 - **Direction**:
   - Prefer lightweight editorial aids over rigid templates.
