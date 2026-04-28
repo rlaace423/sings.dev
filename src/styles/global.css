@@ -10,6 +10,17 @@
 	font-display: swap;
 }
 
+/*
+ * Reserve space for the sticky site header (~85px tall) when the browser
+ * lands on a fragment URL or when a TOC link triggers an in-page scroll.
+ * Without this, anchor jumps put the target heading flush against the top
+ * of the viewport, hiding it behind the header. 6rem matches the
+ * `top-24` offset used by the sticky TOC rail on post detail pages.
+ */
+html {
+	scroll-padding-top: 6rem;
+}
+
 @theme {
 	--font-sans:
 		"Pretendard Std Variable", "Pretendard Std", "Pretendard",
