@@ -24,6 +24,9 @@
 - Discovery polish pass landed: `/posts` header is now eyebrow + `h1` only (descriptive lede dropped), category pages omit the description paragraph entirely when no description is configured, tag pages drop their filler lede line, the `/posts` filter section carries its own `추리기` / `Filter` eyebrow so it reads as in-page narrowing rather than navigation, and the `둘러보기` block's representative tags are now derived at build time as the top N by frequency instead of being hand-curated. See `docs/spec-posts.md` and `docs/spec-tags-categories.md`.
 - Home hero refinement landed: the hero is now eyebrow + `h1` only (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). Both body paragraphs were removed; the home page leans on the Categories block and Recent Posts beneath the hero to convey what the blog covers, instead of having the hero re-list topics or comment on its own quietness. See `docs/spec-home-theme.md` and `docs/spec-site-identity.md`.
 - Optional summary aids landed: posts may declare an opt-in `summary` frontmatter field that renders as a quiet left-bordered block between the post header and the prose body, with a locale-aware `요약` / `Summary` eyebrow. Summaries stay editorial — not every post needs one, and posts without a summary render exactly as before. See `docs/spec-post-detail.md`.
+- Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) are parsed at build time by `src/utils/remarkAdmonition.ts` and rendered as restrained four-sided boxes (2px type-color left accent + 1px hairline frame on the other three sides + 4px radius), with locale-aware uppercase labels. The visual register stays in the site's existing left-rail vocabulary. See `docs/spec-post-detail.md`.
+- TOC scroll-spy landed: the desktop sticky TOC and the mobile `<details>` TOC mark the currently-visible H2 / H3 through a color shift, a 500-weight bump, and a 2px `::before` bar in the gap between the aside's left rail and the link text. The sticky offset was raised to clear the 85px header (`top-24` rail + matching `scroll-padding-top: 6rem` on `html`), so anchor jumps from TOC clicks land below the header rather than under it.
+- Reading progress bar landed: a 2px hairline at the top of post detail pages tracks reader progress through the article's prose body (not full window scroll), so the bar reaches 100% the moment the prose ends rather than the moment the page ends. Mounted only on `[...slug].astro` pages; other surfaces stay free of this chrome. See `docs/spec-post-detail.md`.
 
 ## Priority Areas
 
@@ -71,10 +74,11 @@
 - **Current Status**:
   - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment, and `src/content/blog/{ko,en}/iam-policy-checklist/` for a coverage-fixture example post.
   - Optional summary aids landed: posts opt in via a `summary` frontmatter field, which renders as a quiet left-bordered block between the post header and the prose body. See `docs/spec-post-detail.md`.
-- **Remaining Surfaces** (the "Article structure cues" bucket, scoped):
-  - **Callouts** — GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) parsed from markdown and rendered as restrained left-bordered asides matching the existing PostSummary tone. Start with three types maximum. No icons. Locale-aware uppercase eyebrow (`참고` / `NOTE` etc.). Highest priority because it bridges Notion-style authoring habits into Markdown without pulling in a foreign visual register.
-  - **TOC scroll-spy** — on the desktop sticky TOC, mark the currently-visible section through a 1px left bar or weight change, not a colored fill. Mobile TOC stays a `<details>` block (scroll-spy is meaningless when collapsed).
-  - **Reading progress bar** — hairline (1-2px) indicator at the top of post detail pages, in a muted palette token, only on `[...slug].astro` pages. Not viewport-wide chrome on every site surface.
+  - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) become four-sided boxes with a 2px type-color left accent and a 1px hairline frame on the other three sides, plus a small 4px radius. Locale-aware labels. See `docs/spec-post-detail.md`.
+  - TOC scroll-spy landed: the active section is marked through a color shift, a 500-weight bump, and a 2px `::before` bar; sticky TOC was raised to `top-24` and `html` got `scroll-padding-top: 6rem` so the rail and anchor jumps clear the 85px header. See `docs/spec-post-detail.md`.
+  - Reading progress bar landed: 2px hairline at viewport top, fills against the article's prose body so 100% lines up with "post finished," not "page finished." Mounted only on `[...slug].astro`. See `docs/spec-post-detail.md`.
+- **Next Likely Work**:
+  - Reactive only. The "Article structure cues" bucket is now closed; further reading-aid work happens only when an actual long post starts feeling unclear or noisy in practice.
 - **Decided Not To Add** (handled by the writing itself, not by UI):
   - Section numbering on `H2` / `H3` — the H-level styling is the structure cue.
   - Per-section horizontal dividers — H2 spacing already separates sections.
@@ -94,11 +98,9 @@
 
 ## Recommended Order
 
-1. Refine in-post reading experience, in this order inside the pass:
-   1. Callouts (highest ROI — directly improves the authoring workflow for anyone migrating from Notion-style writing).
-   2. TOC scroll-spy (small, safe enhancement to an existing component).
-   3. Reading progress bar (handle last; visually new chrome, so verify tone holds before shipping).
-2. Treat discovery and identity as reactive only; further work happens only when a specific surface starts feeling unclear or noisy in real reading.
+All three priority areas (Discovery, Identity, In-Post Reading Experience) are now in a steady state. The roadmap moves into reactive-only mode: future work begins when a specific surface starts feeling unclear or noisy in real reading or writing, not on a preemptive schedule.
+
+When the next reactive item surfaces, route it back through the appropriate priority area above and treat the corresponding **Avoid** list as the first guardrail.
 
 ## Success Criteria
 

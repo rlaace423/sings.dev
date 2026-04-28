@@ -33,7 +33,9 @@ Posts marked `draft: true` render under `npm run dev` and disappear from any `np
 
 ## Authoring posts
 
-Posts live under `src/content/blog/{ko,en}/<slug>/index.md`. Each post is a folder so images can co-locate with the post body and be referenced through relative paths. Frontmatter, the optional summary block, the figure / `#wide` authoring rules, and the series-title convention are all documented in [`docs/spec-posts.md`](docs/spec-posts.md) and [`docs/spec-post-detail.md`](docs/spec-post-detail.md).
+Posts live under `src/content/blog/{ko,en}/<slug>/index.md`. Each post is a folder so images can co-locate with the post body and be referenced through relative paths. Frontmatter, the optional summary block, the figure / `#wide` authoring rules, the GitHub-style callouts (`> [!NOTE]` / `> [!WARNING]` / `> [!TIP]`), and the series-title convention are all documented in [`docs/spec-posts.md`](docs/spec-posts.md) and [`docs/spec-post-detail.md`](docs/spec-post-detail.md).
+
+Reading aids on post detail pages — the sticky TOC with scroll-spy, the hairline reading progress bar at the top of the viewport, and the related-reading block at the bottom — render automatically and do not require any extra frontmatter.
 
 Static `/about` content lives under `src/content/pages/{ko,en}/about.md`.
 
