@@ -21,7 +21,7 @@ const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <
 
 {
 	items.length > 0 && (
-		<nav aria-label={ariaLabel} class="text-sm text-dawn-700 dark:text-night-200">
+		<nav data-toc aria-label={ariaLabel} class="text-sm text-dawn-700 dark:text-night-200">
 			<p class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-dawn-600 dark:text-night-400">
 				{title}
 			</p>
@@ -30,7 +30,7 @@ const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <
 					<li class:list={[heading.depth > 2 && "pl-4"]}>
 						<a
 							href={`#${heading.slug}`}
-							class="block leading-6 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							class="toc-link block leading-6 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 						>
 							{heading.text}
 						</a>
@@ -40,3 +40,100 @@ const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <
 		</nav>
 	)
 }
+
+<script is:inline>
+	(() => {
+		if (window.__tocScrollSpyInit) return;
+		window.__tocScrollSpyInit = true;
+
+		function init() {
+			// Derive the tracked heading set from the TOC links themselves so we
+			// follow only the headings the TOC component decided to surface (h2 +
+			// h3 inside the post body) and never accidentally pick up an h2 from
+			// elsewhere on the page (e.g. the comments section heading).
+			const tocLinks = Array.from(
+				document.querySelectorAll('nav[data-toc] a[href^="#"]'),
+			);
+			if (tocLinks.length === 0) return;
+
+			// Build id -> [...links] so both the desktop sticky TOC and the mobile
+			// <details> TOC update together. The mobile one is hidden until the
+			// user opens the <details>, but its active state stays correct.
+			const linksByHash = new Map();
+			for (const link of tocLinks) {
+				const href = link.getAttribute("href");
+				if (!href || !href.startsWith("#") || href.length < 2) continue;
+				const id = href.slice(1);
+				if (!linksByHash.has(id)) linksByHash.set(id, []);
+				linksByHash.get(id).push(link);
+			}
+			if (linksByHash.size === 0) return;
+
+			// Resolve headings in document order. The TOC renders headings in
+			// document order, so iterating linksByHash keys gives us the same.
+			const headings = [];
+			for (const id of linksByHash.keys()) {
+				const el = document.getElementById(id);
+				if (el) headings.push(el);
+			}
+			if (headings.length === 0) return;
+
+			function clearActive() {
+				for (const links of linksByHash.values()) {
+					for (const link of links) link.classList.remove("toc-active");
+				}
+			}
+
+			function setActive(id) {
+				for (const [otherId, links] of linksByHash) {
+					const isActive = otherId === id;
+					for (const link of links) {
+						link.classList.toggle("toc-active", isActive);
+					}
+				}
+			}
+
+			let ticking = false;
+			function updateActive() {
+				// Trigger line at 25% from the top of the viewport. The active
+				// heading is the deepest one whose top is at or above this line.
+				const triggerY = window.scrollY + window.innerHeight * 0.25;
+				let activeId = null;
+				for (const heading of headings) {
+					if (heading.offsetTop <= triggerY) {
+						activeId = heading.id;
+					} else {
+						break;
+					}
+				}
+				if (activeId) {
+					setActive(activeId);
+				} else {
+					// Reader hasn't reached the first heading yet — leave the TOC
+					// unhighlighted rather than falsely activating the first link.
+					clearActive();
+				}
+			}
+
+			function onScrollOrResize() {
+				if (!ticking) {
+					window.requestAnimationFrame(() => {
+						updateActive();
+						ticking = false;
+					});
+					ticking = true;
+				}
+			}
+
+			window.addEventListener("scroll", onScrollOrResize, { passive: true });
+			window.addEventListener("resize", onScrollOrResize, { passive: true });
+			updateActive();
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", init);
+		} else {
+			init();
+		}
+	})();
+</script>
