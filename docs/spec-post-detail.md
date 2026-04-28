@@ -33,6 +33,12 @@
   - Accept `headings` from `await render(entry)`.
   - Render an unordered list of anchor links for level 2 and level 3 headings.
   - Allow localized labels such as `목차` / `이 글의 흐름` and `Table of contents` / `Contents`.
+  - Mark the `<nav>` with `data-toc` and the link with `toc-link` so the scroll-spy script can identify them. Both the desktop sticky TOC and the mobile `<details>` TOC share the same script (kept idempotent across multiple component instances on a page).
+  - **Scroll-spy active state**:
+    - The script tracks H2 / H3 headings whose IDs are referenced by TOC links and applies `toc-active` to the link of the heading whose top is the most recent above the 25% viewport trigger line.
+    - The active state is rendered through three minimal cues only: a color shift to the prominent body ink (`dawn-800` / `night-50`), a `font-weight` bump to 500, and a 2px vertical bar drawn via `::before` inside the gap between the aside's left rail and the link text. No colored fill, no background.
+    - When the reader has not yet scrolled past the first heading, no link is marked active rather than falsely highlighting the first item.
+    - Visibility-aware behavior: the script uses `requestAnimationFrame` for scroll throttling, so updates pause naturally when the tab is hidden and resume when it becomes visible again.
 - **Post Reading Flow**:
   - Render a dedicated series-navigation block below the article body when a post has `series` metadata.
   - Render a shared related-reading block for all posts when there are strong related candidates.
