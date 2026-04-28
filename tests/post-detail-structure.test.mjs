@@ -169,6 +169,7 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 	const postHeaderStubPath = join(tempDir, "src", "components", "PostHeader.ts");
 	const postReadingFlowStubPath = join(tempDir, "src", "components", "PostReadingFlow.ts");
 	const postSummaryStubPath = join(tempDir, "src", "components", "PostSummary.ts");
+	const readingProgressStubPath = join(tempDir, "src", "components", "ReadingProgress.ts");
 	const tocStubPath = join(tempDir, "src", "components", "TOC.ts");
 	const commentsStubPath = join(tempDir, "src", "components", "Comments.ts");
 	const blogUtilsStubPath = join(tempDir, "src", "utils", "blog.ts");
@@ -265,6 +266,19 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			),
 		);
 		await writeFile(
+			readingProgressStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					'<div data-reading-progress-stub />',
+					"",
+				].join("\n"),
+				join(tempDir, "ReadingProgressStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
 			tocStubPath,
 			await compileAstroSource(
 				[
@@ -349,6 +363,8 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			["../../../components/PostReadingFlow.astro", "../../../components/PostReadingFlow.ts"],
 			["../../components/PostSummary.astro", "../../components/PostSummary.ts"],
 			["../../../components/PostSummary.astro", "../../../components/PostSummary.ts"],
+			["../../components/ReadingProgress.astro", "../../components/ReadingProgress.ts"],
+			["../../../components/ReadingProgress.astro", "../../../components/ReadingProgress.ts"],
 			["../../components/TOC.astro", "../../components/TOC.ts"],
 			["../../../components/TOC.astro", "../../../components/TOC.ts"],
 			["../../components/Comments.astro", "../../components/Comments.ts"],

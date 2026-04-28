@@ -5,6 +5,7 @@ import Comments from "../../../components/Comments.astro";
 import PostHeader from "../../../components/PostHeader.astro";
 import PostReadingFlow from "../../../components/PostReadingFlow.astro";
 import PostSummary from "../../../components/PostSummary.astro";
+import ReadingProgress from "../../../components/ReadingProgress.astro";
 import TOC from "../../../components/TOC.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
@@ -60,6 +61,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 	lang="en"
 	contentClass="max-w-none"
 >
+	<ReadingProgress />
 	<article
 		class="mx-auto max-w-5xl"
 		data-pagefind-body

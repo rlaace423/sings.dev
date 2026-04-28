@@ -1,0 +1,86 @@
+---
+/**
+ * Hairline reading-progress indicator for post detail pages.
+ * Mounted by `src/pages/posts/[...slug].astro` and the en/ counterpart only;
+ * other surfaces (home, archive, taxonomy, /about) intentionally do not show
+ * this bar.
+ *
+ * The bar tracks the reader's progress through the article's prose body
+ * (`article .prose`) — not the full window scroll — so it reads as "how
+ * much of the post is left", with comments and the related-reading footer
+ * sitting after the bar has already filled.
+ */
+---
+
+<div
+	data-reading-progress
+	aria-hidden="true"
+	class="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5"
+>
+	<div
+		data-reading-progress-fill
+		class="h-full origin-left bg-dawn-600 dark:bg-night-300"
+		style="transform: scaleX(0)"
+	>
+	</div>
+</div>
+
+<script is:inline>
+	(() => {
+		if (window.__readingProgressInit) return;
+		window.__readingProgressInit = true;
+
+		function init() {
+			const fill = document.querySelector("[data-reading-progress-fill]");
+			if (!fill) return;
+
+			const prose = document.querySelector("article .prose");
+			if (!prose) {
+				fill.style.transform = "scaleX(0)";
+				return;
+			}
+
+			let ticking = false;
+
+			function update() {
+				const rect = prose.getBoundingClientRect();
+				const proseTop = rect.top + window.scrollY;
+				const proseHeight = rect.height;
+				const scrollable = proseHeight - window.innerHeight;
+
+				let progress = 0;
+				if (scrollable > 0) {
+					progress = (window.scrollY - proseTop) / scrollable;
+				} else if (window.scrollY >= proseTop) {
+					// Prose fits in the viewport; once the reader's scrollY reaches the
+					// prose's top, treat the post as fully seen.
+					progress = 1;
+				}
+				if (progress < 0) progress = 0;
+				if (progress > 1) progress = 1;
+
+				fill.style.transform = "scaleX(" + progress + ")";
+			}
+
+			function onScrollOrResize() {
+				if (!ticking) {
+					window.requestAnimationFrame(() => {
+						update();
+						ticking = false;
+					});
+					ticking = true;
+				}
+			}
+
+			window.addEventListener("scroll", onScrollOrResize, { passive: true });
+			window.addEventListener("resize", onScrollOrResize, { passive: true });
+			update();
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", init);
+		} else {
+			init();
+		}
+	})();
+</script>

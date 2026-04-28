@@ -8,6 +8,13 @@
   - Render a compact metadata line above the title with category, publication date, and reading time.
   - Render the shared assembled display title, description, and full frontmatter tag list.
   - Include the bottom divider above the article body.
+- **Reading Progress Bar (`src/components/ReadingProgress.astro`)**:
+  - Mounted on post detail pages only (`src/pages/posts/[...slug].astro` and the en/ counterpart). The home page, archive, taxonomy pages, and `/about` intentionally do not show this bar.
+  - Visual: a 2px-tall hairline at `top: 0` of the viewport, full width, `dawn-600` (light) / `night-300` (dark). No background track, no shadow, no animation easing — the fill follows the scroll directly via `transform: scaleX(progress)` with `transform-origin: left`.
+  - Z-index sits above the sticky site header so the bar reads as a thin line crossing the very top of the page.
+  - Tracking semantics: progress is measured against the article's prose body (`article .prose`), not the full window scroll. The bar reaches 100% when the reader has just scrolled past the bottom of the prose, so the post-reading-flow block, comments, and footer all sit "after the bar has already filled" and the indicator never feels under-reported when the post itself is finished.
+  - When the prose fits in the viewport (very short posts), the bar stays empty until the reader has scrolled past the prose's top, then jumps to 100%.
+  - The script is idempotent across multiple mounts via a `window.__readingProgressInit` guard, in line with the TOC scroll-spy pattern.
 - **Optional Summary (`src/components/PostSummary.astro`)**:
   - A post may declare an opt-in `summary: string` field in its frontmatter.
   - When present, the summary renders between the shared post header and the prose body as a quiet left-bordered block with a small locale-aware `요약` / `Summary` eyebrow.
