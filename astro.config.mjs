@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import remarkPostFigure from "./src/utils/remarkPostFigure.ts";
+import remarkAdmonition from "./src/utils/remarkAdmonition.ts";
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +15,7 @@ export default defineConfig({
     },
   },
   markdown: {
-    remarkPlugins: [remarkPostFigure],
+    remarkPlugins: [remarkPostFigure, remarkAdmonition],
     shikiConfig: {
       themes: {
         light: "github-light",
