@@ -145,6 +145,36 @@
 }
 
 /*
+ * TOC scroll-spy active state.
+ * The script in `src/components/TOC.astro` toggles the `toc-active` class on
+ * the link whose heading is the most recent one above the 25% viewport
+ * trigger line. The visual indicator stays calm:
+ *   - color shift to the prominent body ink (dawn-800 / night-50)
+ *   - 500-weight bump (regular -> medium)
+ *   - 2px left bar inside the gap between the aside's left rail and the link
+ *     text, so the indicator reads as part of the existing left-rail
+ *     vocabulary rather than as a foreign element. No colored fill.
+ */
+.toc-link.toc-active {
+	position: relative;
+	font-weight: 500;
+	color: rgb(36 40 59 / 1); /* dawn-800 */
+}
+:where(.dark) .toc-link.toc-active {
+	color: rgb(192 202 245 / 1); /* night-50 */
+}
+.toc-link.toc-active::before {
+	content: "";
+	position: absolute;
+	left: -0.75rem;
+	top: 0.35em;
+	bottom: 0.35em;
+	width: 2px;
+	background: currentColor;
+	border-radius: 1px;
+}
+
+/*
  * Shiki dual-theme class-based dark mode override.
  * Astro's default markdown highlighter (Shiki) applies the configured light
  * theme inline on pre/span elements and exposes the dark theme through

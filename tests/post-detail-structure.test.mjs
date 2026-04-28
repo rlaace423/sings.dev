@@ -413,7 +413,7 @@ test("TOC renders a quieter, easier-to-scan list", async () => {
 
 	assert.match(
 		rendered,
-		/<nav aria-label="Table of contents" class="text-sm text-dawn-700 dark:text-night-200">/,
+		/<nav data-toc aria-label="Table of contents" class="text-sm text-dawn-700 dark:text-night-200">/,
 	);
 	assert.match(
 		rendered,
@@ -421,7 +421,7 @@ test("TOC renders a quieter, easier-to-scan list", async () => {
 	);
 	assert.match(
 		rendered,
-		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="block leading-6 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
+		/<ul class="space-y-2">[\s\S]*<a href="#intro" class="toc-link block leading-6 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800">[\s\S]*Introduction[\s\S]*<li class="pl-4">[\s\S]*Implementation detail/,
 	);
 });
 
