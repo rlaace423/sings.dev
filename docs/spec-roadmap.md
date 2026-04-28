@@ -71,13 +71,22 @@
 - **Current Status**:
   - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment, and `src/content/blog/{ko,en}/iam-policy-checklist/` for a coverage-fixture example post.
   - Optional summary aids landed: posts opt in via a `summary` frontmatter field, which renders as a quiet left-bordered block between the post header and the prose body. See `docs/spec-post-detail.md`.
-- **Remaining Surfaces**:
-  - Article structure cues
-  - Additional reading guidance inside long technical posts where the current flow is still too thin
+- **Remaining Surfaces** (the "Article structure cues" bucket, scoped):
+  - **Callouts** — GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) parsed from markdown and rendered as restrained left-bordered asides matching the existing PostSummary tone. Start with three types maximum. No icons. Locale-aware uppercase eyebrow (`참고` / `NOTE` etc.). Highest priority because it bridges Notion-style authoring habits into Markdown without pulling in a foreign visual register.
+  - **TOC scroll-spy** — on the desktop sticky TOC, mark the currently-visible section through a 1px left bar or weight change, not a colored fill. Mobile TOC stays a `<details>` block (scroll-spy is meaningless when collapsed).
+  - **Reading progress bar** — hairline (1-2px) indicator at the top of post detail pages, in a muted palette token, only on `[...slug].astro` pages. Not viewport-wide chrome on every site surface.
+- **Decided Not To Add** (handled by the writing itself, not by UI):
+  - Section numbering on `H2` / `H3` — the H-level styling is the structure cue.
+  - Per-section horizontal dividers — H2 spacing already separates sections.
+  - Explicit "skip if you know X" or "prerequisites" UI blocks — express in prose; if a stronger visual is needed, a `> [!NOTE]` callout covers the case without a dedicated component.
+  - Pull quotes / featured-sentence callouts — would feel decorative on a quiet, text-first site.
+  - Footnotes / side-notes — same reasoning; parenthetical asides or callouts are enough.
+  - Internal anchor jumps as a UI feature — Markdown heading anchors already exist; the author can link inside the same post during writing.
 - **Direction**:
   - Prefer lightweight editorial aids over rigid templates.
   - Keep summaries optional rather than mandatory for every post.
   - Improve scanning without flattening tone or narrative flow.
+  - When in doubt between a UI feature and an authorial habit, prefer the authorial habit.
 - **Avoid**:
   - Mandatory TL;DR blocks on every post
   - Over-structured article chrome
@@ -85,7 +94,10 @@
 
 ## Recommended Order
 
-1. Refine in-post reading experience — article structure cues and long-post reading guidance for technical posts.
+1. Refine in-post reading experience, in this order inside the pass:
+   1. Callouts (highest ROI — directly improves the authoring workflow for anyone migrating from Notion-style writing).
+   2. TOC scroll-spy (small, safe enhancement to an existing component).
+   3. Reading progress bar (handle last; visually new chrome, so verify tone holds before shipping).
 2. Treat discovery and identity as reactive only; further work happens only when a specific surface starts feeling unclear or noisy in real reading.
 
 ## Success Criteria
