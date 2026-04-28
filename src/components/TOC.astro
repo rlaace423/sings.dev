@@ -78,6 +78,20 @@ const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <
 			}
 			if (headings.length === 0) return;
 
+			// `scroll-padding-top` on <html> reserves space for the sticky site
+			// header so anchor jumps land below it. Read the same value here so the
+			// scroll-spy trigger line accounts for the header — without this, the
+			// trigger sits 25% below the very top of the viewport (well below the
+			// just-clicked heading after a TOC click) and on dense H2/H3 layouts
+			// the next heading creeps above the trigger before the click-scroll
+			// even settles, causing the active class to jump one row down right
+			// after the click.
+			function readHeaderOffset() {
+				const raw = getComputedStyle(document.documentElement).scrollPaddingTop;
+				const parsed = parseFloat(raw);
+				return Number.isFinite(parsed) ? parsed : 0;
+			}
+
 			function clearActive() {
 				for (const links of linksByHash.values()) {
 					for (const link of links) link.classList.remove("toc-active");
@@ -95,9 +109,17 @@ const items = headings.filter((heading) => heading.depth >= 2 && heading.depth <
 
 			let ticking = false;
 			function updateActive() {
-				// Trigger line at 25% from the top of the viewport. The active
-				// heading is the deepest one whose top is at or above this line.
-				const triggerY = window.scrollY + window.innerHeight * 0.25;
+				// Trigger line at 25% of the viewport, then pulled UP by the header
+				// offset so the trigger sits just below the sticky header in
+				// viewport coordinates. After a TOC click the clicked heading lands
+				// at viewport y = headerOffset; the trigger lands a few pixels
+				// further down, so only the clicked heading is "above the trigger"
+				// even on densely-spaced H2/H3 layouts. Adding the offset (the
+				// previous formulation) would have moved the trigger DOWN and
+				// widened the window in which the next heading also activates,
+				// which is the opposite of the intended fix.
+				const triggerY =
+					window.scrollY + window.innerHeight * 0.25 - readHeaderOffset();
 				let activeId = null;
 				for (const heading of headings) {
 					if (heading.offsetTop <= triggerY) {
