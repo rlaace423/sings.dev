@@ -1,5 +1,4 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
 import { getCategoryDescription } from "../../data/archiveBrowse";
 import Layout from "../../layouts/Layout.astro";
@@ -11,6 +10,7 @@ import {
 	normalizeTaxonomyTags,
 	slugifyTaxonomy,
 	sortPostsByDate,
+	tagHref,
 	uniqueCategories,
 } from "../../utils/blog";
 
@@ -69,10 +69,7 @@ const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
 						{relatedTags.map((tag) => (
 							<li>
 								<a
-									href={getRelativeLocaleUrl(
-										"ko",
-										`tags/${slugifyTaxonomy(tag)}`,
-									)}
+									href={tagHref(tag, "ko")}
 									class="inline-flex items-center gap-1 text-sm text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 								>
 									#{tag}

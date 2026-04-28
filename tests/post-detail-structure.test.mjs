@@ -405,7 +405,7 @@ test("shared post header renders meta line, full tags, and intro divider", async
 	);
 	assert.match(
 		rendered,
-		/<div class="flex flex-wrap items-center gap-x-3 gap-y-2[^"]*">[\s\S]*<a href="\/en\/category\/guides"[^>]*>\s*Guides\s*<\/a>[\s\S]*<time datetime="2024-01-02">2024-01-02<\/time>[\s\S]*<p>7 min read<\/p>[\s\S]*<\/div>/,
+		/<div class="flex flex-wrap items-center gap-x-3 gap-y-2[^"]*">[\s\S]*<a href="\/en\/category\/guides\/"[^>]*>\s*Guides\s*<\/a>[\s\S]*<time datetime="2024-01-02">2024-01-02<\/time>[\s\S]*<p>7 min read<\/p>[\s\S]*<\/div>/,
 	);
 	assert.match(
 		rendered,
@@ -413,7 +413,7 @@ test("shared post header renders meta line, full tags, and intro divider", async
 	);
 	assert.match(
 		rendered,
-		/<ul class="flex flex-wrap gap-2">[\s\S]*<a href="\/en\/tags\/astro"[^>]*>\s*#astro\s*<\/a>[\s\S]*<a href="\/en\/tags\/testing"[^>]*>\s*#testing\s*<\/a>[\s\S]*<\/ul>/,
+		/<ul class="flex flex-wrap gap-2">[\s\S]*<a href="\/en\/tags\/astro\/"[^>]*>\s*#astro\s*<\/a>[\s\S]*<a href="\/en\/tags\/testing\/"[^>]*>\s*#testing\s*<\/a>[\s\S]*<\/ul>/,
 	);
 });
 

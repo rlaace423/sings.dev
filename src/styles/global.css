@@ -52,6 +52,33 @@ html {
 	--color-terracotta-600: #a04e2a;
 }
 
+/*
+ * Shared `prose` chain for long-form Markdown bodies on the site.
+ * Used by post detail pages and `/about`. Centralizing the chain here means
+ * a palette tweak only happens once instead of leaking across four files.
+ *
+ * The class is intentionally additive — pages that need extra utilities
+ * (e.g. `mt-10` on post bodies, or `prose-headings:tracking-tight` on
+ * post-detail pages where headlines benefit from tighter tracking) compose
+ * those utilities alongside `prose-site` directly on the element.
+ */
+@layer components {
+	.prose-site {
+		@apply prose prose-stone max-w-none
+			prose-p:text-dawn-800 prose-headings:text-dawn-800
+			prose-a:text-terracotta-600 prose-a:decoration-terracotta-600/40 prose-a:underline-offset-4
+			prose-blockquote:border-dawn-300 prose-blockquote:text-dawn-700
+			prose-code:rounded prose-code:bg-dawn-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-code:text-dawn-800
+			prose-code:before:content-none prose-code:after:content-none
+			prose-pre:border prose-pre:border-dawn-300 prose-pre:bg-dawn-200
+			dark:prose-invert dark:prose-p:text-night-50 dark:prose-headings:text-night-50
+			dark:prose-a:text-night-100 dark:prose-a:decoration-night-400
+			dark:prose-blockquote:border-night-500 dark:prose-blockquote:text-night-200
+			dark:prose-code:bg-night-600 dark:prose-code:text-night-100
+			dark:prose-pre:border-night-500 dark:prose-pre:bg-night-900;
+	}
+}
+
 .prose figure {
 	margin-top: 1.5rem;
 	margin-bottom: 1.5rem;

@@ -85,6 +85,9 @@ const resolvedDescription = resolveLocalizedValue(description);
 			<SearchModal lang={lang} />
 			<script is:inline>
 				(() => {
+					if (window.__themeToggleInit) return;
+					window.__themeToggleInit = true;
+
 					const storageKey = "theme";
 					const root = document.documentElement;
 					const media = window.matchMedia("(prefers-color-scheme: dark)");

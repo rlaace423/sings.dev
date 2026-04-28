@@ -1,7 +1,6 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
-import { categoryHref, getCountLabel, slugifyTaxonomy, tagHref } from "../utils/blog";
+import { categoryHref, getCountLabel, tagHref } from "../utils/blog";
 
 type ArchiveBrowseCategory = {
 	name: string;
@@ -33,15 +32,8 @@ const categoriesHeading =
 	categoriesLabel ?? (lang === "ko" ? "카테고리" : "Categories");
 const tagsHeading = tagsLabel ?? (lang === "ko" ? "대표 태그" : "Representative tags");
 
-const getCategoryLink = (category: string) =>
-	lang === defaultLocale
-		? categoryHref(category)
-		: getRelativeLocaleUrl(lang, `category/${slugifyTaxonomy(category)}`);
-
-const getTagLink = (tag: string) =>
-	lang === defaultLocale
-		? tagHref(tag)
-		: getRelativeLocaleUrl(lang, `tags/${slugifyTaxonomy(tag)}`);
+const getCategoryLink = (category: string) => categoryHref(category, lang);
+const getTagLink = (tag: string) => tagHref(tag, lang);
 ---
 
 <section class="mt-10 space-y-6 border-t border-dawn-300 pt-8 dark:border-night-600">

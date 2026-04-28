@@ -236,10 +236,10 @@ test("archive browse renders category counts, manual descriptions, and represent
 		rendered,
 		/<section class="mt-10(?: space-y-6)? border-t border-dawn-300 pt-8 dark:border-night-600">/,
 	);
-	assert.match(rendered, /href="\/en\/category\/development"/);
-	assert.match(rendered, /href="\/en\/category\/operations"/);
-	assert.match(rendered, /href="\/en\/tags\/architecture"/);
-	assert.match(rendered, /href="\/en\/tags\/docs"/);
+	assert.match(rendered, /href="\/en\/category\/development\/"/);
+	assert.match(rendered, /href="\/en\/category\/operations\/"/);
+	assert.match(rendered, /href="\/en\/tags\/architecture\/"/);
+	assert.match(rendered, /href="\/en\/tags\/docs\/"/);
 	assert.match(rendered, /Notes on implementation choices and system design\./);
 	assert.match(rendered, /Writing about the shape of systems in real operation\./);
 	assert.match(rendered, /4 posts/);
@@ -392,8 +392,8 @@ test("category pages render locale-aware related tag hrefs when there is repeate
 	);
 
 	assert.match(rendered, /<p class="text-sm font-medium text-dawn-700 dark:text-night-200">\s*Related tags\s*<\/p>/);
-	assert.match(rendered, /href="\/en\/tags\/architecture"/);
-	assert.match(rendered, /href="\/en\/tags\/docs"/);
+	assert.match(rendered, /href="\/en\/tags\/architecture\/"/);
+	assert.match(rendered, /href="\/en\/tags\/docs\/"/);
 	assert.match(rendered, /<div data-post-list>3<\/div>/);
 });
 
