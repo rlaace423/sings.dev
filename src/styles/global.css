@@ -65,13 +65,13 @@ html {
 @layer components {
 	.prose-site {
 		@apply prose prose-stone max-w-none
-			prose-p:text-dawn-800 prose-headings:text-dawn-800
+			prose-p:text-dawn-800 prose-li:text-dawn-800 prose-headings:text-dawn-800
 			prose-a:text-terracotta-600 prose-a:decoration-terracotta-600/40 prose-a:underline-offset-4
 			prose-blockquote:border-dawn-300 prose-blockquote:text-dawn-700
 			prose-code:rounded prose-code:bg-dawn-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-code:text-dawn-800
 			prose-code:before:content-none prose-code:after:content-none
 			prose-pre:border prose-pre:border-dawn-300 prose-pre:bg-dawn-200
-			dark:prose-invert dark:prose-p:text-night-50 dark:prose-headings:text-night-50
+			dark:prose-invert dark:prose-p:text-night-50 dark:prose-li:text-night-50 dark:prose-headings:text-night-50
 			dark:prose-a:text-night-100 dark:prose-a:decoration-night-400
 			dark:prose-blockquote:border-night-500 dark:prose-blockquote:text-night-200
 			dark:prose-code:bg-night-600 dark:prose-code:text-night-100
@@ -111,20 +111,19 @@ html {
 /*
  * List markers (`<ul>` / `<ol>` bullets) inside post bodies.
  * Tailwind Typography's `prose-stone` defaults render the marker with a stone
- * token that is foreign to this site's dawn/night palette and reads slightly
- * dim against the dark body. Override to a tone exactly one step muted from
- * the body text, not the muted "eyebrow / label" tone — bullets sit visually
- * adjacent to body text, so a 3-step gap (eyebrow tone) reads as a foreign
- * decoration; a 1-step gap stays in the same color family and makes the list
- * feel like a natural part of the prose rather than chrome.
+ * token that is foreign to this site's dawn/night palette. Even a one-step
+ * muted same-hue tone reads as "different from body text" because the marker
+ * sits visually adjacent to body characters and any lightness gap registers
+ * as a tone shift. Match the body color exactly so bullets are read as part
+ * of the prose, not as decoration.
  */
 .prose-site ul > li::marker,
 .prose-site ol > li::marker {
-	color: rgb(65 72 104 / 1); /* dawn-700 */
+	color: rgb(36 40 59 / 1); /* dawn-800 — same as prose-p:text-dawn-800 */
 }
 :where(.dark) .prose-site ul > li::marker,
 :where(.dark) .prose-site ol > li::marker {
-	color: rgb(169 177 214 / 1); /* night-100 */
+	color: rgb(192 202 245 / 1); /* night-50 — same as dark:prose-p:text-night-50 */
 }
 
 /*
