@@ -109,6 +109,24 @@ html {
 }
 
 /*
+ * List markers (`<ul>` / `<ol>` bullets) inside post bodies.
+ * Tailwind Typography's `prose-stone` defaults render the marker with a stone
+ * token that is foreign to this site's dawn/night palette and reads slightly
+ * dim against the dark body. Override to the same muted on-palette tone the
+ * site uses for eyebrow labels, the inactive TOC link, and PostSummary's
+ * eyebrow — bullets stay quieter than body text but live in the site's own
+ * color vocabulary.
+ */
+.prose-site ul > li::marker,
+.prose-site ol > li::marker {
+	color: rgb(86 95 137 / 1); /* dawn-600 */
+}
+:where(.dark) .prose-site ul > li::marker,
+:where(.dark) .prose-site ol > li::marker {
+	color: rgb(115 122 162 / 1); /* night-300 */
+}
+
+/*
  * Callouts (admonitions).
  * The `remarkAdmonition` plugin in `src/utils/remarkAdmonition.ts` rewrites
  * GitHub-style `> [!NOTE]` / `> [!WARNING]` / `> [!TIP]` blockquotes into an
