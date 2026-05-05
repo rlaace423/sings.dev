@@ -14,7 +14,7 @@ const localizedDescription = {
 
 <Layout title={localizedTitle} description={localizedDescription}>
 	<article class="space-y-12 py-8">
-		<section class="space-y-5">
+		<section data-404-ko class="space-y-5">
 			<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">404</p>
 			<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 				페이지를 찾을 수 없습니다.
@@ -26,7 +26,11 @@ const localizedDescription = {
 				>.
 			</p>
 		</section>
-		<section lang="en" class="space-y-5 border-t border-dawn-300 pt-12 dark:border-night-600">
+		<section
+			data-404-en
+			lang="en"
+			class="space-y-5 border-t border-dawn-300 pt-12 dark:border-night-600"
+		>
 			<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">404</p>
 			<h2 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
 				Page not found.
@@ -39,4 +43,23 @@ const localizedDescription = {
 			</p>
 		</section>
 	</article>
+
+	<script is:inline>
+		(() => {
+			const isEn = window.location.pathname.startsWith("/en/");
+			document.documentElement.dataset.notFoundLocale = isEn ? "en" : "ko";
+			if (isEn) document.documentElement.lang = "en";
+		})();
+	</script>
+
+	<style is:global>
+		[data-not-found-locale="en"] [data-404-ko],
+		[data-not-found-locale="ko"] [data-404-en] {
+			display: none;
+		}
+		[data-not-found-locale="en"] [data-404-en] {
+			border-top: 0;
+			padding-top: 0;
+		}
+	</style>
 </Layout>
