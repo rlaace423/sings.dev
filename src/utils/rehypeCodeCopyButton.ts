@@ -50,9 +50,13 @@ function detectLocale(file: VFileLike | undefined): "ko" | "en" {
 }
 
 function hasClass(node: HastElement, className: string): boolean {
-	const cls = node.properties?.className;
-	if (!Array.isArray(cls)) return false;
-	return cls.includes(className);
+	const props = node.properties ?? {};
+	// rehype normalises to className (array) in unit tests and most remark pipelines,
+	// but Astro's Shiki integration writes a raw `class` string instead.
+	const cls = props.className ?? props.class;
+	if (Array.isArray(cls)) return cls.includes(className);
+	if (typeof cls === "string") return cls.split(/\s+/).includes(className);
+	return false;
 }
 
 function isPreAstroCode(node: HastNode): node is HastElement {

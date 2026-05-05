@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import remarkPostFigure from "./src/utils/remarkPostFigure.ts";
 import remarkAdmonition from "./src/utils/remarkAdmonition.ts";
+import rehypeCodeCopyButton from "./src/utils/rehypeCodeCopyButton.ts";
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,6 +17,7 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkPostFigure, remarkAdmonition],
+    rehypePlugins: [rehypeCodeCopyButton],
     shikiConfig: {
       themes: {
         light: "github-light",
