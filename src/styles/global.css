@@ -286,3 +286,17 @@ html.theme-transition * {
 		fill 250ms ease,
 		stroke 250ms ease !important;
 }
+
+/*
+ * Image lightbox affordance.
+ * The activation script in `PostImageLightbox.astro` adds `data-zoomable`
+ * to every <img> inside `article .prose-site` after wiring its click
+ * handler. Because this attribute is set at runtime (not at build time),
+ * Tailwind's JIT cannot generate a utility class for it from the source —
+ * a small CSS rule is the simplest way to express the cursor affordance.
+ * Decorative images (no <figcaption>) and captioned figures share the
+ * same affordance: every prose-body image is zoomable.
+ */
+.prose-site img[data-zoomable] {
+	cursor: zoom-in;
+}
