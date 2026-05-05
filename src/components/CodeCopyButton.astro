@@ -18,6 +18,9 @@
 //   - Swap the [data-state="idle"] icon for [data-state="copied"] and
 //     replace the aria-label with the value from data-copied-label for
 //     1500ms before reverting.
+//   - If the user clicks the button again inside the feedback window,
+//     cancel the pending revert and snapshot the original idle label
+//     so the "copied" state never leaks past the next revert.
 ---
 
 <script is:inline>
@@ -29,6 +32,8 @@
 
 		const clipboard = navigator?.clipboard;
 		if (!clipboard || typeof clipboard.writeText !== "function") return;
+
+		const pendingReverts = new WeakMap();
 
 		document.addEventListener("click", async (event) => {
 			const target = event.target;
@@ -49,9 +54,15 @@
 				return;
 			}
 
+			const pending = pendingReverts.get(button);
+			if (pending) {
+				clearTimeout(pending.timeoutId);
+				pendingReverts.delete(button);
+			}
+
 			const idle = button.querySelector('[data-state="idle"]');
 			const copied = button.querySelector('[data-state="copied"]');
-			const idleLabel = button.getAttribute("aria-label");
+			const idleLabel = pending?.idleLabel ?? button.getAttribute("aria-label");
 			const copiedLabel = button.getAttribute("data-copied-label");
 
 			if (idle instanceof Element && copied instanceof Element) {
@@ -62,7 +73,7 @@
 				button.setAttribute("aria-label", copiedLabel);
 			}
 
-			setTimeout(() => {
+			const timeoutId = setTimeout(() => {
 				if (idle instanceof Element && copied instanceof Element) {
 					idle.removeAttribute("hidden");
 					copied.setAttribute("hidden", "");
@@ -70,7 +81,10 @@
 				if (idleLabel) {
 					button.setAttribute("aria-label", idleLabel);
 				}
+				pendingReverts.delete(button);
 			}, COPIED_DURATION_MS);
+
+			pendingReverts.set(button, { timeoutId, idleLabel });
 		});
 	})();
 </script>
