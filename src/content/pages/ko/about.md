@@ -2,6 +2,7 @@
 title: "소개"
 description: "이 사이트를 쓰는 사람과 해 온 일을 소개합니다."
 identity:
+  name: "Sam (김상호)"
   summary: "백엔드 아키텍처와 분산 시스템을 설계해 온 엔지니어입니다. 핀테크·블록체인 스타트업에서 8년간 멀티체인 지갑 API와 TSS 기반 MPC 서명 시스템을 만들어 왔고, 오래 유지할 수 있는 시스템의 구조를 찾아 가는 과정에서 배운 것을 이 블로그에 정리합니다."
   photo:
     src: "/avatar.jpg"
@@ -19,6 +20,13 @@ identity:
     - type: instagram
       href: "https://www.instagram.com/sangho_0423/"
       label: "Instagram"
+  education:
+    - school: "연세대학교 인공지능융합대학원"
+      degree: "인공지능컴퓨팅 석사 · 재학중"
+    - school: "Purdue University"
+      degree: "Computer & Information Technology · 방문연구원 (M2M Lab)"
+    - school: "중앙대학교"
+      degree: "컴퓨터공학부 컴퓨터공학전공 · 학사"
   experience:
     - company: "(주)헥토 월렛원 (구 헥슬란트)"
       role: "Backend Lead · 창립 멤버"
@@ -31,13 +39,3 @@ identity:
       end: "2017"
       description: "OneM2M 표준 기반 스마트홈 IoT 플랫폼(현대 Hi-oT 2.0)의 백엔드 아키텍처를 설계·구현하고, 현대카드·캐피탈·커머셜 차세대 금융 시스템의 여신·채권 코어 백엔드 개발에 참여했습니다."
 ---
-
-## 무엇을 쓰는가
-
-- 백엔드 아키텍처와 서비스 경계 설계
-- TSS MPC 개발과 운영 경험
-- 인프라 라우팅, 관찰 가능성, 배포 판단
-
-## 왜 쓰는가
-
-좋은 기술 글은 시스템을 더 멋지게 보이게 하기보다, 더 빨리 이해하고 더 자신 있게 고치게 만들어야 한다고 생각합니다. 이 블로그는 그 관점에서 해 온 일과 배운 것을 조용히 정리해 둔 공간입니다.

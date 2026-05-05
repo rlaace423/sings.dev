@@ -30,6 +30,7 @@ const pages = defineCollection({
 		description: z.string().optional(),
 		identity: z
 			.object({
+				name: z.string(),
 				summary: z.string(),
 				photo: z.object({
 					src: z.string(),
@@ -41,6 +42,17 @@ const pages = defineCollection({
 							type: z.enum(["github", "email", "linkedin", "instagram"]),
 							href: z.string(),
 							label: z.string().optional(),
+						}),
+					)
+					.default([]),
+				education: z
+					.array(
+						z.object({
+							school: z.string(),
+							degree: z.string(),
+							start: z.string().optional(),
+							end: z.string().optional(),
+							description: z.string().optional(),
 						}),
 					)
 					.default([]),

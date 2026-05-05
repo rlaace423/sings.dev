@@ -2,6 +2,7 @@
 title: "About"
 description: "A short introduction to the person behind this blog and the work they've done."
 identity:
+  name: "Sam (Sangho Kim)"
   summary: "A backend engineer who works on distributed systems. I've spent the past eight years at a fintech/blockchain startup building a multi-chain wallet API and a TSS-based MPC signing system, and this blog is where I keep what I learn while looking for system shapes that hold up over time."
   photo:
     src: "/avatar.jpg"
@@ -19,6 +20,13 @@ identity:
     - type: instagram
       href: "https://www.instagram.com/sangho_0423/"
       label: "Instagram"
+  education:
+    - school: "Yonsei University, Graduate School of AI"
+      degree: "M.S. in AI Computing · in progress"
+    - school: "Purdue University"
+      degree: "Computer & Information Technology · Visiting Researcher (M2M Lab)"
+    - school: "Chung-Ang University"
+      degree: "B.S. in Computer Science and Engineering"
   experience:
     - company: "Hecto Walletone (formerly Hexlant)"
       role: "Backend Lead · Founding Member"
@@ -31,13 +39,3 @@ identity:
       end: "2017"
       description: "Designed and built the backend of Hi-oT 2.0, a OneM2M-based smart home IoT platform deployed in Hyundai Hillstate apartments, and contributed to the lending and securities core of next-generation financial systems for Hyundai Card, Capital, and Commercial."
 ---
-
-## What I write about
-
-- Backend architecture and service boundaries
-- TSS MPC development and operation
-- Infrastructure routing, observability, and deployment judgement
-
-## Why I write
-
-Good technical writing shouldn't make systems look smarter — it should help people understand them faster and fix them with more confidence. This blog is a quiet place to keep what I learn from that angle.
