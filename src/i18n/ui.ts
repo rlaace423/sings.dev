@@ -26,6 +26,8 @@ export const ui = {
 		"search.loading": "검색 준비 중...",
 		"search.unavailable": "검색 인덱스는 프로덕션 빌드 후 사용할 수 있습니다.",
 		"search.close": "검색 닫기",
+		"lightbox.label": "확대된 이미지",
+		"lightbox.close": "확대 닫기",
 	},
 	en: {
 		"nav.home": "Home",
@@ -43,6 +45,8 @@ export const ui = {
 		"search.loading": "Preparing search...",
 		"search.unavailable": "The search index is available after a production build.",
 		"search.close": "Close search",
+		"lightbox.label": "Expanded image",
+		"lightbox.close": "Close zoomed image",
 	},
 } as const;
 
