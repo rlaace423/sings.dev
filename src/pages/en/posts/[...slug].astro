@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, render } from "astro:content";
 import Comments from "../../../components/Comments.astro";
 import PostHeader from "../../../components/PostHeader.astro";
+import PostImageLightbox from "../../../components/PostImageLightbox.astro";
 import PostReadingFlow from "../../../components/PostReadingFlow.astro";
 import PostSummary from "../../../components/PostSummary.astro";
 import ReadingProgress from "../../../components/ReadingProgress.astro";
@@ -108,4 +109,6 @@ const relatedItems = relatedPosts.map((entry) => ({
 			</aside>
 		</div>
 	</article>
+
+	<PostImageLightbox lang="en" />
 </Layout>

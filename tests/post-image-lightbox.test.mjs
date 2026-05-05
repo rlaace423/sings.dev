@@ -92,3 +92,21 @@ test("PostImageLightbox embeds the activation script behind a window guard", asy
 	assert.match(rendered, /window\.__postImageLightboxInit/);
 	assert.match(rendered, /article \.prose-site/);
 });
+
+test("ko post-detail page imports and mounts PostImageLightbox", async () => {
+	const source = await readFile(
+		new URL("../src/pages/posts/[...slug].astro", import.meta.url),
+		"utf8",
+	);
+	assert.match(source, /import PostImageLightbox from "\.\.\/\.\.\/components\/PostImageLightbox\.astro";/);
+	assert.match(source, /<PostImageLightbox lang="ko" \/>/);
+});
+
+test("en post-detail page imports and mounts PostImageLightbox", async () => {
+	const source = await readFile(
+		new URL("../src/pages/en/posts/[...slug].astro", import.meta.url),
+		"utf8",
+	);
+	assert.match(source, /import PostImageLightbox from "\.\.\/\.\.\/\.\.\/components\/PostImageLightbox\.astro";/);
+	assert.match(source, /<PostImageLightbox lang="en" \/>/);
+});
