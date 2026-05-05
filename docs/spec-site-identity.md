@@ -12,7 +12,7 @@
   - The mark stays monochrome and thin-stroke to match the existing header icons (search, theme toggle, `SocialIcon`).
 - **Surfaces Carrying Author Identity**:
   1. Header logo link — `SiteLogo` mark immediately to the left of the `sings.dev` text.
-  2. Home page hero — eyebrow `Singing Developer — Backend · MPC · Infrastructure` and `h1` (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). The hero carries no body prose; the rest of the home page (Categories block, Recent Posts) does the work of showing what the blog covers. See `docs/spec-home-theme.md`.
+  2. Home page hero — eyebrow introduces the author by real name (`Sam (김상호) — 백엔드 · MPC · 인프라` on the Korean home, `Sam (Sangho Kim) — Backend · MPC · Infrastructure` on the English home), followed by the `h1` (`시스템의 구조를 씁니다.` / `Notes on how systems hold together.`). The hero carries no body prose; the rest of the home page (Categories block, Recent Posts) does the work of showing what the blog covers. The nickname intentionally does not appear in the eyebrow — the domain wordmark in the header and the footer signature already carry it. See `docs/spec-home-theme.md`.
   3. `/about` page — structured summary, photo, socials, experience. See `docs/spec-about.md`.
   4. Footer copyright line — `© <year> sings.dev — Singing Developer`.
 - **Guardrails**:
