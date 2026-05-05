@@ -13,7 +13,6 @@ series:
   index: 2
   total: 2
   subtitle: "복호화 과정"
-draft: true
 ---
 
 이전 글에서 이더리움 KeyStore 파일을 이용해 사용자의 Private Key를 암호화하는 방법에 대해 알아보았습니다. 이전 글의 주요 내용을 한마디로 정리하자면 아래와 같습니다.
