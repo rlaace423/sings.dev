@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, render } from "astro:content";
+import CodeCopyButton from "../../../components/CodeCopyButton.astro";
 import Comments from "../../../components/Comments.astro";
 import PostHeader from "../../../components/PostHeader.astro";
 import PostReadingFlow from "../../../components/PostReadingFlow.astro";
@@ -63,6 +64,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 	ogType="article"
 >
 	<ReadingProgress />
+	<CodeCopyButton />
 	<article
 		class="mx-auto max-w-5xl"
 		data-pagefind-body

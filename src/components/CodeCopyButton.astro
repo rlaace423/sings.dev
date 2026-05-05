@@ -1,0 +1,76 @@
+---
+// CodeCopyButton.astro
+//
+// Mounts the click handler that powers <button class="code-copy-button">
+// instances emitted by the rehypeCodeCopyButton plugin. The button's
+// markup is built at compile time, so this component renders no DOM —
+// only an inline script that attaches a single delegated click listener.
+//
+// The script is idempotent across multiple mounts via the
+// window.__codeCopyInit guard, in line with the TOC scroll-spy and
+// reading-progress patterns already used on this site.
+//
+// Behavior:
+//   - On click, read the code's visible text via innerText so newlines
+//     between Shiki <span class="line"> rows are preserved.
+//   - Write to navigator.clipboard. If the API is missing or rejects,
+//     swallow silently — the user can still select-and-copy manually.
+//   - Swap the [data-state="idle"] icon for [data-state="copied"] and
+//     replace the aria-label with the value from data-copied-label for
+//     1500ms before reverting.
+---
+
+<script is:inline>
+	(() => {
+		if (window.__codeCopyInit) return;
+		window.__codeCopyInit = true;
+
+		const COPIED_DURATION_MS = 1500;
+
+		const clipboard = navigator?.clipboard;
+		if (!clipboard || typeof clipboard.writeText !== "function") return;
+
+		document.addEventListener("click", async (event) => {
+			const target = event.target;
+			if (!(target instanceof Element)) return;
+
+			const button = target.closest(".code-copy-button");
+			if (!(button instanceof HTMLButtonElement)) return;
+
+			const wrapper = button.closest(".code-block");
+			if (!wrapper) return;
+
+			const code = wrapper.querySelector("pre code");
+			if (!(code instanceof HTMLElement)) return;
+
+			try {
+				await clipboard.writeText(code.innerText);
+			} catch {
+				return;
+			}
+
+			const idle = button.querySelector('[data-state="idle"]');
+			const copied = button.querySelector('[data-state="copied"]');
+			const idleLabel = button.getAttribute("aria-label");
+			const copiedLabel = button.getAttribute("data-copied-label");
+
+			if (idle instanceof Element && copied instanceof Element) {
+				idle.setAttribute("hidden", "");
+				copied.removeAttribute("hidden");
+			}
+			if (copiedLabel) {
+				button.setAttribute("aria-label", copiedLabel);
+			}
+
+			setTimeout(() => {
+				if (idle instanceof Element && copied instanceof Element) {
+					idle.removeAttribute("hidden");
+					copied.setAttribute("hidden", "");
+				}
+				if (idleLabel) {
+					button.setAttribute("aria-label", idleLabel);
+				}
+			}, COPIED_DURATION_MS);
+		});
+	})();
+</script>
