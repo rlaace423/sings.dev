@@ -184,9 +184,13 @@ const t = useTranslations(lang);
 			if (captionText) {
 				caption.textContent = captionText;
 				caption.classList.remove("hidden");
+				// Reserve layout space (so the FLIP measurement is correct) but stay
+				// invisible during the open animation. Revealed at transitionend.
+				caption.style.visibility = "hidden";
 			} else {
 				caption.textContent = "";
 				caption.classList.add("hidden");
+				caption.style.visibility = "";
 			}
 
 			setShellOpen(true);
@@ -214,6 +218,7 @@ const t = useTranslations(lang);
 				if (event.propertyName !== "transform") return;
 				lightboxImg.removeEventListener("transitionend", onEnd);
 				lightboxImg.style.transition = "";
+				caption.style.visibility = "";
 				isAnimating = false;
 				closeButton.focus();
 				addCloseListeners();
@@ -225,6 +230,9 @@ const t = useTranslations(lang);
 			if (!activeImage || isAnimating) return;
 			isAnimating = true;
 			removeCloseListeners();
+			// Hide the caption the moment the close gesture begins, so the text
+			// is not left "floating" beside the shrinking image.
+			caption.style.visibility = "hidden";
 
 			const img = activeImage;
 			const startRect = img.getBoundingClientRect();
@@ -250,6 +258,9 @@ const t = useTranslations(lang);
 				lightboxImg.removeAttribute("src");
 				lightboxImg.removeAttribute("srcset");
 				lightboxImg.removeAttribute("sizes");
+				caption.classList.add("hidden");
+				caption.style.visibility = "";
+				caption.textContent = "";
 
 				img.style.visibility = "";
 				img.focus();
