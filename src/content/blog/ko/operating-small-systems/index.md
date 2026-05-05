@@ -6,6 +6,7 @@ category: "Operations"
 tags:
   - operations
   - reliability
+draft: true
 ---
 
 작은 시스템에는 분명한 장점이 있습니다. 팀이 전체 그림을 아직 머릿속에 담아 둘 수 있다는 점입니다.

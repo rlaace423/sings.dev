@@ -7,6 +7,7 @@ tags:
   - aws
   - iam
   - infrastructure
+draft: true
 ---
 
 When you create a new policy in AWS, following the console UI step by step is easy to get wrong. These are the three details I most often miss in practice, written down so I can stop tripping over them. A related routing-structure discussion lives in [this earlier post](/en/posts/routing-with-clarity/).

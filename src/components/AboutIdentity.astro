@@ -13,6 +13,14 @@ interface SocialLink {
 	label?: string;
 }
 
+interface EducationEntry {
+	school: string;
+	degree: string;
+	start?: string;
+	end?: string;
+	description?: string;
+}
+
 interface ExperienceEntry {
 	company: string;
 	role: string;
@@ -23,35 +31,47 @@ interface ExperienceEntry {
 
 interface Props {
 	lang?: Locale;
+	name: string;
 	summary: string;
 	photo: Photo;
 	socials?: SocialLink[];
+	education?: EducationEntry[];
 	experience?: ExperienceEntry[];
 }
 
 const {
 	lang: langProp,
+	name,
 	summary,
 	photo,
 	socials = [],
+	education = [],
 	experience = [],
 } = Astro.props;
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
+const educationHeading = lang === "ko" ? "학력" : "Education";
 const experienceHeading = lang === "ko" ? "경력" : "Experience";
 const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and profiles";
 ---
 
-<section class="space-y-12">
-	<div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
-		<img
-			src={photo.src}
-			alt={photo.alt}
-			width="96"
-			height="96"
-			class="h-24 w-24 shrink-0 rounded-full bg-dawn-200 object-cover ring-1 ring-dawn-300 dark:bg-night-700 dark:ring-night-600"
-		/>
-		<div class="space-y-4">
+<div class="space-y-12">
+	<h1
+		data-about-name
+		class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl"
+	>
+		{name}
+	</h1>
+
+	<section class="space-y-8">
+		<div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+			<img
+				src={photo.src}
+				alt={photo.alt}
+				width="96"
+				height="96"
+				class="h-24 w-24 shrink-0 rounded-full bg-dawn-200 object-cover ring-1 ring-dawn-300 dark:bg-night-700 dark:ring-night-600"
+			/>
 			<p
 				data-about-summary
 				class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200"
@@ -59,35 +79,63 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 				{summary}
 			</p>
 		</div>
-	</div>
+
+		{
+			socials.length > 0 && (
+				<ul
+					data-about-socials
+					aria-label={socialsLabel}
+					class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-dawn-700 dark:text-night-200"
+				>
+					{socials.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								rel={item.type === "email" ? undefined : "me noopener"}
+								class="inline-flex items-center gap-2 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+							>
+								<SocialIcon type={item.type} class="h-4 w-4" />
+								<span>{item.label ?? item.type}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</section>
 
 	{
-		socials.length > 0 && (
-			<ul
-				data-about-socials
-				aria-label={socialsLabel}
-				class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-dawn-700 dark:text-night-200"
-			>
-				{socials.map((item) => (
-					<li>
-						<a
-							href={item.href}
-							rel={item.type === "email" ? undefined : "me noopener"}
-							class="inline-flex items-center gap-2 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
-						>
-							<SocialIcon type={item.type} class="h-4 w-4" />
-							<span>{item.label ?? item.type}</span>
-						</a>
-					</li>
-				))}
-			</ul>
+		education.length > 0 && (
+			<section class="space-y-6">
+				<h2 class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50">
+					{educationHeading}
+				</h2>
+				<ol
+					data-about-education
+					class="divide-y divide-dawn-300 border-t border-dawn-300 dark:divide-night-600 dark:border-night-600"
+				>
+					{education.map((entry) => (
+						<li class="py-6">
+							<p class="text-base font-semibold text-dawn-800 dark:text-night-50">
+								{entry.school}
+							</p>
+							<p class="mt-1 text-sm text-dawn-700 dark:text-night-200">{entry.degree}</p>
+							{entry.description && (
+								<p class="mt-3 max-w-2xl leading-7 text-dawn-700 dark:text-night-200">
+									{entry.description}
+								</p>
+							)}
+						</li>
+					))}
+				</ol>
+			</section>
 		)
 	}
 
 	{
 		experience.length > 0 && (
 			<section class="space-y-6">
-				<h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-dawn-600 dark:text-night-400">
+				<h2 class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50">
 					{experienceHeading}
 				</h2>
 				<ol
@@ -105,9 +153,7 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 								<p class="text-base font-semibold text-dawn-800 dark:text-night-50">
 									{entry.company}
 								</p>
-								<p class="text-sm text-dawn-700 dark:text-night-200">
-									{entry.role}
-								</p>
+								<p class="text-sm text-dawn-700 dark:text-night-200">{entry.role}</p>
 								<p class="mt-3 max-w-2xl leading-7 text-dawn-700 dark:text-night-200">
 									{entry.description}
 								</p>
@@ -118,4 +164,4 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 			</section>
 		)
 	}
-</section>
+</div>

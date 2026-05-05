@@ -82,6 +82,7 @@ async function renderAboutIdentity(props) {
 
 const baseProps = () => ({
 	lang: "ko",
+	name: "Sam (김상호)",
 	summary: "백엔드 구조와 MPC 시스템을 씁니다.",
 	photo: { src: "/avatar-placeholder.png", alt: "Sam의 사진" },
 	socials: [
@@ -89,6 +90,17 @@ const baseProps = () => ({
 		{ type: "email", href: "mailto:hello@example.com", label: "Email" },
 		{ type: "linkedin", href: "https://linkedin.com/in/example", label: "LinkedIn" },
 		{ type: "instagram", href: "https://instagram.com/example", label: "Instagram" },
+	],
+	education: [
+		{
+			school: "연세대학교 인공지능융합대학원",
+			degree: "인공지능컴퓨팅 석사 · 재학중",
+		},
+		{
+			school: "중앙대학교",
+			degree: "컴퓨터공학부 · 학사",
+			description: "GPA 3.98/4.5",
+		},
 	],
 	experience: [
 		{
@@ -106,6 +118,14 @@ const baseProps = () => ({
 			description: "결제 라우팅을 다시 그려 정산 오류를 줄였습니다.",
 		},
 	],
+});
+
+test("AboutIdentity renders the name as a top-level h1 page heading", async () => {
+	const rendered = await renderAboutIdentity(baseProps());
+	assert.match(
+		rendered,
+		/<h1[^>]*data-about-name[^>]*>[\s\S]*Sam \(김상호\)[\s\S]*<\/h1>/,
+	);
 });
 
 test("AboutIdentity renders the photo with the given src and alt", async () => {
@@ -148,6 +168,34 @@ test("AboutIdentity omits the socials list entirely when the array is empty", as
 	assert.doesNotMatch(rendered, /data-about-socials/);
 });
 
+test("AboutIdentity renders an ordered education list with preserved order and optional description", async () => {
+	const rendered = await renderAboutIdentity(baseProps());
+	assert.match(rendered, /<ol[^>]*data-about-education[^>]*>/);
+	const firstSchool = rendered.indexOf("연세대학교 인공지능융합대학원");
+	const secondSchool = rendered.indexOf("중앙대학교");
+	assert.ok(
+		firstSchool >= 0 && secondSchool > firstSchool,
+		"education order broken",
+	);
+	assert.match(rendered, /인공지능컴퓨팅 석사 · 재학중/);
+	assert.match(rendered, /GPA 3\.98\/4\.5/);
+});
+
+test("AboutIdentity omits the education section when no entries are given", async () => {
+	const rendered = await renderAboutIdentity({ ...baseProps(), education: [] });
+	assert.doesNotMatch(rendered, /data-about-education/);
+});
+
+test("AboutIdentity renders 학력 above 경력 so education sits at the same heading level as experience and comes first", async () => {
+	const rendered = await renderAboutIdentity(baseProps());
+	const educationIndex = rendered.indexOf("data-about-education");
+	const experienceIndex = rendered.indexOf("data-about-experience");
+	assert.ok(
+		educationIndex >= 0 && experienceIndex > educationIndex,
+		"education must render before experience",
+	);
+});
+
 test("AboutIdentity renders an ordered experience list with preserved order and fields", async () => {
 	const rendered = await renderAboutIdentity(baseProps());
 	assert.match(rendered, /<ol[^>]*data-about-experience[^>]*>/);
@@ -164,11 +212,19 @@ test("AboutIdentity omits the experience section when no entries are given", asy
 	assert.doesNotMatch(rendered, /data-about-experience/);
 });
 
-test("AboutIdentity uses the Korean experience heading for ko and the English one for en", async () => {
+test("AboutIdentity uses Korean section headings for ko (학력 / 경력) and English ones for en (Education / Experience)", async () => {
 	const ko = await renderAboutIdentity({ ...baseProps(), lang: "ko" });
 	const en = await renderAboutIdentity({ ...baseProps(), lang: "en" });
+	assert.match(ko, /학력/);
 	assert.match(ko, /경력/);
+	assert.match(en, /Education/);
 	assert.match(en, /Experience/);
+});
+
+test("AboutIdentity renders 학력 / 경력 as proper h2 section headings, not as small eyebrow labels", async () => {
+	const rendered = await renderAboutIdentity(baseProps());
+	assert.match(rendered, /<h2[^>]*class="[^"]*text-2xl[^"]*"[^>]*>\s*학력\s*<\/h2>/);
+	assert.match(rendered, /<h2[^>]*class="[^"]*text-2xl[^"]*"[^>]*>\s*경력\s*<\/h2>/);
 });
 
 test("AboutIdentity marks external social links with rel=me noopener and leaves mailto bare", async () => {
@@ -240,15 +296,17 @@ async function renderAboutPage(sourceUrl, pageEntry) {
 		const aboutIdentityStubCompiled = await transform(
 			[
 				"---",
-				"const { lang = 'ko', summary = '', photo = { src: '', alt: '' }, socials = [], experience = [] } = Astro.props;",
+				"const { lang = 'ko', name = '', summary = '', photo = { src: '', alt: '' }, socials = [], education = [], experience = [] } = Astro.props;",
 				"---",
 				'<section',
 				'  data-about-identity-stub',
 				'  data-lang={lang}',
+				'  data-name={name}',
 				'  data-summary={summary}',
 				'  data-photo-src={photo.src}',
 				'  data-photo-alt={photo.alt}',
 				'  data-socials={socials.map((s) => `${s.type}:${s.href}:${s.label ?? ""}`).join("|")}',
+				'  data-education={education.map((e) => `${e.school}/${e.degree}/${e.description ?? ""}`).join("|")}',
 				'  data-experience={experience.map((e) => `${e.start}-${e.end}/${e.company}/${e.role}/${e.description}`).join("|")}',
 				"/>",
 				"",
@@ -329,6 +387,7 @@ const pageEntry = (lang) => ({
 		title: lang === "ko" ? "소개" : "About",
 		description: "…",
 		identity: {
+			name: lang === "ko" ? "Sam (김상호)" : "Sam (Sangho Kim)",
 			summary: "summary-" + lang,
 			photo: { src: "/avatar-placeholder.png", alt: "alt-" + lang },
 			socials: [
@@ -336,6 +395,10 @@ const pageEntry = (lang) => ({
 				{ type: "email", href: "mailto:x@x", label: "Email" },
 				{ type: "linkedin", href: "https://linkedin.com/in/x", label: "LinkedIn" },
 				{ type: "instagram", href: "https://instagram.com/x", label: "Instagram" },
+			],
+			education: [
+				{ school: "School A", degree: "Degree A" },
+				{ school: "School B", degree: "Degree B", description: "note-b" },
 			],
 			experience: [
 				{
@@ -357,7 +420,7 @@ const pageEntry = (lang) => ({
 	},
 });
 
-test("ko /about page passes identity frontmatter into AboutIdentity before the content body", async () => {
+test("ko /about page passes identity frontmatter (name, education, experience) into AboutIdentity", async () => {
 	const rendered = await renderAboutPage(
 		new URL("../src/pages/about.astro", import.meta.url),
 		pageEntry("ko"),
@@ -366,20 +429,18 @@ test("ko /about page passes identity frontmatter into AboutIdentity before the c
 	assert.match(rendered, /data-layout-lang="ko"/);
 	assert.match(rendered, /data-about-identity-stub/);
 	assert.match(rendered, /data-lang="ko"/);
+	assert.match(rendered, /data-name="Sam \(김상호\)"/);
 	assert.match(rendered, /data-summary="summary-ko"/);
 	assert.match(rendered, /data-photo-src="\/avatar-placeholder\.png"/);
 	assert.match(
 		rendered,
 		/data-socials="github:https:\/\/github\.com\/x:GitHub\|email:mailto:x@x:Email\|linkedin:https:\/\/linkedin\.com\/in\/x:LinkedIn\|instagram:https:\/\/instagram\.com\/x:Instagram"/,
 	);
+	assert.match(rendered, /data-education="School A\/Degree A\/\|School B\/Degree B\/note-b"/);
 	assert.match(rendered, /data-experience="2023-현재\/Co A\/Role A\/desc-a\|2020-2023\/Co B\/Role B\/desc-b"/);
-	assert.ok(
-		rendered.indexOf("data-about-identity-stub") < rendered.indexOf("data-content"),
-		"AboutIdentity should render before the markdown body",
-	);
 });
 
-test("en /about page passes identity frontmatter into AboutIdentity before the content body", async () => {
+test("en /about page passes identity frontmatter (name, education, experience) into AboutIdentity", async () => {
 	const rendered = await renderAboutPage(
 		new URL("../src/pages/en/about.astro", import.meta.url),
 		pageEntry("en"),
@@ -387,24 +448,8 @@ test("en /about page passes identity frontmatter into AboutIdentity before the c
 
 	assert.match(rendered, /data-layout-lang="en"/);
 	assert.match(rendered, /data-lang="en"/);
+	assert.match(rendered, /data-name="Sam \(Sangho Kim\)"/);
 	assert.match(rendered, /data-summary="summary-en"/);
+	assert.match(rendered, /data-education="School A\/Degree A\/\|School B\/Degree B\/note-b"/);
 	assert.match(rendered, /data-experience="2023-Present\/Co A\/Role A\/desc-a\|2020-2023\/Co B\/Role B\/desc-b"/);
-	assert.ok(
-		rendered.indexOf("data-about-identity-stub") < rendered.indexOf("data-content"),
-		"AboutIdentity should render before the markdown body",
-	);
-});
-
-test("ko /about page renders nothing from AboutIdentity when identity is absent", async () => {
-	const bareEntry = {
-		...pageEntry("ko"),
-		data: { title: "소개", description: "…" },
-	};
-	const rendered = await renderAboutPage(
-		new URL("../src/pages/about.astro", import.meta.url),
-		bareEntry,
-	);
-
-	assert.doesNotMatch(rendered, /data-about-identity-stub/);
-	assert.match(rendered, /data-content/);
 });

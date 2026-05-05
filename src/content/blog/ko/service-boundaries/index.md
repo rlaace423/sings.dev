@@ -6,6 +6,7 @@ category: "Development"
 tags:
   - architecture
   - services
+draft: true
 ---
 
 서비스 경계는 소유권, 변경 빈도, 운영 현실을 반영할 때 가장 잘 작동합니다.

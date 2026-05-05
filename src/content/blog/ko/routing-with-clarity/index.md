@@ -6,6 +6,7 @@ category: "Development"
 tags:
   - routing
   - infrastructure
+draft: true
 ---
 
 운영 복잡도는 종종 요청이 시스템을 통과하는 경로 속에 숨어 있습니다.

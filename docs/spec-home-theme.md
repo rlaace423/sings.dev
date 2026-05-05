@@ -20,7 +20,7 @@
   - Each locale fetches recent posts from its matching content folder only.
   - The page should orient a reader gently and quickly, with the writing remaining more important than any hero treatment.
   - Each home page contains, in order:
-    - A short hero section consisting of an eyebrow and an `h1` only. No body paragraphs. The eyebrow reads as an identity + primary topic areas line (`Singing Developer — Backend · MPC · Infrastructure`). The `h1` is `시스템의 구조를 씁니다.` (KO) and `Notes on how systems hold together.` (EN). See `docs/spec-site-identity.md`.
+    - A short hero section consisting of an eyebrow and an `h1` only. No body paragraphs. The eyebrow reads as the author's real name + primary topic areas (`Sam (김상호) — 백엔드 · MPC · 인프라` on the Korean home, `Sam (Sangho Kim) — Backend · MPC · Infrastructure` on the English home). The `h1` is `시스템의 구조를 씁니다.` (KO) and `Notes on how systems hold together.` (EN). See `docs/spec-site-identity.md`.
     - A Categories block (`src/components/HomeCategories.astro`) acting as a quiet browse entry point into category pages. See `docs/spec-home-categories.md`.
     - A recent posts section showing the latest 3 to 5 posts.
   - Reuse the same quiet, text-first list style as the archive page.

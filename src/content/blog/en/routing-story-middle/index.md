@@ -12,6 +12,7 @@ series:
   index: 2
   total: 3
   subtitle: "Splitting Paths Without Drift"
+draft: true
 ---
 
 After the boundary is set, path design becomes much easier to reason about. The goal is no longer to add routes quickly, but to keep similar routes from slowly diverging into confusion.

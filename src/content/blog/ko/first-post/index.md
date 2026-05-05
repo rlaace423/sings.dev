@@ -6,6 +6,7 @@ category: "Essay"
 tags:
   - astro
   - notes
+draft: true
 ---
 
 이 글은 블로그 컬렉션에 들어가는 첫 번째 글입니다.

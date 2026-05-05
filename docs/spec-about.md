@@ -10,22 +10,28 @@
   - Korean: `src/pages/about.astro` rendering `src/content/pages/ko/about.md`.
   - English: `src/pages/en/about.astro` rendering `src/content/pages/en/about.md`.
 - **Content Schema (`src/content/config.ts`, `pages` collection)**:
-  - `identity` is an optional object on the `pages` schema.
-  - `identity.summary` (string, required): short first-person intro, about two to three sentences.
-  - `identity.photo` (object, required): `{ src, alt }` for the avatar. Uses `/avatar-placeholder.png` until a real portrait replaces it.
+  - `identity` is an optional object on the `pages` schema. When present, the page errors out at build time if any required field is missing — the schema is the single source of truth for the page's structure.
+  - `identity.name` (string, required): the page's `<h1>`. Use the same `Sam (김상호)` / `Sam (Sangho Kim)` form as the home hero eyebrow so identity reads consistently across surfaces.
+  - `identity.summary` (string, required): short first-person intro, about two to three sentences. Renders inline next to the photo.
+  - `identity.photo` (object, required): `{ src, alt }` for the avatar.
   - `identity.socials` (array, default `[]`): each item has `type` (`"github" | "email" | "linkedin" | "instagram"`), `href`, and optional `label`. Order is preserved.
+  - `identity.education` (array, default `[]`): each item has `school` and `degree` (both required), with optional `start`, `end`, and `description`. Dates and descriptions are optional because not every entry has them (e.g. visiting researcher stints, ongoing programs without a fixed start year). Order is preserved.
   - `identity.experience` (array, default `[]`): each item has `company`, `role`, `start`, `end`, and `description`. Order is preserved and reflects reverse-chronological listing by convention.
 - **Rendering Order**:
-  1. Photo + summary row.
-  2. Social links row.
-  3. Experience list.
-  4. Markdown body from the `.md` file (short essays about what the author writes and why).
+  1. Name as the page `<h1>`.
+  2. Photo + summary row (photo on the left at 96×96 round, summary inline on the right).
+  3. Social links row.
+  4. `학력` / `Education` section under a `<h2>`.
+  5. `경력` / `Experience` section under a `<h2>` at the same level as Education.
+  - There is no markdown body section — the photo-side summary covers what the page needs to say. The `.md` file exists only to carry frontmatter for the `pages` collection.
+- **Section Heading Style**:
+  - `학력` and `경력` use the same h2 treatment as the home archive heading (`text-2xl font-semibold tracking-tight ...`), not the small uppercase eyebrow style. This keeps the about page readable as a structured personal page rather than a list of micro-sections.
 - **Editorial Guardrails**:
   - No company logos, badges, skill tags, or achievement callouts.
-  - No card/box decoration around experience entries.
+  - No card/box decoration around experience or education entries.
   - Social links use the shared `SocialIcon.astro` inline SVGs paired with a short text label; icon-only is not used.
-  - Experience entries use typographic structure only (a date column + company/role/description stack).
-  - The body keeps an essay tone and stays short so the page does not read as a pure CV.
+  - Experience entries use typographic structure only (a date column + company/role/description stack). Education entries use a simpler stack (school + degree + optional description) because their dates are intentionally optional.
+  - The page intentionally stays short. If the photo-side summary needs more space, lengthen the summary; do not reintroduce a markdown body section.
 - **Author Presence Elsewhere**:
   - Do not re-introduce a per-post author block on post detail pages. Author identity for readers lives in the header, the home intro, and this page.
   - Social links and contact methods live on this page only; the footer remains a copyright line.

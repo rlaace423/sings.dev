@@ -12,6 +12,7 @@ series:
   index: 1
   total: 3
   subtitle: "Defining Boundaries First"
+draft: true
 ---
 
 Routing usually gets framed as a code problem. In practice, it behaves more like a boundary problem: once the edges are clear, the rest of the system stops wobbling.

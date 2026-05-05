@@ -6,6 +6,7 @@ category: "Development"
 tags:
   - mpc
   - backend
+draft: true
 ---
 
 MPC 작업은 신중한 이름 짓기, 좁은 가정, 그리고 각 프로토콜 단계를 차분히 검토하는 태도를 요구합니다.

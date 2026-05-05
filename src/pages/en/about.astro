@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 import AboutIdentity from "../../components/AboutIdentity.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -9,26 +9,21 @@ if (!page) {
 	throw new Error("Missing en/about page content.");
 }
 
-const { Content } = await render(page);
 const identity = page.data.identity;
+
+if (!identity) {
+	throw new Error("Missing identity on en/about page.");
+}
 ---
 
 <Layout title={`${page.data.title} | sings.dev`} description={page.data.description} lang="en">
-	<article class="space-y-16">
-		{
-			identity && (
-				<AboutIdentity
-					lang="en"
-					summary={identity.summary}
-					photo={identity.photo}
-					socials={identity.socials}
-					experience={identity.experience}
-				/>
-			)
-		}
-
-		<section class="prose-site">
-			<Content />
-		</section>
-	</article>
+	<AboutIdentity
+		lang="en"
+		name={identity.name}
+		summary={identity.summary}
+		photo={identity.photo}
+		socials={identity.socials}
+		education={identity.education}
+		experience={identity.experience}
+	/>
 </Layout>

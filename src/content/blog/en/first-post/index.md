@@ -6,6 +6,7 @@ category: "Essay"
 tags:
   - astro
   - notes
+draft: true
 ---
 
 This is the first entry in the blog collection.
