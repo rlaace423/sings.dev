@@ -11,7 +11,7 @@ test("404 page renders Korean and English sections so a single static 404.html s
 	assert.match(page, /Page not found\./, "English headline must be present");
 	assert.match(page, /<h1[^>]*>\s*페이지를 찾을 수 없습니다/, "Korean message must be the h1 (page lang defaults to ko)");
 	assert.match(page, /<h2[^>]*>\s*Page not found/, "English message must be the h2 alternate");
-	assert.match(page, /<section lang="en"/, "English section must declare lang=en for screen readers");
+	assert.match(page, /<section[^>]*\blang="en"/, "English section must declare lang=en for screen readers");
 });
 
 test("404 page links each locale back to its own home", async () => {
