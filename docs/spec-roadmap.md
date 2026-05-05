@@ -27,6 +27,7 @@
 - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) are parsed at build time by `src/utils/remarkAdmonition.ts` and rendered as restrained four-sided boxes (2px type-color left accent + 1px hairline frame on the other three sides + 4px radius), with locale-aware uppercase labels. The visual register stays in the site's existing left-rail vocabulary. See `docs/spec-post-detail.md`.
 - TOC scroll-spy landed: the desktop sticky TOC and the mobile `<details>` TOC mark the currently-visible H2 / H3 through a color shift, a 500-weight bump, and a 2px `::before` bar in the gap between the aside's left rail and the link text. The sticky offset was raised to clear the 85px header (`top-24` rail + matching `scroll-padding-top: 6rem` on `html`), so anchor jumps from TOC clicks land below the header rather than under it.
 - Reading progress bar landed: a 3px hairline at the top of post detail pages tracks reader progress through the article's prose body (not full window scroll), so the bar reaches 100% the moment the prose ends rather than the moment the page ends. Mounted only on `[...slug].astro` pages; other surfaces stay free of this chrome. See `docs/spec-post-detail.md`.
+- Post-body image lightbox landed: every `<img>` inside `article .prose-site` on a post-detail page expands into a centered fullscreen view via a 250ms FLIP zoom, with caption mirrored from `<figcaption>` and five close triggers (Esc, backdrop, image click, scroll input, resize) plus an explicit × button. Mounted only on `[...slug].astro`. See `docs/spec-post-detail.md` and `docs/superpowers/specs/2026-05-06-post-image-lightbox-design.md`.
 
 ## Priority Areas
 
@@ -77,6 +78,7 @@
   - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) become four-sided boxes with a 2px type-color left accent and a 1px hairline frame on the other three sides, plus a small 4px radius. Locale-aware labels. See `docs/spec-post-detail.md`.
   - TOC scroll-spy landed: the active section is marked through a color shift, a 500-weight bump, and a 2px `::before` bar; sticky TOC was raised to `top-24` and `html` got `scroll-padding-top: 6rem` so the rail and anchor jumps clear the 85px header. See `docs/spec-post-detail.md`.
   - Reading progress bar landed: 3px hairline at viewport top, fills against the article's prose body so 100% lines up with "post finished," not "page finished." Mounted only on `[...slug].astro`. See `docs/spec-post-detail.md`.
+  - Post-body image lightbox landed: in-prose images zoom into a centered fullscreen lightbox via a 250ms FLIP transform; caption mirrored from `<figcaption>`; five close triggers plus a × button. See `docs/spec-post-detail.md`.
 - **Next Likely Work**:
   - Reactive only. The "Article structure cues" bucket is now closed; further reading-aid work happens only when an actual long post starts feeling unclear or noisy in practice.
 - **Decided Not To Add** (handled by the writing itself, not by UI):
