@@ -13,6 +13,12 @@
   - Support localized `title` and `description` metadata when needed.
   - Support both light and dark mode.
   - Apply the light stone / dark night palette and the Pretendard Std Variable sans stack at the html and body level. See `docs/spec-theme-typography.md`.
+- **Social Share Metadata (`<head>`)**:
+  - Emit OpenGraph (`og:title`, `og:description`, `og:type`, `og:site_name`, `og:locale`, `og:url`) and Twitter Card (`twitter:card`, `twitter:title`, `twitter:description`) tags from the same `title` / `description` props that drive `<title>` and `<meta name="description">`, so per-page values stay in sync without per-page meta wiring.
+  - `og:type` defaults to `"website"` and post detail pages opt into `"article"` via the `ogType` prop on `Layout.astro`.
+  - `og:locale` is derived from `lang` (`ko_KR` for `ko`, `en_US` for `en`).
+  - `og:url` reuses the canonical URL produced by `getLocalizedSeoUrls`, so canonical / hreflang / `og:url` cannot drift.
+  - `twitter:card` is set to `summary` (text-only). The site does not currently emit `og:image` / `twitter:image`; if a static OG image is added later, set it as a sitewide default in `Layout.astro` rather than per page.
 - **Header**:
   - Left: a single link combining the `SiteLogo` microphone SVG mark and the `sings.dev` text, pointing at the locale-aware home page. See `docs/spec-site-identity.md`.
   - Right: minimalist navigation links for `Posts` and `About`.

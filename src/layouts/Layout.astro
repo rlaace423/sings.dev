@@ -13,6 +13,7 @@ interface Props {
 	description?: LocalizedValue;
 	lang?: Locale;
 	contentClass?: string;
+	ogType?: "website" | "article";
 }
 
 const {
@@ -20,6 +21,7 @@ const {
 	description = "A minimalist Astro site for notes, posts, and essays.",
 	lang: langProp = defaultLocale,
 	contentClass = "max-w-3xl",
+	ogType = "website",
 } = Astro.props;
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
@@ -30,6 +32,7 @@ const resolveLocalizedValue = (value: LocalizedValue) =>
 
 const resolvedTitle = resolveLocalizedValue(title);
 const resolvedDescription = resolveLocalizedValue(description);
+const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
 ---
 
 <!doctype html>
@@ -50,6 +53,15 @@ const resolvedDescription = resolveLocalizedValue(description);
 				))
 		}
 		{seoUrls && <link rel="alternate" hreflang="x-default" href={seoUrls.alternates[defaultLocale]} />}
+		<meta property="og:title" content={resolvedTitle} />
+		<meta property="og:description" content={resolvedDescription} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:site_name" content="sings.dev" />
+		<meta property="og:locale" content={ogLocale} />
+		{seoUrls && <meta property="og:url" content={seoUrls.canonical} />}
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={resolvedTitle} />
+		<meta name="twitter:description" content={resolvedDescription} />
 		<title>{resolvedTitle}</title>
 		<script is:inline>
 			(() => {
