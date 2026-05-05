@@ -6,6 +6,7 @@ category: "Development"
 tags:
   - architecture
   - services
+draft: true
 ---
 
 Service boundaries work best when they reflect ownership, change rate, and operational reality.

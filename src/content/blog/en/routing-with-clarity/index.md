@@ -6,6 +6,7 @@ category: "Development"
 tags:
   - routing
   - infrastructure
+draft: true
 ---
 
 Operational complexity often hides inside the path a request takes through a system.

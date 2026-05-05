@@ -6,6 +6,7 @@ category: "Essay"
 tags:
   - docs
   - operations
+draft: true
 ---
 
 The best technical writing shortens the distance between confusion and the next correct action.

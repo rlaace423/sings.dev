@@ -6,6 +6,7 @@ category: "Operations"
 tags:
   - ci
   - delivery
+draft: true
 ---
 
 A quiet build pipeline tells the team that signal matters more than decoration.

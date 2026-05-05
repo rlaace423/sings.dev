@@ -7,6 +7,7 @@ tags:
   - aws
   - iam
   - infrastructure
+draft: true
 ---
 
 AWS에서 새 정책을 만들 때, 콘솔 UI만 따라가면 실수하기 쉬운 지점이 몇 군데 있습니다. 이 글에서는 실무에서 자주 놓치는 세 가지를 기록해 둡니다. 라우팅 경계에 관한 이야기는 [다른 글](/posts/routing-with-clarity/)에서 다뤘습니다.

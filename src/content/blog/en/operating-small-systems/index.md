@@ -6,6 +6,7 @@ category: "Operations"
 tags:
   - operations
   - reliability
+draft: true
 ---
 
 Small systems have an advantage: the team can still hold the whole picture in mind.

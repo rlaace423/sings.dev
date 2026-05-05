@@ -12,6 +12,7 @@ series:
   index: 3
   total: 3
   subtitle: "Closing With Operability"
+draft: true
 ---
 
 The last part of the series is not about adding more rules. It is about checking whether the structure still behaves well once it is in daily use.

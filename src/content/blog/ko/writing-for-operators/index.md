@@ -6,6 +6,7 @@ category: "Essay"
 tags:
   - docs
   - operations
+draft: true
 ---
 
 좋은 기술 문서는 혼란과 올바른 다음 행동 사이의 거리를 짧게 만듭니다.

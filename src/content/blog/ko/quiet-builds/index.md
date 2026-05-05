@@ -6,6 +6,7 @@ category: "Operations"
 tags:
   - ci
   - delivery
+draft: true
 ---
 
 조용한 빌드 파이프라인은 팀에게 신호가 장식보다 중요하다는 사실을 알려 줍니다.
