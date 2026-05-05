@@ -33,7 +33,7 @@ Add a small, quiet copy-to-clipboard button to fenced code blocks in post bodies
   - `src/pages/posts/[...slug].astro`
   - `src/pages/en/posts/[...slug].astro`
 - New CSS block in `src/styles/global.css` covering `.code-block` (wrapper) and `.code-copy-button` (button) selectors, including hover / focus / mobile rules and the `prefers-reduced-motion` override. Place the block near the existing `.prose-site pre code` reset since both relate to Shiki output.
-- Two SVG icons inlined in the rehype plugin output: a clipboard glyph (idle state) and a check glyph (copied state). Stroke-only, 14×14 viewBox, 1.5 stroke width, `currentColor`, matching the thin-stroke icon language already used in `SiteLogo`, the search trigger, and the theme toggle.
+- Two SVG icons inlined in the rehype plugin output: a clipboard glyph (idle state) and a check glyph (copied state). Stroke-only, **24×24 viewBox**, **1.8 stroke width**, rendered at 14×14 px in `currentColor`. These values intentionally match the existing thin-stroke icon vocabulary used by the search trigger and the theme toggle in `Header.astro`.
 - Tests:
   - `tests/rehype-code-copy-button.test.ts` — exercise the plugin against seven input cases (single `pre.astro-code`, multiple in one tree, empty `pre.astro-code`, non-Shiki bare `<pre>`, ko vs en locale labels, `pre.astro-code` nested inside `<aside class="callout">`, idempotent re-application).
   - Update `tests/post-detail-structure.test.mjs` with one assertion per locale that the rendered post detail page contains at least one `.code-copy-button` for a fixture post with code blocks.
@@ -96,7 +96,7 @@ Locale detection mirrors `remarkAdmonition.ts`'s `detectLocale` exactly: read `v
 
 The plugin must be **idempotent** against re-runs on the same tree: if a `<pre class="astro-code">` is already inside a `<div class="code-block">` parent, skip it. This is a defensive safety so that accidentally listing the plugin twice in `rehypePlugins`, or having an upstream tool pre-apply a similar wrapping, does not double-emit buttons.
 
-The wrapping `<div class="code-block">` and the `<button>` are emitted as proper hast `element` nodes so their attributes go through hast's normal rendering. The two SVG icons may be emitted as raw HTML children (`type: "raw"`) of the button — Astro's existing pipeline already passes raw nodes through, and SVG attribute naming in hast is fiddly enough that going raw for the icon content is the lighter path. Both SVGs share the wrapper `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">`. The idle SVG is `data-state="idle"`. The copied SVG is `data-state="copied" hidden` so it is invisible until the script unhides it.
+The wrapping `<div class="code-block">` and the `<button>` are emitted as proper hast `element` nodes so their attributes go through hast's normal rendering. The two SVG icons may be emitted as raw HTML children (`type: "raw"`) of the button — Astro's existing pipeline already passes raw nodes through, and SVG attribute naming in hast is fiddly enough that going raw for the icon content is the lighter path. Both SVGs share the wrapper `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">`. The idle SVG is `data-state="idle"`. The copied SVG is `data-state="copied" hidden` so it is invisible until the script unhides it.
 
 ### Astro config
 
