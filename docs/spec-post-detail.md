@@ -115,7 +115,7 @@
   - The visual rules live in `src/styles/global.css` as `.prose figure`, `.prose figure img`, `.prose figcaption`, and `.prose figure[data-width="wide"]`.
   - Post ID normalization for folder-form posts happens in `stripLocaleFromId` (`src/utils/blog.ts`), which strips the trailing `/index` segment so URLs stay the same as the flat-file layout.
 
-## Code blocks in Post Bodies
+## Code Blocks in Post Bodies
 
 - **Default rendering**:
   - Fenced code blocks (` ``` `) are highlighted by Shiki at build time using the dual-theme setup configured in `astro.config.mjs` (`shikiConfig.themes.light = "github-light"`, `shikiConfig.themes.dark = "tokyo-night"`). Tokens swap between the two themes via the `html.dark .astro-code` override in `src/styles/global.css`.
@@ -131,4 +131,4 @@
   - Build-time wrapping (`<pre class="astro-code">` → `<div class="code-block"><pre>…</pre><button class="code-copy-button">…</button></div>`) happens in `src/utils/rehypeCodeCopyButton.ts`, wired into `astro.config.mjs`'s `markdown.rehypePlugins`.
   - Click behavior lives in `src/components/CodeCopyButton.astro`, mounted on `src/pages/posts/[...slug].astro` and `src/pages/en/posts/[...slug].astro`.
   - Visual rules live in `src/styles/global.css` under the `.code-block` and `.code-copy-button` selectors.
-- **Future code-block features (line numbers, file titles, line highlighting, diff highlighting) are not part of this section. They would extend the same rehype hook or compose alongside it without requiring a runtime DOM rewrite.**
+- Future code-block features (line numbers, file titles, line highlighting, diff highlighting) are not part of this section. They would extend the same rehype hook or compose alongside it without requiring a runtime DOM rewrite.

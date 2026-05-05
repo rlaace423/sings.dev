@@ -76,7 +76,7 @@ The plugin runs at the **rehype** stage, not remark, because the input it cares 
 The plugin walks the hast tree (using `unist-util-visit`'s implicit pattern via the unified `visit`-style traversal — the codebase already relies on Astro's transitive unified deps). For every `element` node where:
 
 - `node.tagName === "pre"`, AND
-- `node.properties.className` includes `"astro-code"`, AND
+- the node's class list (see "class shape" note below) includes `"astro-code"`, AND
 - the recursive text content of `node` is non-empty,
 
 …the plugin **replaces** the `<pre>` node with a wrapping `<div class="code-block">` whose children are:
@@ -85,6 +85,8 @@ The plugin walks the hast tree (using `unist-util-visit`'s implicit pattern via 
 2. A `<button class="code-copy-button" type="button" aria-label="…" data-copied-label="…">` containing two inline SVGs (idle clipboard, copied check).
 
 `pre` elements that lack the `astro-code` class are left untouched — this protects any hypothetical inline `<pre>` HTML in posts and any `<pre>` produced by mechanisms other than Shiki.
+
+**Class shape note (important for any future hast plugin in this codebase):** Astro's Shiki integration writes `node.properties.class` as a space-separated string (e.g. `"astro-code shiki tokyo-night"`), NOT `node.properties.className` as a string array — even though rehype's normalised in-memory representation typically uses `className`. The plugin's class-membership check therefore reads `properties.className ?? properties.class`, returns `false` if neither exists, splits the string form on whitespace before comparing, and only matches whole tokens (so `astro-code` does not falsely match a `my-astro-code-foo` lookalike). The unit tests pin both the array-shape (rehype-style) and the string-shape (Shiki-style) inputs so a refactor cannot silently regress either branch.
 
 Locale detection mirrors `remarkAdmonition.ts`'s `detectLocale` exactly: read `vfile.path`, return `"en"` if the path contains `/blog/en/`, otherwise return `"ko"` (covers both the `ko` posts and any future locale that has not been explicitly added — which is the same fallback policy `remarkAdmonition` uses). The matched locale picks the label pair:
 

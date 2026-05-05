@@ -176,3 +176,51 @@ test("does not double-wrap on a second pass over the same tree (idempotency)", (
 	assert.equal((wrapper.children[0] as { tagName: string }).tagName, "pre");
 	assert.equal((wrapper.children[1] as { tagName: string }).tagName, "button");
 });
+
+// Astro's Shiki integration emits hast properties with `class` as a
+// space-separated string (e.g. `"astro-code shiki tokyo-night"`), unlike
+// rehype's normalised `className` array. The plugin must match either form;
+// this test pins that behavior so a refactor cannot silently regress to the
+// array-only assumption that broke real builds before the Task 2 wiring.
+test("wraps a <pre> whose properties use a space-separated `class` string instead of `className` array", () => {
+	const shikiShapedPre = makeElement(
+		"pre",
+		{ class: "astro-code shiki tokyo-night" },
+		[makeElement("code", {}, [makeText("real-shape();")])],
+	);
+	const tree = makeRoot([shikiShapedPre]);
+
+	rehypeCodeCopyButton()(tree, makeFile("ko"));
+
+	const children = (tree as { children: HastNode[] }).children;
+	assert.equal(children.length, 1);
+	const wrapper = children[0] as {
+		tagName: string;
+		properties: Record<string, unknown>;
+		children: HastNode[];
+	};
+	assert.equal(wrapper.tagName, "div");
+	assert.deepEqual(wrapper.properties.className, ["code-block"]);
+	assert.equal((wrapper.children[0] as { tagName: string }).tagName, "pre");
+	assert.equal((wrapper.children[1] as { tagName: string }).tagName, "button");
+});
+
+// Token-boundary protection: a class string that contains "astro-code" only
+// as a substring of a longer token (e.g. "my-astro-code-foo") must NOT match.
+// hasClass tokenises on whitespace and does an exact-token comparison.
+test("does not match `astro-code` as a substring of another class token", () => {
+	const lookalikePre = makeElement(
+		"pre",
+		{ class: "my-astro-code-foo other-token" },
+		[makeElement("code", {}, [makeText("not-shiki")])],
+	);
+	const tree = makeRoot([lookalikePre]);
+
+	rehypeCodeCopyButton()(tree, makeFile("ko"));
+
+	const children = (tree as { children: HastNode[] }).children;
+	assert.equal(children.length, 1);
+	const node = children[0] as { tagName: string };
+	// Untouched: still a bare <pre>, no .code-block wrapper.
+	assert.equal(node.tagName, "pre");
+});
