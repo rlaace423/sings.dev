@@ -27,6 +27,7 @@
 - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) are parsed at build time by `src/utils/remarkAdmonition.ts` and rendered as restrained four-sided boxes (2px type-color left accent + 1px hairline frame on the other three sides + 4px radius), with locale-aware uppercase labels. The visual register stays in the site's existing left-rail vocabulary. See `docs/spec-post-detail.md`.
 - TOC scroll-spy landed: the desktop sticky TOC and the mobile `<details>` TOC mark the currently-visible H2 / H3 through a color shift, a 500-weight bump, and a 2px `::before` bar in the gap between the aside's left rail and the link text. The sticky offset was raised to clear the 85px header (`top-24` rail + matching `scroll-padding-top: 6rem` on `html`), so anchor jumps from TOC clicks land below the header rather than under it.
 - Reading progress bar landed: a 3px hairline at the top of post detail pages tracks reader progress through the article's prose body (not full window scroll), so the bar reaches 100% the moment the prose ends rather than the moment the page ends. Mounted only on `[...slug].astro` pages; other surfaces stay free of this chrome. See `docs/spec-post-detail.md`.
+- Code-block copy button landed: every fenced code block in a post body carries a small copy-to-clipboard button (hover-only on desktop, always visible on mobile, hairline 28×28px) emitted at build time by `src/utils/rehypeCodeCopyButton.ts`. Locale-aware ARIA labels (`코드 복사` / `Copy code`, `복사됨` / `Copied`). The rehype-stage foundation now in place can carry future code-block features (line numbers, file titles, line highlights) without requiring runtime DOM rewrites. See `docs/spec-post-detail.md`.
 
 ## Priority Areas
 
@@ -77,6 +78,7 @@
   - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) become four-sided boxes with a 2px type-color left accent and a 1px hairline frame on the other three sides, plus a small 4px radius. Locale-aware labels. See `docs/spec-post-detail.md`.
   - TOC scroll-spy landed: the active section is marked through a color shift, a 500-weight bump, and a 2px `::before` bar; sticky TOC was raised to `top-24` and `html` got `scroll-padding-top: 6rem` so the rail and anchor jumps clear the 85px header. See `docs/spec-post-detail.md`.
   - Reading progress bar landed: 3px hairline at viewport top, fills against the article's prose body so 100% lines up with "post finished," not "page finished." Mounted only on `[...slug].astro`. See `docs/spec-post-detail.md`.
+  - Code-block copy button landed: see Current State above. The rehype hook (`src/utils/rehypeCodeCopyButton.ts`) is the natural extension point for future code-block features.
 - **Next Likely Work**:
   - Reactive only. The "Article structure cues" bucket is now closed; further reading-aid work happens only when an actual long post starts feeling unclear or noisy in practice.
 - **Decided Not To Add** (handled by the writing itself, not by UI):
