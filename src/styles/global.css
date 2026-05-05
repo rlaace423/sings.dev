@@ -268,6 +268,91 @@ html.dark .shiki span {
 }
 
 /*
+ * Code-block copy button.
+ * The `rehypeCodeCopyButton` plugin (`src/utils/rehypeCodeCopyButton.ts`)
+ * wraps every Shiki <pre class="astro-code"> in a <div class="code-block">
+ * and appends a <button class="code-copy-button"> sibling. The button's
+ * click handling lives in `src/components/CodeCopyButton.astro`.
+ *
+ * Visibility model:
+ *   - Desktop: the button stays at opacity 0 (and is not focusable, because
+ *     pointer-events is none) until the wrapper is hovered or focused
+ *     within. Hover or focus-within fades it to opacity 1 in 150ms. The
+ *     button itself bumps its border + icon color one shade darker on
+ *     hover / focus-visible.
+ *   - Mobile (<= 767px): the button stays visible at opacity 1 because
+ *     touch devices have no hover, and the alternative would force a tap-
+ *     and-wait gesture before the button shows up.
+ *   - Reduced motion: the opacity / color transitions are skipped.
+ *
+ * The wrapper is position: relative so the absolutely-positioned button
+ * sits in the wrapper's top-right corner and stays put when the code
+ * underneath scrolls horizontally.
+ */
+.code-block {
+	position: relative;
+}
+
+.code-copy-button {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border: 1px solid rgb(220 214 204 / 1); /* dawn-300 */
+	border-radius: 0.25rem;
+	background: transparent;
+	color: rgb(86 95 137 / 1); /* dawn-600 */
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	transition:
+		opacity 150ms ease,
+		color 150ms ease,
+		border-color 150ms ease;
+}
+
+:where(.dark) .code-copy-button {
+	border-color: rgb(59 66 97 / 1); /* night-600 */
+	color: rgb(115 122 162 / 1); /* night-300 */
+}
+
+.code-block:hover .code-copy-button,
+.code-block:focus-within .code-copy-button {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.code-copy-button:hover,
+.code-copy-button:focus-visible {
+	color: rgb(65 72 104 / 1); /* dawn-700 */
+	border-color: rgb(86 95 137 / 1); /* dawn-600 */
+	outline: none;
+}
+
+:where(.dark) .code-copy-button:hover,
+:where(.dark) .code-copy-button:focus-visible {
+	color: rgb(192 202 245 / 1); /* night-50 */
+	border-color: rgb(115 122 162 / 1); /* night-300 */
+}
+
+@media (max-width: 767px) {
+	.code-copy-button {
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.code-copy-button {
+		transition: none;
+	}
+}
+
+/*
  * Light/dark theme toggle transition.
  * The .theme-transition class is added to <html> only during an active
  * toggle (via the script in Layout.astro), applies a 250ms color fade
