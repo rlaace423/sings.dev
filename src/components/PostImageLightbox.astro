@@ -1,0 +1,283 @@
+---
+import { defaultLocale, type Locale, isLocale, useTranslations } from "../i18n/ui";
+
+interface Props {
+	lang?: Locale;
+}
+
+const { lang: langProp = defaultLocale } = Astro.props;
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const t = useTranslations(lang);
+---
+
+<div
+	data-post-lightbox
+	aria-hidden="true"
+	inert
+	class="fixed inset-0 z-50 hidden"
+>
+	<button
+		type="button"
+		data-post-lightbox-backdrop
+		tabindex="-1"
+		aria-label={t("lightbox.close")}
+		class="absolute inset-0 bg-dawn-100/95 backdrop-blur-sm dark:bg-night-900/95"
+	></button>
+
+	<div
+		role="dialog"
+		aria-modal="true"
+		aria-label={t("lightbox.label")}
+		class="relative flex h-full w-full items-center justify-center px-6"
+	>
+		<figure class="m-0 flex max-w-full flex-col items-center gap-3">
+			<img
+				data-post-lightbox-image
+				alt=""
+				class="max-h-[80vh] max-w-[90vw] origin-top-left object-contain cursor-zoom-out"
+			/>
+			<figcaption
+				data-post-lightbox-caption
+				class="hidden max-w-[90vw] text-center text-sm italic text-dawn-600 dark:text-night-300"
+			></figcaption>
+		</figure>
+
+		<button
+			type="button"
+			data-post-lightbox-close
+			aria-label={t("lightbox.close")}
+			class="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-dawn-300 text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:border-night-600 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+		>
+			<svg
+				class="h-4 w-4"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M18 6 6 18"></path>
+				<path d="m6 6 12 12"></path>
+			</svg>
+		</button>
+	</div>
+</div>
+
+<script is:inline>
+	(() => {
+		if (window.__postImageLightboxInit) return;
+		window.__postImageLightboxInit = true;
+
+		const shell = document.querySelector("[data-post-lightbox]");
+		if (!(shell instanceof HTMLElement)) return;
+
+		const backdrop = shell.querySelector("[data-post-lightbox-backdrop]");
+		const dialog = shell.querySelector('[role="dialog"]');
+		const lightboxImg = shell.querySelector("[data-post-lightbox-image]");
+		const caption = shell.querySelector("[data-post-lightbox-caption]");
+		const closeButton = shell.querySelector("[data-post-lightbox-close]");
+
+		if (
+			!(backdrop instanceof HTMLElement) ||
+			!(dialog instanceof HTMLElement) ||
+			!(lightboxImg instanceof HTMLImageElement) ||
+			!(caption instanceof HTMLElement) ||
+			!(closeButton instanceof HTMLButtonElement)
+		) {
+			return;
+		}
+
+		const TRANSITION_MS = 250;
+		const SCROLL_KEYS = new Set([
+			" ",
+			"PageUp",
+			"PageDown",
+			"ArrowUp",
+			"ArrowDown",
+			"Home",
+			"End",
+		]);
+
+		let activeImage = null;
+		let isAnimating = false;
+
+		const findCaption = (img) => {
+			const figure = img.closest("figure");
+			if (!figure) return "";
+			const figcap = figure.querySelector("figcaption");
+			return figcap ? figcap.textContent || "" : "";
+		};
+
+		const setShellOpen = (open) => {
+			shell.classList.toggle("hidden", !open);
+			shell.setAttribute("aria-hidden", open ? "false" : "true");
+			if (open) {
+				shell.removeAttribute("inert");
+				shell.dataset.state = "open";
+			} else {
+				shell.setAttribute("inert", "");
+				delete shell.dataset.state;
+			}
+		};
+
+		const onKeyDown = (event) => {
+			if (event.key === "Escape") {
+				event.preventDefault();
+				closeLightbox();
+				return;
+			}
+			if (SCROLL_KEYS.has(event.key)) {
+				closeLightbox();
+			}
+		};
+
+		const onScrollClose = () => closeLightbox();
+		const onResizeClose = () => closeLightbox();
+
+		const onDialogClick = (event) => {
+			if (
+				event.target === closeButton ||
+				(event.target instanceof Node && closeButton.contains(event.target))
+			) {
+				return;
+			}
+			closeLightbox();
+		};
+
+		const addCloseListeners = () => {
+			document.addEventListener("keydown", onKeyDown);
+			window.addEventListener("wheel", onScrollClose, { passive: true });
+			window.addEventListener("touchmove", onScrollClose, { passive: true });
+			window.addEventListener("resize", onResizeClose);
+			backdrop.addEventListener("click", closeLightbox);
+			dialog.addEventListener("click", onDialogClick);
+			closeButton.addEventListener("click", closeLightbox);
+		};
+
+		const removeCloseListeners = () => {
+			document.removeEventListener("keydown", onKeyDown);
+			window.removeEventListener("wheel", onScrollClose);
+			window.removeEventListener("touchmove", onScrollClose);
+			window.removeEventListener("resize", onResizeClose);
+			backdrop.removeEventListener("click", closeLightbox);
+			dialog.removeEventListener("click", onDialogClick);
+			closeButton.removeEventListener("click", closeLightbox);
+		};
+
+		function openLightbox(img) {
+			if (isAnimating || activeImage) return;
+			if (!img.complete || img.naturalWidth === 0) return;
+
+			activeImage = img;
+			isAnimating = true;
+
+			lightboxImg.src = img.currentSrc || img.src;
+			if (img.srcset) lightboxImg.srcset = img.srcset;
+			else lightboxImg.removeAttribute("srcset");
+			if (img.sizes) lightboxImg.sizes = img.sizes;
+			else lightboxImg.removeAttribute("sizes");
+			lightboxImg.alt = img.alt || "";
+
+			const captionText = findCaption(img);
+			if (captionText) {
+				caption.textContent = captionText;
+				caption.classList.remove("hidden");
+			} else {
+				caption.textContent = "";
+				caption.classList.add("hidden");
+			}
+
+			setShellOpen(true);
+			backdrop.style.opacity = "0";
+			lightboxImg.style.transition = "none";
+			lightboxImg.style.transform = "none";
+
+			const startRect = img.getBoundingClientRect();
+			const endRect = lightboxImg.getBoundingClientRect();
+			const dx = startRect.left - endRect.left;
+			const dy = startRect.top - endRect.top;
+			const scale = endRect.width === 0 ? 1 : startRect.width / endRect.width;
+
+			lightboxImg.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+			img.style.visibility = "hidden";
+
+			void lightboxImg.offsetWidth;
+
+			lightboxImg.style.transition = `transform ${TRANSITION_MS}ms ease-out`;
+			backdrop.style.transition = `opacity ${TRANSITION_MS}ms ease-out`;
+			lightboxImg.style.transform = "";
+			backdrop.style.opacity = "";
+
+			const onEnd = (event) => {
+				if (event.propertyName !== "transform") return;
+				lightboxImg.removeEventListener("transitionend", onEnd);
+				lightboxImg.style.transition = "";
+				isAnimating = false;
+				closeButton.focus();
+				addCloseListeners();
+			};
+			lightboxImg.addEventListener("transitionend", onEnd);
+		}
+
+		function closeLightbox() {
+			if (!activeImage || isAnimating) return;
+			isAnimating = true;
+			removeCloseListeners();
+
+			const img = activeImage;
+			const startRect = img.getBoundingClientRect();
+			const endRect = lightboxImg.getBoundingClientRect();
+			const dx = startRect.left - endRect.left;
+			const dy = startRect.top - endRect.top;
+			const scale = endRect.width === 0 ? 1 : startRect.width / endRect.width;
+
+			lightboxImg.style.transition = `transform ${TRANSITION_MS}ms ease-out`;
+			backdrop.style.transition = `opacity ${TRANSITION_MS}ms ease-out`;
+			lightboxImg.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+			backdrop.style.opacity = "0";
+
+			const onEnd = (event) => {
+				if (event.propertyName !== "transform") return;
+				lightboxImg.removeEventListener("transitionend", onEnd);
+
+				setShellOpen(false);
+				lightboxImg.style.transition = "";
+				lightboxImg.style.transform = "";
+				backdrop.style.transition = "";
+				backdrop.style.opacity = "";
+				lightboxImg.removeAttribute("src");
+				lightboxImg.removeAttribute("srcset");
+				lightboxImg.removeAttribute("sizes");
+
+				img.style.visibility = "";
+				img.focus();
+
+				activeImage = null;
+				isAnimating = false;
+			};
+			lightboxImg.addEventListener("transitionend", onEnd);
+		}
+
+		const article = document.querySelector("article .prose-site");
+		if (!article) return;
+
+		const wireImage = (img) => {
+			if (img.dataset.zoomable !== undefined) return;
+			if (img.closest("[data-no-zoom]") || img.dataset.noZoom !== undefined) return;
+			img.dataset.zoomable = "";
+			img.setAttribute("tabindex", "0");
+			img.addEventListener("click", () => openLightbox(img));
+		};
+
+		const images = article.querySelectorAll("img");
+		images.forEach((img) => {
+			if (img.complete && img.naturalWidth > 0) {
+				wireImage(img);
+			} else {
+				img.addEventListener("load", () => wireImage(img), { once: true });
+			}
+		});
+	})();
+</script>
