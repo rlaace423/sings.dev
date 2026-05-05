@@ -28,4 +28,8 @@
   - English post detail: `src/pages/en/posts/[...slug].astro`
   - Korean taxonomy pages: `src/pages/category/[category].astro`, `src/pages/tags/[tag].astro`
   - English taxonomy pages: `src/pages/en/category/[category].astro`, `src/pages/en/tags/[tag].astro`
+- **404 Page**:
+  - A single bilingual page at `src/pages/404.astro` serves all 404s (Cloudflare static hosting only renders one root-level `404.html`).
+  - The Korean message is the `<h1>` so it matches the page-level `lang="ko"` default; the English message is a `<h2>` inside a `<section lang="en">` so screen readers announce the language switch.
+  - Each section links back to its own locale home (`/` and `/en/`).
 - **Constraint**: Update `getCollection` calls to filter by the language prefix (e.g., `id.startsWith("ko/")`). Use `getRelativeLocaleUrl` from `astro:i18n` for all internal links.
