@@ -140,8 +140,8 @@ The script is mounted via `<CodeCopyButton />` placed once inside each post deta
     aria-label="코드 복사"
     data-copied-label="복사됨"
   >
-    <svg data-state="idle" viewBox="0 0 16 16" width="14" height="14" …>…</svg>
-    <svg data-state="copied" viewBox="0 0 16 16" width="14" height="14" hidden …>…</svg>
+    <svg data-state="idle" viewBox="0 0 24 24" width="14" height="14" …>…</svg>
+    <svg data-state="copied" viewBox="0 0 24 24" width="14" height="14" hidden …>…</svg>
   </button>
 </div>
 ```
