@@ -114,3 +114,22 @@
   - The authoring-to-HTML transformation happens in `src/utils/remarkPostFigure.ts`, wired in through `astro.config.mjs`'s `markdown.remarkPlugins`.
   - The visual rules live in `src/styles/global.css` as `.prose figure`, `.prose figure img`, `.prose figcaption`, and `.prose figure[data-width="wide"]`.
   - Post ID normalization for folder-form posts happens in `stripLocaleFromId` (`src/utils/blog.ts`), which strips the trailing `/index` segment so URLs stay the same as the flat-file layout.
+
+## Image Lightbox
+
+- **Behavior**:
+  - Every `<img>` inside `article .prose-site` on a post-detail page is zoomable. Authors do not opt in per image.
+  - `data-no-zoom` on a `<figure>` or an `<img>` is the (rarely needed) escape hatch for opting a single image out.
+  - Clicking a zoomable image opens a centered fullscreen lightbox via a 250ms `ease-out` FLIP transform. The backdrop fades in over the same window.
+  - Five close triggers: Esc, backdrop click, click anywhere on the lightbox image area, click on the explicit × close button at the top-right, any scroll input (`wheel`, `touchmove`, scroll-related keys), or window resize. Each runs the reverse animation.
+  - If the source image's parent `<figure>` carries a `<figcaption>`, the lightbox shows that caption beneath the image in the same italic-centered-muted style as the in-prose caption. Decorative images (empty `alt`, no `<figure>`) render in the lightbox without a caption block.
+  - Focus management: on open, focus moves to the close button; on close, focus returns to the source image.
+- **Visual treatment**:
+  - Backdrop: `dawn-100/95` (light) / `night-900/95` (dark) with `backdrop-blur-sm`. More opaque than the search modal on purpose — the image is the focus.
+  - Lightbox image: rendered at the source `<img>`'s `src` and `srcset` (the browser fetches the largest candidate the source already exposes), capped at `90vw × 80vh` with `object-fit: contain`. No frame, no shadow, no border-radius.
+  - Cursor: `zoom-in` on every in-prose `<img>` once the activation script has marked it; `zoom-out` on the lightbox image while open.
+- **Implementation location**:
+  - Component: `src/components/PostImageLightbox.astro` (markup + inline activation script). Mounted on `src/pages/posts/[...slug].astro` and `src/pages/en/posts/[...slug].astro`, just after `</article>`.
+  - Translation keys: `lightbox.label` and `lightbox.close` in `src/i18n/ui.ts`.
+  - Cursor rule: `.prose-site img[data-zoomable]` in `src/styles/global.css`.
+- **Out of scope**: per-image opt-in, pinch zoom or pan, multi-image gallery navigation, a separate "lightbox-only" image asset variant. See `docs/superpowers/specs/2026-05-06-post-image-lightbox-design.md` for the full design.

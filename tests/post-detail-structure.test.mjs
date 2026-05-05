@@ -167,6 +167,7 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 	const pagePath = join(pageDirectory, "page.ts");
 	const layoutStubPath = join(tempDir, "src", "layouts", "Layout.ts");
 	const postHeaderStubPath = join(tempDir, "src", "components", "PostHeader.ts");
+	const postImageLightboxStubPath = join(tempDir, "src", "components", "PostImageLightbox.ts");
 	const postReadingFlowStubPath = join(tempDir, "src", "components", "PostReadingFlow.ts");
 	const postSummaryStubPath = join(tempDir, "src", "components", "PostSummary.ts");
 	const readingProgressStubPath = join(tempDir, "src", "components", "ReadingProgress.ts");
@@ -234,6 +235,20 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 					"",
 				].join("\n"),
 				join(tempDir, "PostHeaderStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
+			postImageLightboxStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"const { lang = 'en' } = Astro.props;",
+					"---",
+					'<div data-post-image-lightbox-stub={lang} />',
+					"",
+				].join("\n"),
+				join(tempDir, "PostImageLightboxStub.astro"),
 				runtimeStubPath,
 			),
 		);
@@ -359,6 +374,8 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			["../../../layouts/Layout.astro", "../../../layouts/Layout.ts"],
 			["../../components/PostHeader.astro", "../../components/PostHeader.ts"],
 			["../../../components/PostHeader.astro", "../../../components/PostHeader.ts"],
+			["../../components/PostImageLightbox.astro", "../../components/PostImageLightbox.ts"],
+			["../../../components/PostImageLightbox.astro", "../../../components/PostImageLightbox.ts"],
 			["../../components/PostReadingFlow.astro", "../../components/PostReadingFlow.ts"],
 			["../../../components/PostReadingFlow.astro", "../../../components/PostReadingFlow.ts"],
 			["../../components/PostSummary.astro", "../../components/PostSummary.ts"],

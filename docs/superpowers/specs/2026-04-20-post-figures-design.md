@@ -243,3 +243,9 @@ A mockup of the light and dark V2 treatments was reviewed during brainstorming; 
 - **Support a third `full-bleed` width variant** — deferred: for a text-first screenshot-focused blog, viewport-wide images would dominate the layout and fight the editorial voice. Easy to add later if needed.
 - **Invert or dim light-theme screenshots in dark mode** — rejected: inverting a screenshot lies about what the real UI looks like, and dimming makes text inside the screenshot unreadable. The frame does the necessary contrast work without falsifying the image.
 - **Pull in an existing remark figure-caption plugin** (e.g. `remark-figure-caption`, `@microflash/remark-figure-caption`) — considered. Rejected in favor of a small in-house plugin because (a) the four cases we care about fit in a short, auditable file; (b) we want precise control over the `#wide` fragment parsing rule; (c) avoiding one more external dependency is consistent with the rest of the repo.
+
+---
+
+## Follow-up: Image lightbox (2026-05-06)
+
+The "image lightbox / modal / zoom" item listed under Out of Scope of this spec was delivered on 2026-05-06 by `docs/superpowers/specs/2026-05-06-post-image-lightbox-design.md`. The lightbox layers on top of this spec's figure system without changing the rendered figure markup; the activation script only adds runtime markers (`data-zoomable`) and click handlers to the existing `<img>` elements.
