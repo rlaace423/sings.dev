@@ -12,7 +12,6 @@ series:
   index: 1
   total: 2
   subtitle: "Install and first run"
-draft: true
 ---
 
 The EOS 1.0 mainnet went live on June 2, 2018.

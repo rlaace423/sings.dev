@@ -12,7 +12,6 @@ series:
   index: 2
   total: 2
   subtitle: "Architecture and configuration"
-draft: true
 ---
 
 The previous post covered installing and starting EOS. This one introduces the main EOS components, walks through how they actually behave at runtime, sets up a tidier configuration layout, and finishes with the start / stop shell scripts I use to make daily operation simple.
