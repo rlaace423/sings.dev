@@ -28,21 +28,34 @@ Download images and co-locate inside the post folder, reference relatively. Use 
 
 ### 4. Re-author embedded elements as native markdown.
 
-Medium has no native table feature, so the original may use GitHub Gists for tables — convert these to GitHub-flavored Markdown tables. Other embeds (CodePen, Twitter, YouTube, etc.) should become native equivalents or short text references. Do not preserve the iframe/script form.
+Medium has no native table feature, so the original may use GitHub Gists for tables — convert these to GitHub-flavored Markdown tables. Source-code Gists become fenced code blocks (or, when long, a separate file in the post folder linked from the body). Other embeds (CodePen, Twitter, YouTube, etc.) should become native equivalents or short text references. Do not preserve the iframe/script form.
 
-### 5. Locale-specific abbreviation register.
+When Cloudflare blocks direct curl on the Medium HTML and WebFetch can't surface iframe URLs, the author's GitHub Gists are usually the source — list them via `https://api.github.com/users/<github-username>/gists?per_page=100` and match by date (the gist was typically created within a day or two of the Medium post). The author's GitHub username can be inferred from `git config user.email` (rlaace423) or asked. Confirm with the author before reaching for an unrelated gist if the date/filename match is ambiguous.
+
+### 5. Limited formatting normalization for Medium-imposed quirks.
+
+Medium's editor is awkward for technical writing — authors sometimes reach for whatever block element is closest at hand, not the one that actually fits. Those Medium-shaped quirks can be lightly re-cast in native Markdown when the new form clearly reads more naturally:
+
+- A blockquote used as a "callout-ish" sub-note (the **Additional…** pattern) → may stay as a blockquote, or become a `> [!NOTE]` callout per `docs/spec-post-detail.md`. Keep the post's total callout count to one or two; convert only the most callout-shaped instances and leave the rest as plain blockquotes.
+- A blockquote used to highlight a single inline phrase → leave as-is unless it's a true callout.
+- Code "fenced" with stray backticks, or a paragraph used to fake a code line → re-form as a proper fenced code block.
+- An inline `code span` mistakenly used to set a section heading → promote to a real heading.
+
+Stay conservative — this rule is for cases where the original block is clearly a workaround for Medium's editor, not a stylistic choice. When in doubt, preserve the original form. Note conversions in the migration report (rule 12).
+
+### 6. Locale-specific abbreviation register.
 
 Korean posts use `예:` (not `ex:` or `e.g.,`) for inline examples. English posts use `e.g.,` (the proper Latin abbreviation). Medium's auto-typography also tends to convert `-` to `–` (en-dash) inside terms like `SHA3-256` — always normalize back to plain hyphen, since the original source was a hyphen.
 
-### 6. Image format and naming.
+### 7. Image format and naming.
 
 Images saved from Medium typically arrive as `.webp` files named `<part>-<index>.webp` (e.g. `1-1.webp` for part 1's first image). When migrating: copy each into the post folder under a descriptive name that matches its caption (e.g. `scrypt-encryption.webp`), then reference via `![caption](./descriptive-name.webp)` so the figure-caption convention promotes it to a `<figure>` with `<figcaption>`. Do not alter the file format — webp is fine for the site.
 
-### 7. Image fidelity — do not pre-process.
+### 8. Image fidelity — do not pre-process.
 
 Source images committed to the repo must be md5-identical to what the author provided. Astro applies a small lossless optimization (~2–5% size reduction, metadata trim) during build automatically; that is the right place for it. Astro also deduplicates by content hash — two posts referencing identical webp content emit one file in `dist/_astro/`, not two. That is a feature.
 
-### 8. Translation rule (KO ↔ EN).
+### 9. Translation rule (KO ↔ EN).
 
 The author has explicitly granted editorial autonomy for translation. Adapt for natural target-language flow rather than literal translation:
 
@@ -57,11 +70,11 @@ The author has explicitly granted editorial autonomy for translation. Adapt for 
 
 Default new translations to `draft: true` so the author can review the adaptation in dev before publishing.
 
-### 9. Image folder layout for translated posts.
+### 10. Image folder layout for translated posts.
 
 Each locale's post folder owns its own assets. Do not reach across with `../../../ko/.../image.webp` from an `en/` post — copy the same image files into the EN post's folder. Astro's dedup-by-content-hash means there is no deploy-size penalty for the duplicated source files; the same single output file is served. Filenames match across locales so `en/post-slug/scrypt-encryption.webp` and `ko/post-slug/scrypt-encryption.webp` are byte-identical, which keeps maintenance simple.
 
-### 10. Strip company-name self-identification.
+### 11. Strip company-name self-identification.
 
 The author's archival Medium posts often open with a company-byline greeting like "안녕하세요, 헥슬란트 김상호입니다." Posts now live on the personal blog (sings.dev), not on a company publication, so the company affiliation is no longer the publication context. Silently strip the company name from this kind of self-identification when migrating:
 
@@ -71,24 +84,24 @@ The author's archival Medium posts often open with a company-byline greeting lik
 
 Specific company names to watch for (current and prior employers): `헥슬란트` / `Hexlant`, `헥토 월렛원` / `Hecto Walletone`, `현대오토에버` / `Hyundai AutoEver`, `Walletone`. Add anything else the author signals over time.
 
-Edge case — when the company *is* the technical subject of the sentence ("Hexlant developed the X protocol"), use judgment: rephrase neutrally if natural, otherwise flag in the migration report (rule 11) and let the author decide.
+Edge case — when the company *is* the technical subject of the sentence ("Hexlant developed the X protocol"), use judgment: rephrase neutrally if natural, otherwise flag in the migration report (rule 12) and let the author decide.
 
 The same rule applies in translation: drop company self-identification in the target-language version too.
 
-### 11. End-of-migration report.
+### 12. End-of-migration report.
 
 After completing each migration (post committed), present a "Notes from this migration" summary at the end of the response. The author has explicitly asked for this so unusual decisions are auditable even when migrations work cleanly.
 
 Format — short bulleted summary:
 
-- **Category and tags chosen** (always present, per rule 12): the chosen `category` and `tags` list, with `[NEW]` markers next to anything newly introduced to the site's taxonomy
-- **Editorial fixes applied silently** (per rule 1 and rule 8 autonomy): lexical fixes, company-name strips, translation adaptations
+- **Category and tags chosen** (always present, per rule 13): the chosen `category` and `tags` list, with `[NEW]` markers next to anything newly introduced to the site's taxonomy
+- **Editorial fixes applied silently** (per rule 1 and rule 9 autonomy): lexical fixes, company-name strips, translation adaptations, Medium-formatting normalizations (per rule 5)
 - **Issues encountered and how they were handled**: image fetch failure → author provided manually, broken markdown render → quote relocated, etc.
 - **Things needing author follow-up**: spelling candidates list (per rule 2), factual ambiguities, missing assets
 
 If the migration was uneventful — verbatim text, clean images, no embeds, no judgment calls — say so explicitly ("no notable adaptations") rather than omitting the section. The point is consistent transparency, not noise filtering. The category-and-tags line is the one item that always appears regardless of how clean the migration was.
 
-### 12. Pick category and tags from post content; report what was chosen and flag new additions.
+### 13. Pick category and tags from post content; report what was chosen and flag new additions.
 
 Read the post and choose `category` (single string, required) and `tags` (array of strings, optional but typical). Prefer reusing existing values from the rest of the site's taxonomy so the archive's category and tag pages stay coherent — but introduce new entries when the post genuinely does not fit anything existing.
 
@@ -100,7 +113,7 @@ grep -hE "^(category|  - )" src/content/blog/{ko,en}/*/index.md | sort -u
 
 Conventions: tags are lowercase, single-word or kebab-case. Categories are TitleCase nouns. Keep tag count modest (3–5 typical).
 
-In the migration report (rule 11), always include a one-line summary of what was picked, with `[NEW]` markers next to anything not already in the site:
+In the migration report (rule 12), always include a one-line summary of what was picked, with `[NEW]` markers next to anything not already in the site:
 
 ```
 Category: Cryptography [NEW]
@@ -115,12 +128,13 @@ For a typical migration request (the author pastes a Medium URL or says "이 글
 
 1. **Fetch fully** — get the source post including images.
 2. **Preserve text verbatim** (rule 1) — strict by default, with limited lexical latitude under the rule 1 exception.
-3. **Strip company self-identification** (rule 10) — silently remove byline greetings and prior-employer attributions.
-4. **Choose category and tags** (rule 12) — prefer existing, flag `[NEW]` additions.
-5. **Fetch images** (rules 3, 6, 7) — co-locate as descriptive filenames, never pre-process.
-6. **Convert embeds** (rule 4) — gists / iframes → native markdown.
-7. **Apply locale-specific typography** (rule 5) — `예:` vs `e.g.`, hyphen vs en-dash.
-8. **List spelling candidates** (rule 2) — present a numbered `old → new` list; do not auto-apply.
-9. **For translations** (rule 8): adapt rather than translate literally, default `draft: true`.
-10. **Present final draft and migration-notes summary** (rule 11) — always include category/tags.
-11. **Wait for author approval** — do not apply spelling/awkwardness fixes without an explicit "ok".
+3. **Strip company self-identification** (rule 11) — silently remove byline greetings and prior-employer attributions.
+4. **Choose category and tags** (rule 13) — prefer existing, flag `[NEW]` additions.
+5. **Fetch images** (rules 3, 7, 8) — co-locate as descriptive filenames, never pre-process.
+6. **Convert embeds** (rule 4) — gists / iframes → native markdown; resolve gist content from the author's GitHub when Medium HTML is bot-blocked.
+7. **Lightly normalize Medium-imposed formatting** (rule 5) — only when the new form clearly reads more naturally; stay conservative.
+8. **Apply locale-specific typography** (rule 6) — `예:` vs `e.g.`, hyphen vs en-dash.
+9. **List spelling candidates** (rule 2) — present a numbered `old → new` list; do not auto-apply.
+10. **For translations** (rule 9): adapt rather than translate literally, default `draft: true`.
+11. **Present final draft and migration-notes summary** (rule 12) — always include category/tags.
+12. **Wait for author approval** — do not apply spelling/awkwardness fixes without an explicit "ok".
