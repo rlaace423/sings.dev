@@ -78,7 +78,7 @@ The result:
 
 The first line tells us keosd was started. You can run keosd directly, but if there's no keosd process when cleos issues a wallet command, one is created automatically.
 
-`ps` confirms keosd is running. The auto-launched keosd uses port 8900 by default.
+`ps` confirms keosd is running. The auto-launched keosd uses port `8900` by default.
 
 ![Auto-launched keosd process (default port 8900)](./keosd-process.webp)
 
@@ -94,13 +94,13 @@ Like nodeos, keosd needs a `config.ini` at startup. We didn't specify one, so EO
 
 The default locations and required files for nodeos and keosd:
 
-|                | nodeos                              | keosd                  |
-| -------------- | ----------------------------------- | ---------------------- |
-| Default home   | (home)/.local/share/eosio/nodeos/   | (home)/eosio-wallet/   |
-| Data dir       | (default home)/data/                | (default home)         |
-| Config file    | (default home)/config/config.ini    | (default home)/config.ini |
-| Genesis file   | (default home)/config/genesis.json  |                        |
-| Default port   | 8888                                | 8900                   |
+|                | nodeos                                | keosd                       |
+| -------------- | ------------------------------------- | --------------------------- |
+| Default home   | `(home)/.local/share/eosio/nodeos/`   | `(home)/eosio-wallet/`      |
+| Data dir       | `(default home)/data/`                | `(default home)`            |
+| Config file    | `(default home)/config/config.ini`    | `(default home)/config.ini` |
+| Genesis file   | `(default home)/config/genesis.json`  |                             |
+| Default port   | `8888`                                | `8900`                      |
 
 ## Configuration
 
@@ -137,7 +137,7 @@ Notice that `wallet_api_plugin` is added on top of the default plugins. With thi
 1. Use the keosd process that nodeos auto-launches
 2. Run keosd separately and use it
 
-Either works, but both require managing two distinct processes, and method 1's auto-launched keosd uses port 8900 by default. That means future API work requires knowing two different endpoints. To avoid that, this post adds `wallet_api_plugin` to nodeos directly.
+Either works, but both require managing two distinct processes, and method 1's auto-launched keosd uses port `8900` by default. That means future API work requires knowing two different endpoints. To avoid that, this post adds `wallet_api_plugin` to nodeos directly.
 
 ### keosd configuration
 
@@ -149,7 +149,6 @@ $ cp ~/eosio-wallet/* ~/eos_data/keosd/
 
 Since nodeos's `wallet-dir` config now points here, the nodeos instance loaded with `wallet_api_plugin` will use the `config.ini` and wallet files in this location.
 
-> **Additional…**
 > Strictly speaking, with our current setup, the `config.ini` we copied to `eos_data/keosd` won't be read at all — nodeos plus `wallet_api_plugin` is doubling as the wallet manager. And if you look closely at nodeos's `config.ini`, every setting that would belong in keosd's `config.ini` is already covered there.
 > If you ever need to run keosd standalone, that's when this file becomes useful.
 
@@ -165,7 +164,6 @@ $ alias cleos='cleos --wallet-url http://localhost:8888'
 
 Now cleos uses the location we configured by default, and a duplicate keosd process is never spawned.
 
-> **Additional…**
 > To keep this alias across shell sessions, add the line to `.bashrc` (for bash).
 
 ### Start script

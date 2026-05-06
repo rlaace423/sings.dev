@@ -1,7 +1,7 @@
 ---
 title: "Building and running an EOS Dawn v4.0 node"
 pubDate: 2018-05-17
-description: "Building an EOS node from source — clone, build, install, and the first nodeos · cleos run — written around the EOS Dawn v4.0 release."
+description: "Building EOS, then running nodeos and cleos."
 category: "Development"
 tags:
   - eos
@@ -16,12 +16,11 @@ series:
 
 The EOS 1.0 mainnet went live on June 2, 2018.
 
-> **Additional…**
 > The current release is v1.0.9. The build process hasn't changed much across versions, so the steps below should apply to other versions just as well.
 
 This post walks through actually installing and running EOS. It's been a little over a month since the 1.0 release, but the technical documentation is detailed enough that you can stand a node up without much trouble.
 
-> I'm following the official EOS guide, but with a few **configuration tweaks** and **start / stop scripts** to make day-to-day operation easier. I've also added **Additional…** notes wherever the official guide skims over something. It's a long post — give it a careful read. [(Official setup guide)](https://github.com/EOSIO/eos/wiki/Local-Environment/10b1474d44e1812c319009edb0aca3fe1e2b7e90)
+> I'm following the official EOS guide, but with a few **configuration tweaks** and **start / stop scripts** to make day-to-day operation easier. I've also added extra notes wherever the official guide skims over something. It's a long post — give it a careful read. [(Official setup guide)](https://github.com/EOSIO/eos/wiki/Local-Environment/10b1474d44e1812c319009edb0aca3fe1e2b7e90)
 
 The server I installed EOS on:
 
@@ -52,7 +51,6 @@ Clone the EOS source with `git clone`. By default it creates an `eos` folder in 
 $ git clone https://github.com/EOSIO/eos --recursive
 ```
 
-> **Additional..**
 > You have to clone with **git** — not download the source archive. The recursive option pulls submodules conveniently, and the next step ("Build the source") explicitly checks for a `.git` directory, so an archive download **won't even build**. [(Reference: line 100 of `eosio_build.sh`)](https://github.com/EOSIO/eos/blob/master/eosio_build.sh#L100)
 
 ### 2. Build the source
@@ -62,7 +60,6 @@ Now turn the source you just cloned into actual binaries. EOS ships a build scri
 - 8GB RAM
 - 20GB disk
 
-> **Additional…**
 > Those are the requirements from the official guide, but the build script is implemented to proceed as long as you have at least 7000MB of RAM. [(Reference: line 27 of `eosio_build_ubuntu.sh`)](https://github.com/EOSIO/eos/blob/master/scripts/eosio_build_ubuntu.sh#L27)
 
 **@ Mac OS users**
@@ -80,7 +77,6 @@ $ cd eos             (or whatever folder name you used)
 $ ./eosio_build.sh -s EOS
 ```
 
-> **Additional…**
 > The `-s` flag defines the eosio system token symbol. The source defaults to `SYS`, so `-s EOS` is needed.
 
 The script does three things:
@@ -91,7 +87,6 @@ The script does three things:
 
 The main outputs land in the `build` folder.
 
-> **Additional…**
 > While installing the required libraries, the script creates an `opt` folder under your home directory and drops [boost](https://www.boost.org/), [mongodb](https://www.mongodb.com/), and [wasm](https://clang.llvm.org/) inside. So make sure there's no existing `opt` folder you'd be conflicting with!
 
 ### 3. Verify the build (optional)
@@ -139,8 +134,6 @@ Start the EOS node — the main daemon:
 ```
 $ nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
 ```
-
-(That's all one command!)
 
 You'll see blocks being produced continuously:
 
