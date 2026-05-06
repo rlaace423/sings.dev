@@ -88,6 +88,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 			</button>
 
 			<a
+				data-locale-switcher
 				href={switchHref}
 				class="inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-dawn-300 px-3 text-xs font-semibold tracking-[0.14em] text-dawn-700 transition-colors hover:border-dawn-300 hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:border-night-600 dark:text-night-200 dark:hover:border-night-500 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
 				aria-label={`Switch language to ${labels[targetLocale]}`}
