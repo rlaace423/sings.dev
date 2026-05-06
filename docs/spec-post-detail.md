@@ -133,3 +133,21 @@
   - Translation keys: `lightbox.label` and `lightbox.close` in `src/i18n/ui.ts`.
   - Cursor rule: `.prose-site img[data-zoomable]` in `src/styles/global.css`.
 - **Out of scope**: per-image opt-in, pinch zoom or pan, multi-image gallery navigation, a separate "lightbox-only" image asset variant. See `docs/superpowers/specs/2026-05-06-post-image-lightbox-design.md` for the full design.
+
+## Code Blocks in Post Bodies
+
+- **Default rendering**:
+  - Fenced code blocks (` ``` `) are highlighted by Shiki at build time using the dual-theme setup configured in `astro.config.mjs` (`shikiConfig.themes.light = "github-light"`, `shikiConfig.themes.dark = "tokyo-night"`). Tokens swap between the two themes via the `html.dark .astro-code` override in `src/styles/global.css`.
+  - Inline code (single backticks) is styled by the `prose-code:*` utilities on `.prose-site` and is intentionally not paired with a copy button — too short to be useful.
+- **Copy button**:
+  - Every fenced code block in a post body ships with a small copy-to-clipboard button anchored to the wrapper's top-right corner.
+  - **Visibility**: hover-only on desktop, always visible on viewports `<= 767px`. The fade in / out is a 150ms opacity transition that is removed under `prefers-reduced-motion: reduce`.
+  - **Visual register**: 28×28px transparent button, 1px hairline border in `dawn-300` (light) / `night-600` (dark), 14px clipboard / check icon in `dawn-600` (light) / `night-300` (dark). The icon and border step one shade darker on the button's own hover / focus-visible.
+  - **Feedback on copy**: the clipboard icon swaps to a check icon for 1500ms; the `aria-label` swaps from `코드 복사` / `Copy code` to `복사됨` / `Copied` for the same duration. No toast, no banner, no overlay.
+  - **Failure mode**: if `navigator.clipboard.writeText` is unavailable or rejects, the button silently does nothing. Users can still select-and-copy code manually.
+  - **i18n**: Korean / English ARIA labels are decided at build time from the post's locale folder (`src/content/blog/ko/...` vs `.../en/...`), the same convention `remarkAdmonition.ts` uses.
+- **Implementation location**:
+  - Build-time wrapping (`<pre class="astro-code">` → `<div class="code-block"><pre>…</pre><button class="code-copy-button">…</button></div>`) happens in `src/utils/rehypeCodeCopyButton.ts`, wired into `astro.config.mjs`'s `markdown.rehypePlugins`.
+  - Click behavior lives in `src/components/CodeCopyButton.astro`, mounted on `src/pages/posts/[...slug].astro` and `src/pages/en/posts/[...slug].astro`.
+  - Visual rules live in `src/styles/global.css` under the `.code-block` and `.code-copy-button` selectors.
+- Future code-block features (line numbers, file titles, line highlighting, diff highlighting) are not part of this section. They would extend the same rehype hook or compose alongside it without requiring a runtime DOM rewrite.

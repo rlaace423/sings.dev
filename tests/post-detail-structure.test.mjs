@@ -166,6 +166,7 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 		: join(tempDir, "src", "pages", "posts");
 	const pagePath = join(pageDirectory, "page.ts");
 	const layoutStubPath = join(tempDir, "src", "layouts", "Layout.ts");
+	const codeCopyButtonStubPath = join(tempDir, "src", "components", "CodeCopyButton.ts");
 	const postHeaderStubPath = join(tempDir, "src", "components", "PostHeader.ts");
 	const postImageLightboxStubPath = join(tempDir, "src", "components", "PostImageLightbox.ts");
 	const postReadingFlowStubPath = join(tempDir, "src", "components", "PostReadingFlow.ts");
@@ -294,6 +295,18 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 			),
 		);
 		await writeFile(
+			codeCopyButtonStubPath,
+			await compileAstroSource(
+				[
+					"---",
+					"---",
+					"",
+				].join("\n"),
+				join(tempDir, "CodeCopyButtonStub.astro"),
+				runtimeStubPath,
+			),
+		);
+		await writeFile(
 			tocStubPath,
 			await compileAstroSource(
 				[
@@ -372,6 +385,8 @@ async function renderPostDetailPage(sourceUrl, props, posts) {
 		for (const [find, replaceWith] of [
 			["../../layouts/Layout.astro", "../../layouts/Layout.ts"],
 			["../../../layouts/Layout.astro", "../../../layouts/Layout.ts"],
+			["../../components/CodeCopyButton.astro", "../../components/CodeCopyButton.ts"],
+			["../../../components/CodeCopyButton.astro", "../../../components/CodeCopyButton.ts"],
 			["../../components/PostHeader.astro", "../../components/PostHeader.ts"],
 			["../../../components/PostHeader.astro", "../../../components/PostHeader.ts"],
 			["../../components/PostImageLightbox.astro", "../../components/PostImageLightbox.ts"],
