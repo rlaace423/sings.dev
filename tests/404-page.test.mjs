@@ -27,3 +27,28 @@ test("404 page passes a localized title to Layout so the tab title stays sensibl
 	assert.match(page, /ko: "404 — 페이지를 찾을 수 없습니다/);
 	assert.match(page, /en: "404 — Page not found/);
 });
+
+test("on an /en/ 404 the inline script flips the locale switcher anchor back to KO so the reader can return", async () => {
+	const page = await readFile(pageUrl, "utf8");
+
+	assert.match(
+		page,
+		/document\.querySelector\(\s*"\[data-locale-switcher\]"\s*\)/,
+		"The 404 script must look up the locale switcher to flip it",
+	);
+	assert.match(
+		page,
+		/switcher\.textContent\s*=\s*"KO"/,
+		"On /en/ 404 the switcher text must read KO (currently EN, since 404.html is built with defaultLocale=ko)",
+	);
+	assert.match(
+		page,
+		/switcher\.setAttribute\(\s*"href",\s*"\/"\s*\)/,
+		"The switcher must point back to the KO root, not to the now-broken /en/ URL",
+	);
+	assert.match(
+		page,
+		/switcher\.setAttribute\(\s*"aria-label",\s*"Switch language to 한국어"\s*\)/,
+		"The aria-label must match the new direction (Switch language to 한국어)",
+	);
+});

@@ -48,7 +48,19 @@ const localizedDescription = {
 		(() => {
 			const isEn = window.location.pathname.startsWith("/en/");
 			document.documentElement.dataset.notFoundLocale = isEn ? "en" : "ko";
-			if (isEn) document.documentElement.lang = "en";
+			if (!isEn) return;
+
+			document.documentElement.lang = "en";
+
+			// 404.html is built once with defaultLocale=ko, so the header's locale
+			// switcher reads "EN" → "/en/". On an /en/ 404 the reader is already in
+			// EN, so the button needs to flip to "KO" → "/" to be useful.
+			const switcher = document.querySelector("[data-locale-switcher]");
+			if (switcher) {
+				switcher.textContent = "KO";
+				switcher.setAttribute("href", "/");
+				switcher.setAttribute("aria-label", "Switch language to 한국어");
+			}
 		})();
 	</script>
 

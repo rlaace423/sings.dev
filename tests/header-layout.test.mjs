@@ -42,3 +42,13 @@ test("header uses the SiteLogo mark next to the sings.dev text and keeps the Kor
 	assert.match(header, /gap-4 sm:gap-5/);
 	assert.match(header, /whitespace-nowrap/);
 });
+
+test("locale switcher carries a data-locale-switcher hook so the 404 page can flip it client-side", async () => {
+	const header = await readFile(new URL("../src/components/Header.astro", import.meta.url), "utf8");
+
+	assert.match(
+		header,
+		/<a\s+data-locale-switcher[\s\S]*?aria-label=\{`Switch language to \$\{labels\[targetLocale\]\}`\}/,
+		"The locale switcher anchor must carry data-locale-switcher; without it the 404 inline script can't flip the button to KO on an /en/ 404",
+	);
+});
