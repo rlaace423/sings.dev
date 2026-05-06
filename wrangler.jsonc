@@ -3,7 +3,8 @@
   "name": "sings-dev",
   "compatibility_date": "2026-04-13",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "not_found_handling": "404-page"
   }
 }
 
