@@ -100,7 +100,7 @@ You can pass a callback as the final argument:
 ```javascript
 eos.transfer('lazylion1234', 'babylion1234', '1.0000 EOS', 'send!',
     (error, result) => {
-        if (error) {
+        if(error) {
             console.error('Failed...');
         } else {
             console.log("Success!");
@@ -117,7 +117,7 @@ async function() {
         ......
         let result = await eos.transfer('lazylion1234', 'babylion1234', '1.0000 EOS', 'send!');
         // print the resulting transaction id
-        console.log('transaction ID is ' + result.transaction_id);
+        console.log('transaction ID is '+ result.transaction_id);
         ......
     } catch (err) {
         console.error('error!');

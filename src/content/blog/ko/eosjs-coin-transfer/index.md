@@ -88,7 +88,7 @@ let eos = Eos({
 
 ## eosjs로 EOS 전송
 
-설정까지 무사히 끝났다면 실제 코인 전송을 진행해봅시다. 윗 단계에서 생성한 eos 객체의 transfer 메서드를 사용합니다. 순서대로 **보내는 이**, **받는 이**, **수량**, **메모**를 파라미터로 사용합니다.
+설정까지 무사히 끝났다면 실제 코인 전송을 진행해봅시다. 윗 단계에서 생성한 eos객체의 transfer 메서드를 사용합니다. 순서대로 **보내는 이**, **받는 이**, **수량**, **메모**를 파라미터로 사용합니다.
 
 ```javascript
 eos.transfer('lazylion1234', 'babylion1234', '1.0000 EOS', 'send!');
@@ -99,7 +99,7 @@ transfer 메서드의 마지막 파라미터에 callback을 사용할 수 있습
 ```javascript
 eos.transfer('lazylion1234', 'babylion1234', '1.0000 EOS', 'send!',
     (error, result) => {
-        if (error) {
+        if(error) {
             console.error('Failed...');
         } else {
             console.log("Success!");
@@ -116,7 +116,7 @@ async function() {
         ......
         let result = await eos.transfer('lazylion1234', 'babylion1234', '1.0000 EOS', 'send!');
         // 전송된 트랜잭션에 대한 트랜잭션ID 출력
-        console.log('transaction ID is ' + result.transaction_id);
+        console.log('transaction ID is '+ result.transaction_id);
         ......
     } catch (err) {
         console.error('error!');
