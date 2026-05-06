@@ -1,5 +1,5 @@
 ---
-title: "EOS Dawn v4.0"
+title: "EOS Dawn v4.0 노드 직접 구축하고 운영하기"
 pubDate: 2018-05-20
 description: "EOS의 주요 컴포넌트(nodeos · cleos · keosd) 동작 구조, 그리고 손쉬운 운영을 위한 환경설정과 시작·종료 스크립트 정리."
 category: "Development"

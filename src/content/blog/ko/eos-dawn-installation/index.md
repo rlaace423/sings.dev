@@ -1,5 +1,5 @@
 ---
-title: "EOS Dawn v4.0"
+title: "EOS Dawn v4.0 노드 직접 구축하고 운영하기"
 pubDate: 2018-05-17
 description: "EOS Dawn v4.0 시점에 작성한, EOS 소스를 직접 빌드해 nodeos · cleos까지 실행해보는 설치 가이드."
 category: "Development"

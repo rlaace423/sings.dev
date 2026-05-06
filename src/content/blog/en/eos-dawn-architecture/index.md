@@ -1,5 +1,5 @@
 ---
-title: "EOS Dawn v4.0"
+title: "Building and running an EOS Dawn v4.0 node"
 pubDate: 2018-05-20
 description: "How EOS's nodeos, cleos, and keosd fit together — plus the configuration and start/stop scripts that make running a node painless."
 category: "Development"

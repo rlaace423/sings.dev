@@ -1,5 +1,5 @@
 ---
-title: "EOS Dawn v4.0"
+title: "Building and running an EOS Dawn v4.0 node"
 pubDate: 2018-05-17
 description: "Building an EOS node from source — clone, build, install, and the first nodeos · cleos run — written around the EOS Dawn v4.0 release."
 category: "Development"
