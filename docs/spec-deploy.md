@@ -19,6 +19,7 @@
   - No Workers script, no functions, no environment variables required at runtime.
   - All content is prerendered at build time. Publishing a new post requires a fresh build + deploy.
   - Theme (light / dark) is resolved client-side from `localStorage` and `prefers-color-scheme`. Locale routing is fully static. No server contribution at request time.
+  - 404 handling is delegated to Cloudflare's static-assets behavior via `assets.not_found_handling: "404-page"` in `wrangler.jsonc`. Requests that do not map to a built asset are served the prebuilt `dist/404.html` (the bilingual 404 page) with a `404 Not Found` status. Without this option, Cloudflare returns its built-in 404, which is what readers see on a missed route.
 - **Pre-deploy Checklist**:
   - `npm test` passes.
   - `npm run build` completes without errors.
