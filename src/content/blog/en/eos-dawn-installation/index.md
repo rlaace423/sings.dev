@@ -11,7 +11,7 @@ series:
   id: "eos-dawn"
   index: 1
   total: 2
-  subtitle: "Installing and running"
+  subtitle: "Install and first run"
 draft: true
 ---
 
