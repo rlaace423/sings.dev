@@ -47,8 +47,8 @@ The full list of OSes EOS supports:
 
 Clone the EOS source with `git clone`. By default it creates an `eos` folder in your current location. To use a different folder name, append it to the command (e.g., `--recursive eosSource`).
 
-```
-$ git clone https://github.com/EOSIO/eos --recursive
+```bash
+git clone https://github.com/EOSIO/eos --recursive
 ```
 
 > You have to clone with **git** — not download the source archive. The recursive option pulls submodules conveniently, and the next step ("Build the source") explicitly checks for a `.git` directory, so an archive download **won't even build**. [(Reference: line 100 of `eosio_build.sh`)](https://github.com/EOSIO/eos/blob/master/eosio_build.sh#L100)
@@ -62,19 +62,19 @@ Now turn the source you just cloned into actual binaries. EOS ships a build scri
 
 > Those are the requirements from the official guide, but the build script is implemented to proceed as long as you have at least 7000MB of RAM. [(Reference: line 27 of `eosio_build_ubuntu.sh`)](https://github.com/EOSIO/eos/blob/master/scripts/eosio_build_ubuntu.sh#L27)
 
-**@ Mac OS users**
+**macOS users**
 
-On Mac OS you'll need `xcode-select` installed. Run:
+On macOS you'll need `xcode-select` installed. Run:
 
-```
-$ xcode-select --install
+```bash
+xcode-select --install
 ```
 
 Move into the source folder you cloned and run `eosio_build.sh` (this takes a while):
 
-```
-$ cd eos             (or whatever folder name you used)
-$ ./eosio_build.sh -s EOS
+```bash
+cd eos             (or whatever folder name you used)
+./eosio_build.sh -s EOS
 ```
 
 > The `-s` flag defines the eosio system token symbol. The source defaults to `SYS`, so `-s EOS` is needed.
@@ -95,15 +95,15 @@ This step isn't required, but it confirms the build is correct. Run the steps be
 
 First start mongodb (built into `~/opt`):
 
-```
-$ ~/opt/mongodb/bin/mongod -f ~/opt/mongodb/mongod.conf &
+```bash
+~/opt/mongodb/bin/mongod -f ~/opt/mongodb/mongod.conf &
 ```
 
 Then move into the `build` folder under the EOS source and run the tests:
 
-```
-$ cd build
-$ make test
+```bash
+cd build
+make test
 ```
 
 ### 4. Install the binaries globally
@@ -116,9 +116,9 @@ But because the programs you'll run all the time live nested under that folder, 
 
 Move into the `build` folder under the EOS source and run install:
 
-```
-$ cd build
-$ sudo make install        (sudo is needed because /usr/local/bin requires admin)
+```bash
+cd build
+sudo make install        (sudo is needed because /usr/local/bin requires admin)
 ```
 
 ![Binaries installed in /usr/local/bin](./usr-local-bin.webp)
@@ -131,8 +131,8 @@ After this, you can run EOS programs from anywhere.
 
 Start the EOS node — the main daemon:
 
-```
-$ nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
+```bash
+nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
 ```
 
 You'll see blocks being produced continuously:
@@ -145,8 +145,8 @@ Since you started nodeos straight in the foreground, its output will fill the co
 
 `cleos` lets you send commands to nodeos and check its state. Let's print out the node info:
 
-```
-$ cleos get info
+```bash
+cleos get info
 ```
 
 ![EOS node info](./cleos-get-info.webp)

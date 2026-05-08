@@ -122,6 +122,32 @@ Tags: ethereum, keystore, scrypt [NEW], encryption
 
 The `[NEW]` flagging lets the author decide whether the new addition is worth keeping or whether to fold it into an existing entry.
 
+### 14. Code block hygiene — always tag, drop terminal prompts.
+
+**Every code fence must have a language tag.** This applies to both new code blocks created during migration and existing unmarked blocks brought over from the source. Never emit a bare ` ``` ` opener. Pick the most specific tag that fits:
+
+- Shell commands → `bash`
+- JS / TS → `javascript` / `typescript`
+- Config / data → `json`, `yaml`, `ini`, `toml`
+- Markup → `html`, `css`, `xml`
+- Other languages → `python`, `go`, `solidity`, `rust`, etc.
+- Plain text or pseudo-code where no language fits → `text`
+
+If you find yourself about to write ` ``` ` with no tag, stop and pick one — including a tag is non-negotiable.
+
+Two recurring patterns in archival posts hurt copy-paste UX. Silently fix both during migration:
+
+- **Missing language tag on shell blocks**: code fences with no language identifier whose body is clearly a terminal command (lines starting with `$ `, or commands like `npm`, `git`, `cd`, `cleos`, `nodeos`, `cp`, `curl`, etc.) — add `bash` so syntax highlighting kicks in and the site's code-block style stays consistent.
+- **`$ ` prompt prefix in shell commands**: drop the leading `$ ` on each command line. With `bash` highlighting the "this is a shell command" signal is already visual, and the prefix forces a manual edit on every paste. (Vercel / Astro / MDN docs all follow this convention.)
+
+Apply silently — this is post-migration hygiene, not editorial change. Do NOT touch:
+
+- Code blocks already tagged with another language (`json`, `javascript`, `ini`, `html`, etc.) — leave their tag and contents alone.
+- Shell scripts where `$VAR` is a variable reference, not a prompt (e.g., `$CONFIG_DIR`, `$(date ...)`).
+- Lines inside a `bash`-tagged shell-script block — the `$` there is almost always a variable, not a prompt.
+
+The same normalization applies to the matching translation when present. No need to mention these silent fixes in the migration report (rule 12) — they are routine.
+
 ## Workflow — applying the rules in order
 
 For a typical migration request (the author pastes a Medium URL or says "이 글 옮겨줘"):
@@ -133,8 +159,9 @@ For a typical migration request (the author pastes a Medium URL or says "이 글
 5. **Fetch images** (rules 3, 7, 8) — co-locate as descriptive filenames, never pre-process.
 6. **Convert embeds** (rule 4) — gists / iframes → native markdown; resolve gist content from the author's GitHub when Medium HTML is bot-blocked.
 7. **Lightly normalize Medium-imposed formatting** (rule 5) — only when the new form clearly reads more naturally; stay conservative.
-8. **Apply locale-specific typography** (rule 6) — `예:` vs `e.g.`, hyphen vs en-dash.
-9. **List spelling candidates** (rule 2) — present a numbered `old → new` list; do not auto-apply.
-10. **For translations** (rule 9): adapt rather than translate literally, default `draft: true`.
-11. **Present final draft and migration-notes summary** (rule 12) — always include category/tags.
-12. **Wait for author approval** — do not apply spelling/awkwardness fixes without an explicit "ok".
+8. **Normalize shell code blocks** (rule 14) — add `bash` tag to unmarked shell blocks; strip leading `$ ` prompts.
+9. **Apply locale-specific typography** (rule 6) — `예:` vs `e.g.`, hyphen vs en-dash.
+10. **List spelling candidates** (rule 2) — present a numbered `old → new` list; do not auto-apply.
+11. **For translations** (rule 9): adapt rather than translate literally, default `draft: true`.
+12. **Present final draft and migration-notes summary** (rule 12) — always include category/tags.
+13. **Wait for author approval** — do not apply spelling/awkwardness fixes without an explicit "ok".

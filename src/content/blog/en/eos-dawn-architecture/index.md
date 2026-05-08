@@ -40,8 +40,8 @@ EOS organizes keys in units called wallets. `keosd` is the daemon that manages t
 
 The previous post started nodeos like this:
 
-```
-$ nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
+```bash
+nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
 ```
 
 - `-e` : produces blocks even without producer voting. Needed for testing.
@@ -68,8 +68,8 @@ When nodeos starts, it needs `config.ini` (configuration) and `genesis.json` (ge
 
 `keosd` manages wallets. With nodeos still running, let's exercise keosd through cleos by creating a wallet:
 
-```
-$ cleos wallet create
+```bash
+cleos wallet create
 ```
 
 The result:
@@ -114,8 +114,8 @@ For tidier management, we'll collect everything into the folder structure below.
 
 Start with nodeos. Until now we hadn't specified `config.ini` or `genesis.json`, so nodeos created defaults itself. Copy those two files into `(home)/eos_data/nodeos/config/`:
 
-```
-$ cp ~/.local/share/eosio/nodeos/config/* ~/eos_data/nodeos/config/
+```bash
+cp ~/.local/share/eosio/nodeos/config/* ~/eos_data/nodeos/config/
 ```
 
 Then edit the copied `config.ini` and update these lines (uncomment them if they're commented out with `#`):
@@ -143,8 +143,8 @@ Either works, but both require managing two distinct processes, and method 1's a
 
 Next, set up keosd. Move the files inside the auto-generated `eosio-wallet` folder to the location we chose (if you don't need the default wallet that was created earlier, just copy `config.ini`):
 
-```
-$ cp ~/eosio-wallet/* ~/eos_data/keosd/
+```bash
+cp ~/eosio-wallet/* ~/eos_data/keosd/
 ```
 
 Since nodeos's `wallet-dir` config now points here, the nodeos instance loaded with `wallet_api_plugin` will use the `config.ini` and wallet files in this location.
@@ -158,8 +158,8 @@ Since nodeos now handles wallet operations, when you run wallet commands via cle
 
 A simple alias makes `cleos` behave as if `--wallet-url` were always passed:
 
-```
-$ alias cleos='cleos --wallet-url http://localhost:8888'
+```bash
+alias cleos='cleos --wallet-url http://localhost:8888'
 ```
 
 Now cleos uses the location we configured by default, and a duplicate keosd process is never spawned.
@@ -170,8 +170,8 @@ Now cleos uses the location we configured by default, and a duplicate keosd proc
 
 To run nodeos with the layout above, you'd have to pass both `--config-dir` and `--data-dir` every time:
 
-```
-$ nodeos -e -p eosio --config-dir ~/eos_data/nodeos/config --data-dir ~/eos_data/nodeos/data
+```bash
+nodeos -e -p eosio --config-dir ~/eos_data/nodeos/config --data-dir ~/eos_data/nodeos/data
 ```
 
 That's a mouthful, so let's wrap it in a shell script that handles startup in one go. The script does:
