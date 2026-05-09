@@ -67,49 +67,45 @@ const relatedItems = relatedPosts.map((entry) => ({
 	<ReadingProgress />
 	<CodeCopyButton />
 	<article
-		class="mx-auto max-w-5xl"
+		class="relative mx-auto max-w-3xl"
 		data-pagefind-body
 	>
-		<div class="md:flex md:gap-16">
-			<div class="min-w-0 md:w-3/4">
-				<details class="mb-10 rounded-lg border border-dawn-300 px-4 py-3 dark:border-night-600 md:hidden">
-					<summary class="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.18em] text-dawn-700 dark:text-night-200">
-						목차
-					</summary>
-					<div class="mt-4 border-t border-dawn-300 pt-4 dark:border-night-600">
-						<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
-					</div>
-				</details>
-
-				<PostHeader
-					category={post.data.category}
-					description={post.data.description}
-					lang="ko"
-					pubDate={post.data.pubDate}
-					readingTimeMinutes={readingTimeMinutes}
-					tags={post.data.tags ?? []}
-					title={getDisplayTitle(post)}
-				/>
-
-				<PostSummary lang="ko" summary={post.data.summary} />
-
-				<div class="prose-site mt-10 prose-headings:tracking-tight">
-					<Content />
-				</div>
-
-				<PostReadingFlow lang="ko" series={seriesData} items={relatedItems} />
-
-				<div class="mt-16 border-t border-dawn-300 pt-10 dark:border-night-600">
-					<Comments lang="ko" />
-				</div>
+		<details class="mb-10 rounded-lg border border-dawn-300 px-4 py-3 dark:border-night-600 xl:hidden">
+			<summary class="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.18em] text-dawn-700 dark:text-night-200">
+				목차
+			</summary>
+			<div class="mt-4 border-t border-dawn-300 pt-4 dark:border-night-600">
+				<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
 			</div>
+		</details>
 
-			<aside class="hidden md:block md:w-1/4">
-				<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">
-					<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
-				</div>
-			</aside>
+		<PostHeader
+			category={post.data.category}
+			description={post.data.description}
+			lang="ko"
+			pubDate={post.data.pubDate}
+			readingTimeMinutes={readingTimeMinutes}
+			tags={post.data.tags ?? []}
+			title={getDisplayTitle(post)}
+		/>
+
+		<PostSummary lang="ko" summary={post.data.summary} />
+
+		<div class="prose-site mt-10 prose-headings:tracking-tight">
+			<Content />
 		</div>
+
+		<PostReadingFlow lang="ko" series={seriesData} items={relatedItems} />
+
+		<div class="mt-16 border-t border-dawn-300 pt-10 dark:border-night-600">
+			<Comments lang="ko" />
+		</div>
+
+		<aside class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60">
+			<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">
+				<TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
+			</div>
+		</aside>
 	</article>
 
 	<PostImageLightbox lang="ko" />

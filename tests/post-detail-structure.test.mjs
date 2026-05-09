@@ -541,3 +541,36 @@ test("post lists and home pages still read assembled titles from the shared help
 	assert.match(enHome, /\{getDisplayTitle\(post\)\}/);
 	assert.doesNotMatch(enHome, /\{post\.data\.title\}/);
 });
+
+test("post detail pages center the body on viewport with TOC overhanging at xl:", async () => {
+	for (const path of ["pages/posts/[...slug].astro", "pages/en/posts/[...slug].astro"]) {
+		const file = await readFile(new URL(`../src/${path}`, import.meta.url), "utf8");
+
+		// Article wraps a centered, max-w-3xl, position: relative box for TOC absolute anchor.
+		assert.match(
+			file,
+			/<article\s+class="relative mx-auto max-w-3xl"\s+data-pagefind-body/,
+			`${path}: article should carry "relative mx-auto max-w-3xl" with data-pagefind-body`,
+		);
+
+		// Mobile details TOC is hidden at xl+ (not md+).
+		assert.match(
+			file,
+			/<details[^>]*\bxl:hidden\b/,
+			`${path}: mobile details TOC should be xl:hidden`,
+		);
+
+		// Desktop TOC aside overhangs at xl+ via absolute positioning, full-height for sticky scroll range.
+		assert.match(
+			file,
+			/<aside\s+class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60"/,
+			`${path}: desktop TOC aside should be the absolute overhang shape`,
+		);
+
+		// Old md: 2-column structure must not regress.
+		assert.doesNotMatch(file, /md:flex md:gap-16/, `${path}: old md:flex layout should be removed`);
+		assert.doesNotMatch(file, /md:w-3\/4/, `${path}: old md:w-3/4 body column should be removed`);
+		assert.doesNotMatch(file, /hidden md:block md:w-1\/4/, `${path}: old md:w-1/4 TOC column should be removed`);
+		assert.doesNotMatch(file, /max-w-5xl/, `${path}: old article max-w-5xl should be removed`);
+	}
+});
