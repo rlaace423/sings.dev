@@ -2,8 +2,10 @@
 title: "About"
 description: "A short introduction to the person behind this blog and the work they've done."
 identity:
-  name: "Sam (Sangho Kim)"
-  summary: "A backend engineer who works on distributed systems. I've spent the past eight years at a fintech/blockchain startup building a multi-chain wallet API and a TSS-based MPC signing system, and this blog is where I keep what I learn while looking for system shapes that hold up over time."
+  name: "Sam Kim (Sangho Kim)"
+  tagline: "I enjoy the climb and the summit."
+  homeSummary: "I think software lasts longest when it stands on a purpose that doesn't waver. I'm currently a Backend Lead at a fintech startup, with broad interests across cryptography, blockchain, TypeScript, home lab infrastructure, and more recently AI."
+  summary: "I'm a backend engineer who designs distributed systems. Over eight years at a fintech startup — building a multi-chain wallet API and a TSS-based MPC signing system — I've come to believe that software lasts only when it stands on a purpose that doesn't waver. This blog is where I keep what I've felt and learned along the way."
   photo:
     src: "/avatar.jpg"
     alt: "Portrait of Sam (Sangho Kim)"

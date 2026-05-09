@@ -31,6 +31,8 @@ const pages = defineCollection({
 		identity: z
 			.object({
 				name: z.string(),
+				tagline: z.string(),
+				homeSummary: z.string(),
 				summary: z.string(),
 				photo: z.object({
 					src: z.string(),
