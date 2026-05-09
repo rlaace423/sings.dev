@@ -66,14 +66,14 @@
     - Show at most 3 related posts.
   - Search indexing should continue to rely on the rendered assembled titles that appear in the detail page and reading-flow UI, not on raw frontmatter fields.
 - **Layout Change for Post Detail**:
-  - **Desktop (`md:` and above)**:
-    - Use a 2-column layout.
-    - Left column: shared header, article body, and post footer.
-    - Right column: a sticky TOC rail with a left border and left padding.
-  - **Mobile**:
-    - Use a single-column layout.
-    - Render the TOC above the article body in a native `<details>` / `<summary>` block.
+  - **Desktop (`xl:` and above, viewport ≥ 1280px)**:
+    - Article body is dead-centered on the viewport via `<article class="relative mx-auto max-w-3xl" data-pagefind-body>` (768px max). The Layout shell (`src/layouts/Layout.astro`'s `max-w-4xl mx-auto`) stays in place; the body wrapper is its own narrower `mx-auto max-w-3xl`, so body-on-viewport-center composes correctly through the shell.
+    - TOC overhangs the body's right edge as an absolutely-positioned satellite: `<aside class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60">` with the existing `<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">` and `<TOC>` inside. `inset-y-0` stretches the aside to the article's full height so the sticky inner element scrolls with the entire article body.
+    - The aside escapes the Layout shell's right edge horizontally via the shell's default `overflow: visible`.
+  - **Below `xl:` (mobile, tablet, small laptop — viewport < 1280px)**:
+    - Single-column body. The TOC renders above the article body in a native `<details>` / `<summary>` block carrying `xl:hidden` so it disappears at the desktop breakpoint.
     - Start the article body below the header with `mt-10` spacing.
+  - **Wide figure corner case**: `figure[data-width="wide"]` (the `#wide` URL fragment) bleeds `-4rem` (-64px) on each side of the prose column. At `xl:` viewports with the TOC visible, the right-side bleed (body_right + 64) overlaps the TOC's gap-and-content range (body_right + 16 to body_right + 256) by ~48px. No current post uses `#wide`, so this is a future-content concern only. If a wide figure is added to a post that ships at `xl:`, options are: (a) reduce the right bleed to 0 at `xl:`, (b) hide the desktop TOC overhang on screens that contain wide figures, (c) reduce the bleed amount to fit the available space.
 
 ## Callouts in Post Bodies
 
