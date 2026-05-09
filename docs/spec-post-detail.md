@@ -73,7 +73,7 @@
   - **Below `xl:` (mobile, tablet, small laptop — viewport < 1280px)**:
     - Single-column body. The TOC renders above the article body in a native `<details>` / `<summary>` block carrying `xl:hidden` so it disappears at the desktop breakpoint.
     - Start the article body below the header with `mt-10` spacing.
-  - **Wide figure corner case**: `figure[data-width="wide"]` (the `#wide` URL fragment) bleeds `-4rem` (-64px) on each side of the prose column. At `xl:` viewports with the TOC visible, the right-side bleed (body_right + 64) overlaps the TOC's gap-and-content range (body_right + 16 to body_right + 256) by ~48px. No current post uses `#wide`, so this is a future-content concern only. If a wide figure is added to a post that ships at `xl:`, options are: (a) reduce the right bleed to 0 at `xl:`, (b) hide the desktop TOC overhang on screens that contain wide figures, (c) reduce the bleed amount to fit the available space.
+  - **Wide figure corner case**: `figure[data-width="wide"]` (the `#wide` URL fragment) bleeds `-4rem` (-64px) on each side of the prose column. At `xl:` viewports with the TOC visible, the right-side bleed (body_right + 64) overlaps the TOC's gap-and-content range (body_right + 16 to body_right + 240) by ~48px. No current post uses `#wide`, so this is a future-content concern only. If a wide figure is added to a post that ships at `xl:`, options are: (a) reduce the right bleed to 0 at `xl:`, (b) hide the desktop TOC overhang on screens that contain wide figures, (c) reduce the bleed amount to fit the available space.
 
 ## Callouts in Post Bodies
 
