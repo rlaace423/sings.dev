@@ -29,6 +29,7 @@
 - Reading progress bar landed: a 3px hairline at the top of post detail pages tracks reader progress through the article's prose body (not full window scroll), so the bar reaches 100% the moment the prose ends rather than the moment the page ends. Mounted only on `[...slug].astro` pages; other surfaces stay free of this chrome. See `docs/spec-post-detail.md`.
 - Post-body image lightbox landed: every `<img>` inside `article .prose-site` on a post-detail page expands into a centered fullscreen view via a 250ms FLIP zoom, with caption mirrored from `<figcaption>` and five close triggers (Esc, backdrop, image click, scroll input, resize) plus an explicit × button. Mounted only on `[...slug].astro`. See `docs/spec-post-detail.md` and `docs/superpowers/specs/2026-05-06-post-image-lightbox-design.md`.
 - Code-block copy button landed: every fenced code block in a post body carries a small copy-to-clipboard button (hover-only on desktop, always visible on mobile, hairline 28×28px) emitted at build time by `src/utils/rehypeCodeCopyButton.ts`. Locale-aware ARIA labels (`코드 복사` / `Copy code`, `복사됨` / `Copied`). The rehype-stage foundation now in place can carry future code-block features (line numbers, file titles, line highlights) without requiring runtime DOM rewrites. See `docs/spec-post-detail.md`.
+- Legacy Medium archive migration is complete: archival posts now live under `src/content/blog/{ko,en}/`, the home-page temporary "view on Medium" notice and the construction-phase dummy posts have been removed, and `docs/spec-migration.md` stays the SSOT for any future archival imports.
 
 ## Priority Areas
 
@@ -74,7 +75,7 @@
 
 - **Intent**: Make long posts easier to scan, understand, and stay with while preserving the writing's rhythm.
 - **Current Status**:
-  - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment, and `src/content/blog/{ko,en}/iam-policy-checklist/` for a coverage-fixture example post.
+  - Image captions and figure handling landed: see `docs/spec-post-detail.md` for the authoring convention and visual treatment.
   - Optional summary aids landed: posts opt in via a `summary` frontmatter field, which renders as a quiet left-bordered block between the post header and the prose body. See `docs/spec-post-detail.md`.
   - Callouts landed: GitHub-style admonitions (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`) become four-sided boxes with a 2px type-color left accent and a 1px hairline frame on the other three sides, plus a small 4px radius. Locale-aware labels. See `docs/spec-post-detail.md`.
   - TOC scroll-spy landed: the active section is marked through a color shift, a 500-weight bump, and a 2px `::before` bar; sticky TOC was raised to `top-24` and `html` got `scroll-padding-top: 6rem` so the rail and anchor jumps clear the 85px header. See `docs/spec-post-detail.md`.

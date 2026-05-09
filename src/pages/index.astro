@@ -27,7 +27,6 @@ const browseCategories = uniqueCategories(posts).map((name) => ({
 }));
 
 const formatDate = (date: Date) => date.toISOString().slice(0, 10);
-const legacyBlogUrl = "https://medium.com/@rlaace423";
 ---
 
 <Layout
@@ -35,29 +34,7 @@ const legacyBlogUrl = "https://medium.com/@rlaace423";
 	description="백엔드 아키텍처, MPC 시스템, 인프라 라우팅에 대한 글을 모아 둔 공간입니다."
 	lang="ko"
 >
-	<section
-		data-legacy-notice
-		class="space-y-5 rounded-2xl border border-sky-200 bg-sky-50/80 px-6 py-6 dark:border-sky-900/80 dark:bg-sky-950/30"
-	>
-		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
-			임시 안내
-		</p>
-		<h2 class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-3xl">
-			새로운 블로그(여기!)를 개발 중입니다.
-		</h2>
-		<p class="max-w-2xl leading-8 text-dawn-700 dark:text-night-200">
-			기존 글을 옮기는 동안에는 과거에 작성한 글을 Medium에서 먼저 확인하실
-			수 있습니다. 새 사이트는 현재 순차적으로 정리하고 있습니다.
-		</p>
-		<a
-			href={legacyBlogUrl}
-			class="inline-flex w-fit items-center justify-center rounded-full bg-sky-600 px-7 py-4 text-lg font-semibold text-white shadow-lg shadow-sky-600/25 transition-colors hover:bg-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:bg-sky-500 dark:hover:bg-sky-400 dark:focus-visible:ring-sky-300 dark:focus-visible:ring-offset-night-800"
-		>
-			현재 블로그로 이동
-		</a>
-	</section>
-
-	<section data-home-hero class="mt-14 space-y-6">
+	<section data-home-hero class="space-y-6">
 		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
 			Sam (김상호) — 백엔드 · MPC · 인프라
 		</p>
