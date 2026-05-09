@@ -3,7 +3,8 @@
 - **Goal**: Serve as both the blog's identity page ("who writes here") and a concrete job-search surface for the author, without giving the rest of the site a portfolio or marketing feel.
 - **Reference Philosophy**: Follow `docs/spec-editorial-philosophy.md`. The philosophy's `Avoid: Resume-site energy on the home page` guidance applies to the home page; `/about` is the designated surface for structured biographical content, so light resume-flavored structure is allowed here but must stay typographically calm.
 - **Page Role**:
-  - `/about` is the only site surface that carries structured biographical data (photo, socials, experience).
+  - `/about` is the canonical home of the full biographical record (name, photo, summary, socials, education, experience). The home page reuses the same `pages` collection record but projects only the motto, name, short `homeSummary`, and socials through `HomeIdentity.astro`; education, experience, the photo, and the longer `summary` stay on `/about` only.
+  - The home and `/about` cannot drift because both read the same `pages` record.
   - It should feel like a quiet editorial about-page, not like a portfolio template or a LinkedIn export.
   - The home page, archive, and post detail remain the primary "quiet, text-first" surfaces.
 - **Routes**:
@@ -11,8 +12,10 @@
   - English: `src/pages/en/about.astro` rendering `src/content/pages/en/about.md`.
 - **Content Schema (`src/content/config.ts`, `pages` collection)**:
   - `identity` is an optional object on the `pages` schema. When present, the page errors out at build time if any required field is missing — the schema is the single source of truth for the page's structure.
-  - `identity.name` (string, required): the page's `<h1>`. Use the same `Sam (김상호)` / `Sam (Sangho Kim)` form as the home hero eyebrow so identity reads consistently across surfaces.
-  - `identity.summary` (string, required): short first-person intro, about two to three sentences. Renders inline next to the photo.
+  - `identity.name` (string, required): the page's `<h1>`. Use the public-facing name format (KO: `김상호 (Sam Kim)`, EN: `Sam Kim (Sangho Kim)`). The home and `/about` render the same value, so it changes once in the `pages` collection.
+  - `identity.tagline` (string, required): the author's motto, rendered as the home page `h1`. Editorial copy in the author's voice, not a brand slogan. Does not appear on `/about`.
+  - `identity.homeSummary` (string, required): the short two-sentence intro shown on the home page below the name. Distinct from `summary`, which stays the longer reflective paragraph on `/about`.
+  - `identity.summary` (string, required): the longer reflective paragraph on `/about`, two to three sentences, rendered inline next to the photo.
   - `identity.photo` (object, required): `{ src, alt }` for the avatar.
   - `identity.socials` (array, default `[]`): each item has `type` (`"github" | "email" | "linkedin" | "instagram"`), `href`, and optional `label`. Order is preserved.
   - `identity.education` (array, default `[]`): each item has `school` and `degree` (both required), with optional `start`, `end`, and `description`. Dates and descriptions are optional because not every entry has them (e.g. visiting researcher stints, ongoing programs without a fixed start year). Order is preserved.
