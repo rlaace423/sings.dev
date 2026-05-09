@@ -9,7 +9,7 @@ Restructure the post detail page so the article body sits dead-centered on the v
 ## Decision
 
 - **Body wrapper**: `<div class="relative mx-auto max-w-3xl">` (768px max). Dead-centered via `mx-auto` within the unchanged Layout shell, which is itself centered on the viewport — so the body is dead-centered on the viewport at all viewport widths.
-- **Desktop TOC overhang**: `<aside class="hidden xl:block absolute top-0 left-full pl-4 w-60">`. Anchored to the body wrapper's right edge via `left: 100%`. Inside the aside, the existing sticky element keeps its current treatment: `<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">`. Total reach beyond body's right edge: 240px (16px aside left padding + visible content area to the aside's right edge).
+- **Desktop TOC overhang**: `<aside class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60">`. Anchored to the body wrapper's right edge via `left: 100%`. `inset-y-0` (top:0; bottom:0) stretches the aside to the full height of its relative-positioned ancestor (the article), so the sticky inner element has a scroll range matching the entire article body — equivalent to the current flex `align-items: stretch` behavior. Inside the aside, the existing sticky element keeps its current treatment: `<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">`. Total reach beyond body's right edge: 240px (16px aside left padding + visible content area to the aside's right edge).
 - **Mobile/tablet pattern**: existing `<details>` block at the top of the article stays exactly as it is, with one change — its trigger breakpoint moves from `md:hidden` to `xl:hidden`. Below xl viewport (1280px), readers see the same single-column body + collapsible TOC at top that mobile already shows.
 - **Breakpoint**: `xl:` (1280px), Tailwind native. At exactly 1280px viewport, body 768 + gap 16 + TOC 240 = 1024px reach from the body's left edge, which puts the TOC's right edge at the viewport's right edge. Below xl, the overhang would clip outside the viewport, so the layout falls back to the mobile pattern.
 - **Layout shell unchanged**: `src/layouts/Layout.astro` keeps its `max-w-4xl` (896px) wrapper. The shell has default `overflow: visible`, so the TOC overhang freely extends beyond the shell's right edge into the page's right margin at xl+ viewports. Other pages (home, archive, /about, taxonomy) are not touched and not affected — they have their own `contentClass` (default `max-w-3xl`) which constrains their content independently.
@@ -33,9 +33,9 @@ Restructure the post detail page so the article body sits dead-centered on the v
   - Outer wrapper changes from `<article class="mx-auto max-w-5xl" data-pagefind-body>` to `<article class="relative mx-auto max-w-3xl" data-pagefind-body>`.
   - The `<div class="md:flex md:gap-16">` flex wrapper (line 73) is removed. Its inner two-column children dissolve back into the article: the `<div class="min-w-0 md:w-3/4">` body wrapper (line 74) is removed (its children now live directly inside `<article>`), and the `<aside class="hidden md:block md:w-1/4">` TOC wrapper (line 107) is repositioned and re-classed.
   - The mobile-style `<details>` TOC at the top of the article (line 75) keeps its content exactly the same; only its breakpoint trigger changes from `md:hidden` to `xl:hidden`.
-  - The desktop TOC `<aside>` (line 107) becomes `<aside class="hidden xl:block absolute top-0 left-full pl-4 w-60">`, with the same inner `<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">` and the same `<TOC>` component call.
+  - The desktop TOC `<aside>` (line 107) becomes `<aside class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60">`, with the same inner `<div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">` and the same `<TOC>` component call.
 - `src/pages/en/posts/[...slug].astro` — identical restructure.
-- `tests/post-detail-structure.test.mjs` — add a small source-grep test asserting the new structure (article carries `relative mx-auto max-w-3xl`; aside carries `hidden xl:block absolute top-0 left-full pl-4 w-60`; mobile details carries `xl:hidden`). Existing tests in this file render the page and assert on data attributes; those data attributes are unchanged so existing tests stay green.
+- `tests/post-detail-structure.test.mjs` — add a small source-grep test asserting the new structure (article carries `relative mx-auto max-w-3xl`; aside carries `hidden xl:block absolute inset-y-0 left-full pl-4 w-60`; mobile details carries `xl:hidden`). Existing tests in this file render the page and assert on data attributes; those data attributes are unchanged so existing tests stay green.
 - `docs/spec-post-detail.md` — rewrite the "Layout Change for Post Detail" section to reflect the new structure. Add a single sentence flagging the wide-figure / TOC-overhang corner case for future authors.
 - `docs/spec-roadmap.md` — append one Current State bullet recording the centered-layout iteration.
 
@@ -109,7 +109,7 @@ At narrower viewports (below xl, ≥768px = `md:`-`xl:` band), the desktop TOC i
       <Comments ... />
     </div>
 
-    <aside class="hidden xl:block absolute top-0 left-full pl-4 w-60">
+    <aside class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60">
       <div class="sticky top-24 border-l border-dawn-300 pl-6 dark:border-night-600">
         <TOC headings={headings} title="이 글의 흐름" ariaLabel="목차" />
       </div>
@@ -151,7 +151,7 @@ test("post detail pages restructure article to centered body + overhanging TOC",
         // Desktop TOC aside overhangs at xl+ via absolute positioning.
         assert.match(
             file,
-            /<aside[^>]*class="hidden xl:block absolute top-0 left-full pl-4 w-60"/,
+            /<aside[^>]*class="hidden xl:block absolute inset-y-0 left-full pl-4 w-60"/,
             `${path}: desktop TOC aside should be the absolute overhang shape`,
         );
         // Old md: structure must not regress.
