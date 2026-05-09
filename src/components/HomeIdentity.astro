@@ -1,0 +1,75 @@
+---
+import SocialIcon, { type SocialType } from "./SocialIcon.astro";
+import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
+
+interface SocialLink {
+	type: SocialType;
+	href: string;
+	label?: string;
+}
+
+interface Props {
+	lang?: Locale;
+	tagline: string;
+	name: string;
+	summary: string;
+	socials?: SocialLink[];
+}
+
+const {
+	lang: langProp,
+	tagline,
+	name,
+	summary,
+	socials = [],
+} = Astro.props;
+
+const lang = isLocale(langProp) ? langProp : defaultLocale;
+const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and profiles";
+---
+
+<section class="space-y-6">
+	<h1
+		data-home-tagline
+		class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl"
+	>
+		{tagline}
+	</h1>
+
+	<p
+		data-home-author-name
+		class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50"
+	>
+		{name}
+	</p>
+
+	<p
+		data-home-author-summary
+		class="max-w-2xl text-lg leading-8 text-dawn-700 dark:text-night-200"
+	>
+		{summary}
+	</p>
+
+	{
+		socials.length > 0 && (
+			<ul
+				data-home-socials
+				aria-label={socialsLabel}
+				class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-dawn-700 dark:text-night-200"
+			>
+				{socials.map((item) => (
+					<li>
+						<a
+							href={item.href}
+							rel={item.type === "email" ? undefined : "me noopener"}
+							aria-label={item.label ?? item.type}
+							class="inline-flex items-center transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+						>
+							<SocialIcon type={item.type} class="h-4 w-4" />
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</section>
