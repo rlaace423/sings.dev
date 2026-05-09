@@ -29,6 +29,12 @@
   - Fallback chain: `"Pretendard Std Variable", "Pretendard Std", "Pretendard", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif`.
   - Loading: `font-display: swap`; preloaded in `src/layouts/Layout.astro` so first paint swaps to Pretendard as early as the network allows.
   - License: OFL. The license file ships alongside the font at `public/fonts/PretendardStd.LICENSE.txt`.
+- **Body Prose Size**:
+  - Article body sits at 1.125rem (18px) via Tailwind Typography's `prose-lg` size step. The `.prose-site` chain in `src/styles/global.css` composes `prose prose-lg prose-stone`, which retunes line-height (1.78), paragraph spacing, heading scale, list indents, and code-block padding as a coordinated set rather than only the body font-size.
+  - Reading-prose surfaces outside `.prose-site` echo the same size: post-card descriptions in `PostList.astro` and the inline post lists on `src/pages/index.astro` and `src/pages/en/index.astro`, and the summary paragraph in `PostSummary.astro`, all carry `text-lg` (1.125rem) with `leading-8` (line-height 2rem) preserved for the existing essay-feel leading.
+  - Compact list-card patterns (`RelatedReading.astro`, education / experience descriptions in `AboutIdentity.astro`) and UI chrome (eyebrow labels, dates, metadata, card titles, hero h1, h2 section headings) stay at their existing sizes. The bump targets reading prose only.
+  - In-prose images that are narrower than the figure container center via `margin: 0 auto` on `.prose-site figure img`, matching the figcaption that is already centered. Wide images using `data-width="wide"` continue to bleed beyond the prose column at full container width.
+  - Rationale and decision history: `docs/superpowers/specs/2026-05-10-prose-comfort-bump-design.md`.
 - **Code Block Syntax Highlighting**:
   - Astro's built-in Shiki highlighter is configured in `astro.config.mjs` with a dual-theme pair.
   - Light theme: `github-light` — neutral, widely recognized, pairs cleanly with the warm `dawn-100` body without competing for attention.
