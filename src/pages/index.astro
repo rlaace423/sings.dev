@@ -1,7 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
-import HomeCategories from "../components/HomeCategories.astro";
+import HomeIdentity from "../components/HomeIdentity.astro";
 import Layout from "../layouts/Layout.astro";
 import {
 	getDisplayTitle,
@@ -9,22 +9,22 @@ import {
 	matchesLocale,
 	sortPostsByDate,
 	stripLocaleFromId,
-	uniqueCategories,
 } from "../utils/blog";
+
+const [aboutPage] = await getCollection("pages", ({ id }) => id === "ko/about");
+
+if (!aboutPage) {
+	throw new Error("Missing ko/about page content.");
+}
+
+const identity = aboutPage.data.identity;
+
+if (!identity) {
+	throw new Error("Missing identity on ko/about page.");
+}
 
 const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
 const recentPosts = sortPostsByDate(posts).slice(0, 5);
-const categoryCounts = posts.reduce((counts, post) => {
-	const category = post.data.category;
-	if (!category) return counts;
-
-	counts.set(category, (counts.get(category) ?? 0) + 1);
-	return counts;
-}, new Map<string, number>());
-const browseCategories = uniqueCategories(posts).map((name) => ({
-	name,
-	count: categoryCounts.get(name) ?? 0,
-}));
 
 const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 ---
@@ -34,30 +34,23 @@ const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 	description="백엔드 아키텍처, MPC 시스템, 인프라 라우팅에 대한 글을 모아 둔 공간입니다."
 	lang="ko"
 >
-	<section data-home-hero class="space-y-6">
-		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
-			Sam (김상호) — 백엔드 · MPC · 인프라
-		</p>
-		<h1 class="text-4xl font-semibold tracking-tight text-dawn-800 dark:text-night-50 sm:text-5xl">
-			시스템의 구조를 씁니다.
-		</h1>
-	</section>
-
-	<HomeCategories lang="ko" categories={browseCategories} />
+	<HomeIdentity
+		lang="ko"
+		tagline={identity.tagline}
+		name={identity.name}
+		summary={identity.homeSummary}
+		socials={identity.socials}
+	/>
 
 	<section
 		id="posts"
+		data-home-recent-posts
 		class="mt-16 space-y-4 border-t border-dawn-300 pt-10 dark:border-night-600"
 	>
 		<div class="flex items-end justify-between gap-4">
-			<div class="space-y-2">
-				<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
-					최근 글
-				</p>
-				<h2 class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50">
-					포스트
-				</h2>
-			</div>
+			<h2 class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50">
+				최근 글
+			</h2>
 			<a
 				href={getRelativeLocaleUrl("ko", "posts")}
 				class="text-sm text-dawn-700 transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
