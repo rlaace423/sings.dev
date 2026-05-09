@@ -64,7 +64,7 @@ html {
  */
 @layer components {
 	.prose-site {
-		@apply prose prose-stone max-w-none
+		@apply prose prose-lg prose-stone max-w-none
 			prose-p:text-dawn-800 prose-li:text-dawn-800 prose-headings:text-dawn-800
 			prose-a:text-terracotta-600 prose-a:decoration-terracotta-600/40 prose-a:underline-offset-4
 			prose-blockquote:border-dawn-300 prose-blockquote:text-dawn-700
@@ -84,7 +84,7 @@ html {
 	margin-bottom: 1.5rem;
 }
 .prose-site figure img {
-	margin: 0;
+	margin: 0 auto;
 	border-radius: 0.375rem;
 	border: 1px solid rgb(220 214 204 / 1); /* dawn-300 */
 }

@@ -160,3 +160,33 @@ test("no light-mode *-stone-* utility remains anywhere under src/", async () => 
 	}
 	assert.deepEqual(offenders, [], `residual light-mode stone tokens:\n${JSON.stringify(offenders, null, 2)}`);
 });
+
+test("global.css applies prose-lg on .prose-site for the body prose size step", async () => {
+	const css = await readFile(globalCssUrl, "utf8");
+	// Match the .prose-site @apply chain and assert prose-lg appears in it.
+	const match = css.match(/\.prose-site\s*\{[^}]*@apply\s+([^;]+);/);
+	assert.ok(match, ".prose-site @apply chain not found");
+	const chain = match[1];
+	assert.ok(
+		/\bprose-lg\b/.test(chain),
+		`expected prose-lg in .prose-site @apply chain; got: ${chain.trim()}`,
+	);
+	// And the size step must come after the base prose token so the cascade is correct.
+	assert.ok(
+		/\bprose\b[\s\S]*\bprose-lg\b/.test(chain),
+		"prose-lg should appear after the base prose token in the @apply chain",
+	);
+});
+
+test("global.css centers in-prose images via margin: 0 auto", async () => {
+	const css = await readFile(globalCssUrl, "utf8");
+	// Match the .prose-site figure img rule body and assert margin: 0 auto is present.
+	const match = css.match(/\.prose-site figure img\s*\{([^}]*)\}/);
+	assert.ok(match, ".prose-site figure img rule not found");
+	const body = match[1];
+	assert.match(
+		body,
+		/margin:\s*0\s+auto/,
+		`expected margin: 0 auto in .prose-site figure img; got: ${body.trim()}`,
+	);
+});
