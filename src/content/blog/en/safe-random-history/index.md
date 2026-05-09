@@ -14,7 +14,7 @@ series:
   subtitle: "Why it matters"
 ---
 
-alea iacta est — the die is cast!
+![alea iacta est (the die is cast!)](./dice-roll.webp)
 
 A **random number** is a value whose outcome can't be predicted. For a very long time we've leaned on various methods to make decisions where no one's preference dominates and the result can't be guessed in advance — coin tosses and dice rolls are the obvious examples.
 
@@ -23,8 +23,6 @@ Coin tossing traces back to Caesar's Rome. Roman coins of the time had nothing o
 ![Pre-match coin toss in football](./coin-toss.webp)
 
 Dice are older — their origins are uncertain, but they go back well before recorded history. Around 3000 BCE Egyptians played Senet, an ancient board game built around piece movement and chance. And excavations from the Indus Valley civilization (around 2600 BCE) have turned up six-sided dice that look very close to the ones we use today.
-
-![Rolling dice](./dice-roll.webp)
 
 From antiquity to now, we've kept finding ourselves in situations where a value needs to be decided by randomness. The same is true in computer science. We need random numbers when a game draws a starry night sky, when card games like poker compute the probability of a specific card appearing, and when we set up encrypted communication.
 
