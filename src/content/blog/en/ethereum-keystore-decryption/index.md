@@ -13,7 +13,6 @@ series:
   index: 2
   total: 2
   subtitle: "Decryption and follow-ups"
-draft: true
 ---
 
 In the previous post we walked through how Ethereum KeyStore files encrypt a user's private key. To summarize what we covered:

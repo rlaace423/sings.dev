@@ -13,7 +13,6 @@ series:
   index: 1
   total: 2
   subtitle: "EOS coin transfer"
-draft: true
 ---
 
 This post introduces eosjs, the JavaScript library for the EOSIO blockchain.

@@ -13,7 +13,6 @@ series:
   index: 2
   total: 2
   subtitle: "Token transfer"
-draft: true
 ---
 
 The previous post used eosjs's `transfer` method to send the native EOS coin. Any "action" on EOS — `transfer` included — needs two pieces of information:

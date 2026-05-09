@@ -13,7 +13,6 @@ series:
   index: 1
   total: 2
   subtitle: "Generation and encryption"
-draft: true
 ---
 
 Ethereum uses KeyStore files as the way to identify an account holder. By entering the password they originally chose when the file was created, a user authenticates themselves and gains access to the account. So how is a KeyStore file actually generated, and what kind of encryption keeps the underlying private key safe? Let's walk through it.
