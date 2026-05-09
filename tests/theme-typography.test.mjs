@@ -190,3 +190,54 @@ test("global.css centers in-prose images via margin: 0 auto", async () => {
 		`expected margin: 0 auto in .prose-site figure img; got: ${body.trim()}`,
 	);
 });
+
+test("PostList.astro description paragraph carries text-lg", async () => {
+	const file = await readFile(new URL("components/PostList.astro", srcUrl), "utf8");
+	// The description <p> is the one that renders post.data.description.
+	// Match the <p ...> opening tag immediately preceding {post.data.description}.
+	const match = file.match(/<p\s+class="([^"]+)"\s*>\s*\{post\.data\.description\}/);
+	assert.ok(match, "PostList description <p> not found");
+	const classes = match[1];
+	assert.ok(
+		/\btext-lg\b/.test(classes),
+		`expected text-lg on PostList description <p>; got: ${classes}`,
+	);
+});
+
+test("PostSummary.astro summary paragraph carries text-lg, not text-base", async () => {
+	const file = await readFile(new URL("components/PostSummary.astro", srcUrl), "utf8");
+	// The summary <p> is the second <p> in the file, rendering {summary}.
+	const match = file.match(/<p\s+class="([^"]+)"\s*>\s*\{summary\}/);
+	assert.ok(match, "PostSummary summary <p> not found");
+	const classes = match[1];
+	assert.ok(
+		/\btext-lg\b/.test(classes),
+		`expected text-lg on PostSummary summary <p>; got: ${classes}`,
+	);
+	assert.ok(
+		!/\btext-base\b/.test(classes),
+		`text-base should be removed from PostSummary summary <p>; got: ${classes}`,
+	);
+});
+
+test("Korean home page inline post-list description carries text-lg", async () => {
+	const file = await readFile(new URL("pages/index.astro", srcUrl), "utf8");
+	const match = file.match(/<p\s+class="([^"]+)"\s*>\s*\{post\.data\.description\}/);
+	assert.ok(match, "ko home inline-list description <p> not found");
+	const classes = match[1];
+	assert.ok(
+		/\btext-lg\b/.test(classes),
+		`expected text-lg on ko home description <p>; got: ${classes}`,
+	);
+});
+
+test("English home page inline post-list description carries text-lg", async () => {
+	const file = await readFile(new URL("pages/en/index.astro", srcUrl), "utf8");
+	const match = file.match(/<p\s+class="([^"]+)"\s*>\s*\{post\.data\.description\}/);
+	assert.ok(match, "en home inline-list description <p> not found");
+	const classes = match[1];
+	assert.ok(
+		/\btext-lg\b/.test(classes),
+		`expected text-lg on en home description <p>; got: ${classes}`,
+	);
+});
