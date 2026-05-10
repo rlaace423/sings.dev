@@ -27,6 +27,7 @@ async function renderHomeIdentity(props) {
 
 	const tempDir = await mkdtemp(join(tmpdir(), "home-identity-"));
 	const runtimeStubPath = join(tempDir, "astro-runtime-stub.ts");
+	const i18nStubPath = join(tempDir, "astro-i18n-stub.ts");
 	const socialIconStubPath = join(tempDir, "SocialIcon.ts");
 	const componentPath = join(tempDir, "component.ts");
 
@@ -36,6 +37,13 @@ async function renderHomeIdentity(props) {
 			[
 				`export * from ${JSON.stringify(astroRuntimeUrl)};`,
 				"export const createMetadata = () => ({})",
+				"",
+			].join("\n"),
+		);
+		await writeFile(
+			i18nStubPath,
+			[
+				"export const getRelativeLocaleUrl = (locale, path) => `/${locale}/${path}/`;",
 				"",
 			].join("\n"),
 		);
@@ -67,6 +75,7 @@ async function renderHomeIdentity(props) {
 			"./SocialIcon.astro",
 			pathToFileURL(socialIconStubPath).href,
 		);
+		rewritten = rewritten.replaceAll("astro:i18n", pathToFileURL(i18nStubPath).href);
 		rewritten = rewritten.replaceAll("../i18n/ui", repoUiUrl);
 
 		await writeFile(componentPath, rewritten);
@@ -106,6 +115,19 @@ test("HomeIdentity renders the name in its own hook below h1, not as a heading",
 	assert.match(
 		rendered,
 		/<p[^>]*data-home-author-name[^>]*>[\s\S]*김상호 \(Sam Kim\)[\s\S]*<\/p>/,
+	);
+});
+
+test("HomeIdentity wraps the name in a link to the locale-aware /about page", async () => {
+	const ko = await renderHomeIdentity({ ...baseProps(), lang: "ko" });
+	const en = await renderHomeIdentity({ ...baseProps(), lang: "en" });
+	assert.match(
+		ko,
+		/<p[^>]*data-home-author-name[^>]*>[\s\S]*<a[^>]*href="\/ko\/about\/"[^>]*>[\s\S]*김상호 \(Sam Kim\)[\s\S]*<\/a>/,
+	);
+	assert.match(
+		en,
+		/<a[^>]*href="\/en\/about\/"[^>]*>[\s\S]*김상호 \(Sam Kim\)[\s\S]*<\/a>/,
 	);
 });
 

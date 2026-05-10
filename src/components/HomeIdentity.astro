@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import SocialIcon, { type SocialType } from "./SocialIcon.astro";
 import { defaultLocale, type Locale, isLocale } from "../i18n/ui";
 
@@ -26,6 +27,7 @@ const {
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
 const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and profiles";
+const aboutHref = getRelativeLocaleUrl(lang, "about");
 ---
 
 <section class="space-y-6">
@@ -40,7 +42,12 @@ const socialsLabel = lang === "ko" ? "연락처와 프로필" : "Contact and pro
 		data-home-author-name
 		class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50"
 	>
-		{name}
+		<a
+			href={aboutHref}
+			class="transition-colors hover:text-dawn-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-200 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+		>
+			{name}
+		</a>
 	</p>
 
 	<p
