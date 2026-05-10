@@ -277,6 +277,12 @@ const t = useTranslations(lang);
 		const wireImage = (img) => {
 			if (img.dataset.zoomable !== undefined) return;
 			if (img.closest("[data-no-zoom]") || img.dataset.noZoom !== undefined) return;
+			// Skip <img> elements inside <picture> — these are mermaid diagrams
+			// rendered by rehype-mermaid as <picture><source><img></picture>.
+			// Lightbox copies a single src and loses the source-selection logic,
+			// so the dark/light variant doesn't track theme. SVG diagrams also
+			// scale perfectly with browser zoom, making lightbox redundant.
+			if (img.closest("picture")) return;
 			img.dataset.zoomable = "";
 			img.setAttribute("tabindex", "0");
 			img.addEventListener("click", () => openLightbox(img));
