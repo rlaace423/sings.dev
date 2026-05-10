@@ -4,7 +4,7 @@
 
 ## Goal
 
-Write a single Korean blog post for sings.dev that argues the root cause of long-lived software degrading into "spaghetti" is **purpose drift**, not complexity accumulation. The author proposes a simple cycle that preserves purpose across change — define purpose → develop → re-check purpose when adding features → reaffirm or update → develop again — and presents superpowers (the Claude Code skill collection) as **an expression of that methodology in tool form**, not as a methodology the author adopted from outside.
+Write a single Korean blog post for sings.dev that argues long-lived software degrades into "spaghetti" because complexity accumulates *incoherently*, and the root cause of that incoherence is **purpose drift**. Complexity accumulation is the visible symptom; purpose drift is the cause underneath. The author proposes a simple cycle that preserves purpose across change — define purpose → develop → re-check purpose when adding features → reaffirm or update → develop again — and presents superpowers (the Claude Code skill collection) as **an expression of that methodology in tool form**, not as a methodology the author adopted from outside.
 
 The article uses sings.dev itself as the running evidence: the top-level purpose anchored in `docs/spec-editorial-philosophy.md` (referenced explicitly by sub-specs like `docs/spec-migration.md`), and one full cycle visible in the recent post-detail centered-layout work — `brainstorm → plan → impl → spec 갱신 → SSOT 정렬` across six commits in a single week. The author's prior thinking is the main artist; superpowers is featured.
 
@@ -31,7 +31,7 @@ The article uses sings.dev itself as the running evidence: the top-level purpose
 
 ### §1. Hook / 본질 주장 (~300자)
 - Open: "오래 유지되는 시스템을 만드는 걸 좋아합니다."
-- Drop the thesis: 시스템이 망가지는 본질은 복잡성 누적이 아니라 **목적의 흔들림**이다.
+- Drop the thesis: 시스템이 망가지는 본질은 **복잡성 누적**이고, 그 복잡성 누적의 원인은 결국 **목적의 흔들림**이다. (관찰되는 증상 → 그 아래의 원인.)
 - One italic 곁다리 acknowledging this is a long-held belief: `_(이건 꽤 오래전부터 가져온 생각인데요.)_`
 - Tone: 정중체, 의견은 분명하게.
 
@@ -64,7 +64,7 @@ The article uses sings.dev itself as the running evidence: the top-level purpose
 
 ### §6. sings.dev 증거 (~700자)
 
-Open with a single line that reads as observation, not boast: "이 블로그가 정확히 그렇게 만들어졌습니다 — git이 그대로 보여줘서 인용하기 쉽거든요."
+Open with a single line as direct observation, no hedging: "이 블로그가 정확히 그렇게 만들어졌습니다."
 
 - **(a) 정적 증거: 최상위 purpose가 anchor 역할** (~200자)
   - `docs/spec-editorial-philosophy.md`가 사이트의 근본 정체성을 codify.
@@ -89,7 +89,7 @@ Open with a single line that reads as observation, not boast: "이 블로그가 
 - "정리하자면…" 마무리 톤.
 - 본질 주장 한 번 더: 목적이 흔들리지 않으면 시스템은 안 망가진다.
 - superpowers를 쓰는 이유 — 내 사고방식의 좋은 expression이라서.
-- 마지막 한 줄: **도구가 사고를 바꾸는 게 아니라, 좋은 도구는 이미 가진 사고를 더 단단하게 만들어준다.**
+- 마지막 한 줄: **도구가 사고를 바꾸는 게 아니라, 좋은 도구는 사고를 더 단단하게 만들어준다.**
 
 ## Source Material
 
