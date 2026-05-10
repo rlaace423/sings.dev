@@ -43,6 +43,25 @@ _(말로는 단순합니다. 매 작업마다 이걸 도는 게 즐겁기만 한
 - **verification-before-completion**: 무언가가 됐다고 주장하기 전에 직접 실행해 검증하라고 요구합니다.
 - **code-review / finishing**: 마무리 단계에서 한 번 더 전체를 훑게 합니다.
 
+```mermaid
+flowchart LR
+    subgraph outer[큰 사이클]
+        direction LR
+        BR[brainstorming] --> WP[writing-plans]
+        WP --> EP[executing-plans]
+        EP --> FIN[code-review / finishing]
+    end
+
+    subgraph inner["작은 사이클 (executing-plans 안)"]
+        direction LR
+        T[test] --> CD[code]
+        CD --> V[verify]
+        V --> T
+    end
+
+    EP -.fractal.-> inner
+```
+
 흥미로운 건, 이 흐름이 fractal하다는 점입니다. 큰 단위(brainstorm ↔ plan ↔ execute)에서도, 작은 단위(test ↔ code ↔ verify)에서도 같은 패턴이 그대로 반복됩니다.
 
 ![Sierpinski 삼각형 줌 — 같은 패턴이 어느 스케일에서도 반복됩니다 (이미지: Mariko GODA, CC BY-SA 3.0)](./sierpinski-zoom.gif)
