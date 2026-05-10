@@ -1,6 +1,6 @@
 ---
 title: "튼튼한 시스템은 분명한 목적에서 비롯된다 (feat. superpowers)"
-pubDate: 2026-05-10
+pubDate: 2026-05-09
 description: "오래 가는 시스템에 필요한 단순한 사이클, 그리고 그 사이클을 도구화한 superpowers를 살펴봅니다."
 category: "Essay"
 tags:

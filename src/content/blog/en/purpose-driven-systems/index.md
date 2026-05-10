@@ -1,6 +1,6 @@
 ---
 title: "Purpose-Driven Systems (feat. superpowers)"
-pubDate: 2026-05-10
+pubDate: 2026-05-09
 description: "A simple cycle for systems that last, and how superpowers turns that cycle into a tool."
 category: "Essay"
 tags:
@@ -8,7 +8,6 @@ tags:
   - ai
   - claude-code
   - superpowers
-draft: true
 ---
 
 I like building systems that last. I work mostly on backends — services that run for years — and I've watched up close as some code stays clean over time while other code unravels fast. From that I've landed on one conclusion: what really breaks a system is **complexity accumulation**, and what causes that complexity accumulation is **purpose drift**. Peel back the visible symptom by one layer and the same thing is always underneath.
