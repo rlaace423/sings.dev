@@ -2,7 +2,7 @@
 title: "튼튼한 시스템은 분명한 목적에서 비롯된다 (feat. superpowers)"
 pubDate: 2026-05-10
 description: "오래 가는 시스템에 필요한 단순한 사이클, 그리고 그 사이클을 도구화한 superpowers를 살펴봅니다."
-category: "Development"
+category: "Essay"
 tags:
   - methodology
   - ai
@@ -68,7 +68,7 @@ flowchart LR
 
 이 블로그가 정확히 그렇게 만들어졌습니다.
 
-`docs/spec-editorial-philosophy.md`가 사이트의 근본 정체성을 codify하고, sub-spec들이 이것을 바라봅니다 - `spec-migration.md` 첫머리의 ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``가 그 예입니다.
+`docs/spec-editorial-philosophy.md`가 사이트의 근본 정체성을 codify하고, sub-spec들이 이것을 바라봅니다. `spec-migration.md` 첫머리의 ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``가 그 예입니다.
 
 post-detail 정렬 작업의 커밋 여섯 개를 시간순으로 따라가면:
 

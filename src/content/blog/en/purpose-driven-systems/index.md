@@ -2,7 +2,7 @@
 title: "Purpose-Driven Systems (feat. superpowers)"
 pubDate: 2026-05-10
 description: "A simple cycle for systems that last, and how superpowers turns that cycle into a tool."
-category: "Development"
+category: "Essay"
 tags:
   - methodology
   - ai
@@ -69,7 +69,7 @@ Interestingly, this flow is fractal. The same pattern repeats at the large scale
 
 This blog was built exactly that way.
 
-`docs/spec-editorial-philosophy.md` codifies the site's fundamental identity, and the sub-specs all point back to it — for example, `spec-migration.md` opens with the line ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``.
+`docs/spec-editorial-philosophy.md` codifies the site's fundamental identity, and the sub-specs all point back to it. For example, `spec-migration.md` opens with the line ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``.
 
 Walk through six commits from the recent post-detail centering work, in chronological order:
 
