@@ -30,7 +30,7 @@ export default defineConfig({
         rehypeMermaid,
         {
           strategy: "img-svg",
-          dark: { themeVariables: mermaidThemeDark },
+          dark: { theme: "base", themeVariables: mermaidThemeDark },
           mermaidConfig: {
             theme: "base",
             themeVariables: mermaidThemeLight,

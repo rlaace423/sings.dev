@@ -131,7 +131,12 @@ const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
 					};
 
 					const setMermaidPictureTheme = (isDark) => {
-						document.querySelectorAll('figure picture').forEach((picture) => {
+						// Mermaid <picture> elements live directly in the prose body, not
+						// inside <figure> (remarkPostFigure only auto-promotes plain <img>
+						// paragraphs, not mermaid blocks). Match all <picture> in the post
+						// content; the originalMedia.includes('dark') guard inside the
+						// loop scopes the flip to mermaid output specifically.
+						document.querySelectorAll('article picture').forEach((picture) => {
 							picture.querySelectorAll('source').forEach((source) => {
 								// Cache the original media query on first run so we can restore it.
 								if (!source.dataset.originalMedia) {
