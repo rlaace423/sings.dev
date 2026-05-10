@@ -130,10 +130,40 @@ const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
 						});
 					};
 
+					const setMermaidPictureTheme = (isDark) => {
+						document.querySelectorAll('figure picture').forEach((picture) => {
+							picture.querySelectorAll('source').forEach((source) => {
+								// Cache the original media query on first run so we can restore it.
+								if (!source.dataset.originalMedia) {
+									source.dataset.originalMedia = source.media;
+								}
+								// Override the dark-variant source's media to "all" when manually
+								// dark, restore the original prefers-color-scheme query when light.
+								if (source.dataset.originalMedia.includes('dark')) {
+									source.media = isDark ? 'all' : source.dataset.originalMedia;
+								}
+							});
+							// Picture source selection is browser-side and only re-evaluates on
+							// insertion. Clone-replace forces re-evaluation against the new media
+							// attribute. The existing 250ms .theme-transition fade absorbs any
+							// visual flicker.
+							const clone = picture.cloneNode(true);
+							// Strip the zoomable marker on the cloned <img> so
+							// PostImageLightbox re-wires its click handler (cloneNode copies
+							// attributes but not event listeners, so the original handler is
+							// lost on the new element).
+							clone.querySelectorAll("img[data-zoomable]").forEach((img) => {
+								delete img.dataset.zoomable;
+							});
+							picture.replaceWith(clone);
+						});
+					};
+
 					const applyTheme = (theme) => {
 						const isDark = theme === "dark";
 						root.classList.toggle("dark", isDark);
 						root.style.colorScheme = isDark ? "dark" : "light";
+						setMermaidPictureTheme(isDark);
 						updateButtons();
 					};
 
