@@ -17,7 +17,7 @@ export const mermaidThemeLight = {
 	mainBkg: "transparent",
 	titleColor: "#24283b",           // dawn-800
 	noteBkgColor: "#e8e3d9",         // dawn-200 (sequence/state notes — future-proofing)
-	fontFamily: "inherit",
+	fontFamily: "arial, sans-serif",
 } as const;
 
 export const mermaidThemeDark = {
@@ -35,5 +35,5 @@ export const mermaidThemeDark = {
 	mainBkg: "transparent",
 	titleColor: "#c0caf5",           // night-50
 	noteBkgColor: "#292e42",         // night-700
-	fontFamily: "inherit",
+	fontFamily: "arial, sans-serif",
 } as const;
