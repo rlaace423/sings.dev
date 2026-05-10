@@ -38,7 +38,7 @@ That's the output of `ls -al`. As you can see, the listing starts in proper Kore
 
 Here's the font section of my Ghostty config:
 
-![](./ghostty-config.webp)
+![Ghostty Config](./ghostty-config.webp)
 
 So Latin and glyphs (icons) should use JetBrainsMono Nerd Font, and Korean should use D2Coding. But looking back at Figure 3, the **first** Korean run uses something I never specified — a Myeongjo-ish (?) font — while the **second** Korean run uses D2Coding as configured.
 
@@ -74,7 +74,7 @@ The letter **A** is a single, indivisible character. But the Korean syllable **�
 
 Both are reasonable, and so far so good — multiple ways to represent Korean is fine in the abstract. The problem starts now. Since there's more than one standard, **compatibility breaks down depending on which one each environment chooses**.
 
-![](./nfc-nfd-meme.webp)
+![Start killing each other](./nfc-nfd-meme.webp)
 
 Here's how the four major environments (Windows, macOS, Linux, Web) handle NFC/NFD:
 
