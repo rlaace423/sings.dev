@@ -19,6 +19,14 @@ Every piece of software was built for a reason. That reason — the purpose — 
 
 Here's how I lay out the cycle: **define purpose → develop → re-check purpose when adding a feature → revise or reaffirm → develop again**. Every time a new feature shows up, I run it against the original purpose. If they're out of alignment, I revise the purpose or reaffirm it before moving on to the next round of development. It's a simple cycle (one that's not always easy to hold to). Each turn either updates or reaffirms the purpose, and the moment that loop breaks, complexity starts to pile up.
 
+```mermaid
+flowchart LR
+    A[define purpose] --> B[develop]
+    B --> C[re-check purpose when adding a feature]
+    C --> D[revise / affirm]
+    D --> B
+```
+
 _(Simple to describe. Going through it on every task isn't always enjoyable.)_
 
 Lately a much larger share of my code gets written with AI. What used to take an hour finishes in ten minutes; what used to take days wraps up within a day. The speed boost is clearly a good thing, but it brings one worry along with it. As code pours out faster, won't the parts that drift from purpose pour out at the same rate, raising the breakage rate too? In the end, if the *human* who's supposed to define the purpose can't keep up with that speed, the cycle has effectively collapsed. Or has it?
@@ -35,6 +43,25 @@ It gets clearer when you map each stage to a point in the cycle.
 - **TDD**: a spec at the function level. Even inside a single function, you nail down what you're building first, then write the code.
 - **verification-before-completion**: requires you to actually run things and verify before claiming anything is done.
 - **code-review / finishing**: a final sweep over the whole thing at the wrap-up stage.
+
+```mermaid
+flowchart LR
+    subgraph outer[outer cycle]
+        direction LR
+        BR[brainstorming] --> WP[writing-plans]
+        WP --> EP[executing-plans]
+        EP --> FIN[code-review / finishing]
+    end
+
+    subgraph inner["inner cycle (within executing-plans)"]
+        direction LR
+        T[test] --> CD[code]
+        CD --> V[verify]
+        V --> T
+    end
+
+    EP -.fractal.-> inner
+```
 
 Interestingly, this flow is fractal. The same pattern repeats at the large scale (brainstorm ↔ plan ↔ execute) and at the small scale (test ↔ code ↔ verify).
 
