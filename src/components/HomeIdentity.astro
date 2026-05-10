@@ -42,12 +42,7 @@ const aboutHref = getRelativeLocaleUrl(lang, "about");
 		data-home-author-name
 		class="text-2xl font-semibold tracking-tight text-dawn-800 dark:text-night-50"
 	>
-		<a
-			href={aboutHref}
-			class="transition-colors hover:text-dawn-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-200 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
-		>
-			{name}
-		</a>
+		{name}
 	</p>
 
 	<p
@@ -79,4 +74,12 @@ const aboutHref = getRelativeLocaleUrl(lang, "about");
 			</ul>
 		)
 	}
+
+	<a
+		href={aboutHref}
+		data-home-whoami
+		class="inline-block font-mono text-sm text-dawn-700 underline decoration-dawn-300 decoration-2 underline-offset-4 transition-colors hover:text-dawn-800 hover:decoration-dawn-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:text-night-200 dark:decoration-night-600 dark:hover:text-night-50 dark:hover:decoration-night-400 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
+	>
+		$ whoami
+	</a>
 </section>

@@ -118,16 +118,37 @@ test("HomeIdentity renders the name in its own hook below h1, not as a heading",
 	);
 });
 
-test("HomeIdentity wraps the name in a link to the locale-aware /about page", async () => {
+test("HomeIdentity renders the name as plain text (not a link)", async () => {
+	const rendered = await renderHomeIdentity(baseProps());
+	const nameBlockMatch = rendered.match(
+		/<p[^>]*data-home-author-name[^>]*>([\s\S]*?)<\/p>/,
+	);
+	assert.ok(nameBlockMatch, "name block missing");
+	assert.doesNotMatch(nameBlockMatch[1], /<a[\s>]/);
+});
+
+test("HomeIdentity renders a $ whoami link to the locale-aware /about page", async () => {
 	const ko = await renderHomeIdentity({ ...baseProps(), lang: "ko" });
 	const en = await renderHomeIdentity({ ...baseProps(), lang: "en" });
-	assert.match(
-		ko,
-		/<p[^>]*data-home-author-name[^>]*>[\s\S]*<a[^>]*href="\/ko\/about\/"[^>]*>[\s\S]*김상호 \(Sam Kim\)[\s\S]*<\/a>/,
+	const koWhoami = ko.match(
+		/<a[^>]*data-home-whoami[^>]*>[\s\S]*?<\/a>|<a[^>]*\bhref="[^"]*"[^>]*data-home-whoami[^>]*>[\s\S]*?<\/a>/,
 	);
+	const enWhoami = en.match(
+		/<a[^>]*data-home-whoami[^>]*>[\s\S]*?<\/a>|<a[^>]*\bhref="[^"]*"[^>]*data-home-whoami[^>]*>[\s\S]*?<\/a>/,
+	);
+	assert.ok(koWhoami, "ko whoami link missing");
+	assert.ok(enWhoami, "en whoami link missing");
+	assert.match(koWhoami[0], /href="\/ko\/about\/"/);
+	assert.match(enWhoami[0], /href="\/en\/about\/"/);
+	assert.match(koWhoami[0], /\$ whoami/);
+	assert.match(enWhoami[0], /\$ whoami/);
+});
+
+test("HomeIdentity whoami link uses underlined monospace styling for clear link affordance", async () => {
+	const rendered = await renderHomeIdentity(baseProps());
 	assert.match(
-		en,
-		/<a[^>]*href="\/en\/about\/"[^>]*>[\s\S]*김상호 \(Sam Kim\)[\s\S]*<\/a>/,
+		rendered,
+		/<a[^>]*data-home-whoami[^>]*class="[^"]*font-mono[^"]*underline[^"]*"/,
 	);
 });
 
