@@ -127,7 +127,7 @@ test("HomeIdentity renders the name as plain text (not a link)", async () => {
 	assert.doesNotMatch(nameBlockMatch[1], /<a[\s>]/);
 });
 
-test("HomeIdentity renders a $ whoami link to the locale-aware /about page", async () => {
+test("HomeIdentity renders a $ whoami? link to the locale-aware /about page", async () => {
 	const ko = await renderHomeIdentity({ ...baseProps(), lang: "ko" });
 	const en = await renderHomeIdentity({ ...baseProps(), lang: "en" });
 	const koWhoami = ko.match(
@@ -140,15 +140,26 @@ test("HomeIdentity renders a $ whoami link to the locale-aware /about page", asy
 	assert.ok(enWhoami, "en whoami link missing");
 	assert.match(koWhoami[0], /href="\/ko\/about\/"/);
 	assert.match(enWhoami[0], /href="\/en\/about\/"/);
-	assert.match(koWhoami[0], /\$ whoami/);
-	assert.match(enWhoami[0], /\$ whoami/);
+	assert.match(koWhoami[0], /\$ whoami\?/);
+	assert.match(enWhoami[0], /\$ whoami\?/);
 });
 
-test("HomeIdentity whoami link uses underlined monospace styling for clear link affordance", async () => {
+test("HomeIdentity whoami link uses underlined monospace styling at text-lg for clear link affordance", async () => {
 	const rendered = await renderHomeIdentity(baseProps());
 	assert.match(
 		rendered,
-		/<a[^>]*data-home-whoami[^>]*class="[^"]*font-mono[^"]*underline[^"]*"/,
+		/<a[^>]*data-home-whoami[^>]*class="[^"]*font-mono[^"]*text-lg[^"]*underline[^"]*"/,
+	);
+});
+
+test("HomeIdentity renders the whoami link between the name and the summary", async () => {
+	const rendered = await renderHomeIdentity(baseProps());
+	const nameIndex = rendered.indexOf("data-home-author-name");
+	const whoamiIndex = rendered.indexOf("data-home-whoami");
+	const summaryIndex = rendered.indexOf("data-home-author-summary");
+	assert.ok(
+		nameIndex >= 0 && whoamiIndex > nameIndex && summaryIndex > whoamiIndex,
+		"whoami link must sit between the name and the summary",
 	);
 });
 
