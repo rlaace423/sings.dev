@@ -38,6 +38,8 @@ It gets clearer when you map each stage to a point in the cycle.
 
 Interestingly, this flow is fractal. The same pattern repeats at the large scale (brainstorm ↔ plan ↔ execute) and at the small scale (test ↔ code ↔ verify).
 
+![Sierpinski triangle zoom — the same pattern repeats at every scale (image: Mariko GODA, CC BY-SA 3.0)](./sierpinski-zoom.gif)
+
 This blog was built exactly that way.
 
 `docs/spec-editorial-philosophy.md` codifies the site's fundamental identity, and the sub-specs all point back to it — for example, `spec-migration.md` opens with the line ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``.
@@ -51,9 +53,7 @@ Walk through six commits from the recent post-detail centering work, in chronolo
 5. `1b1ae26` fix TOC overhang math ← spec consistency
 6. `5ac4c26` align design spec wide-figure math with the SSOT ← **SSOT alignment**
 
-A whole turn of the loop is preserved in git. The `prose comfort bump` (`6731db7` → `7812dd3` → `952b81c` → `b44c224`) and `code-block copy button` (... → `0b4dd6f`) series follow the same shape.
-
-_(Writing and updating a spec for every feature is honestly tedious. But I've been bitten enough times by what happens when I skip it.)_
+As shown above, a whole turn of the cycle is preserved in git. Feature additions like `prose comfort bump` (`b44c224`) and `code-block copy button` (`0b4dd6f`) were developed through the same cycle.
 
 To wrap up: a system breaks down when complexity accumulates, and complexity accumulates when purpose drifts. So if purpose doesn't drift, a system doesn't break down so easily. Why I use superpowers is simple — it's a good expression of how I already think. The flow the tool enforces and the cycle in my head point to exactly the same place, so the cycle keeps turning even at AI speed.
 

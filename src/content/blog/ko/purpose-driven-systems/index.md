@@ -37,6 +37,8 @@ _(말로는 단순합니다. 매 작업마다 이걸 도는 게 즐겁기만 한
 
 흥미로운 건, 이 흐름이 fractal하다는 점입니다. 큰 단위(brainstorm ↔ plan ↔ execute)에서도, 작은 단위(test ↔ code ↔ verify)에서도 같은 패턴이 그대로 반복됩니다.
 
+![Sierpinski 삼각형 줌 — 같은 패턴이 어느 스케일에서도 반복됩니다 (이미지: Mariko GODA, CC BY-SA 3.0)](./sierpinski-zoom.gif)
+
 이 블로그가 정확히 그렇게 만들어졌습니다.
 
 `docs/spec-editorial-philosophy.md`가 사이트의 근본 정체성을 codify하고, sub-spec들이 이것을 바라봅니다 - `spec-migration.md` 첫머리의 ``Reference Philosophy: Follow `docs/spec-editorial-philosophy.md` ``가 그 예입니다.
@@ -50,9 +52,7 @@ post-detail 정렬 작업의 커밋 여섯 개를 시간순으로 따라가면:
 5. `1b1ae26` fix TOC overhang math ← spec 정합성
 6. `5ac4c26` align design spec wide-figure math with the SSOT ← **SSOT 정렬**
 
-한 사이클이 통째로 git에 남았습니다. `prose comfort bump`(`6731db7` → `7812dd3` → `952b81c` → `b44c224`), `code-block copy button`(... → `0b4dd6f`) 시리즈도 같은 흐름입니다.
-
-_(매 기능마다 spec을 쓰고 갱신하는 건 사실 귀찮습니다. 그런데 안 했을 때의 비용이 더 크다는 걸 여러 번 겪어서요.)_
+위처럼 한 사이클이 통째로 git에 남았습니다. `prose comfort bump`(`b44c224`), `code-block copy button`(`0b4dd6f`)와 같은 기능 추가 건도 동일한 사이클을 통해 개발되었습니다.
 
 정리하자면 이렇습니다. 시스템은 복잡성이 쌓일 때 망가지고, 복잡성은 목적이 흔들릴 때 쌓입니다. 그러니 목적이 흔들리지 않으면 시스템도 쉽게 망가지지 않습니다. 제가 superpowers를 쓰는 이유는 단순합니다. 제 사고방식의 좋은 expression이라서요. 도구가 강제하는 흐름과 제 머릿속 사이클이 정확히 같은 곳을 가리키니, 빨라진 속도 위에서도 사이클이 그대로 굴러갑니다.
 
