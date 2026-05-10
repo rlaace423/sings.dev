@@ -16,7 +16,7 @@ The immediate driver is two diagrams in [src/content/blog/ko/purpose-driven-syst
 - **Markdown convention**: standard fenced ` ```mermaid ` block. No new admonition syntax.
 - **Caption**: optional. Authors who want a caption add a separate italic line below the diagram (consistent with how `_(...)_` 곁다리 already work). The figure-caption auto-promotion that `remarkPostFigure` does for `<img>` does not apply to mermaid blocks; this is intentional — the diagram's own labels usually speak for themselves, and forcing every diagram into a captioned figure adds visual chrome the post often does not need.
 - **Build dependency**: `playwright` package + a `postinstall` hook in `package.json` that runs `playwright install chromium` so both local dev and CI/CD pull the headless Chromium binary automatically on first install. No `--with-deps` flag (which requires sudo apt-get) — system fonts and libs are assumed to come from the build host's base image.
-- **Manual-toggle compatibility**: the site uses `<html class="dark">` toggling via [src/layouts/Layout.astro](src/layouts/Layout.astro), not `prefers-color-scheme` directly. A short CSS block in [src/styles/global.css](src/styles/global.css) overrides the `<picture>` source-selection behavior so manual toggles flip the diagram source alongside the rest of the page.
+- **Manual-toggle compatibility**: the site uses `<html class="dark">` toggling via [src/layouts/Layout.astro](src/layouts/Layout.astro), not `prefers-color-scheme` directly. A small JS hook added to the existing theme-toggle script in `Layout.astro` overrides each `<picture>` element's `<source media>` and clone-replaces the picture to force re-evaluation, so manual toggles flip the diagram alongside the rest of the page. CSS alone cannot override `<picture>` source selection — that is a browser-side mechanism — so a JS line is unavoidable.
 
 ## Why
 
@@ -25,7 +25,7 @@ The immediate driver is two diagrams in [src/content/blog/ko/purpose-driven-syst
 - **Custom theme over mermaid built-ins**: the built-in `default` and `dark` themes use a generic blue palette that clashes with the dawn (`#f5f3ee` / `#414868`) and night (`#24283b` / `#c0caf5`) palette already established for the rest of the site. Custom `themeVariables` is the cheapest way to make the diagrams feel native — one config object, no SVG post-processing.
 - **Caption optional, not auto-promoted**: most diagrams will be a flowchart whose node labels already tell the reader what each step is. Forcing a `<figcaption>` would add a redundant text line below most of them. Authors who genuinely want a caption can add an italic 곁다리 line in the same prose pattern they already use.
 - **`postinstall` over a manual build-command override**: keeping the Chromium install in `package.json` means anyone running `npm install` (locally, CI, Cloudflare Pages) gets the dependency automatically. A `wrangler.toml`-level build-command override would only fix Cloudflare and would silently break local dev for new contributors.
-- **Manual-toggle CSS over rendering both SVGs and JS-toggling**: only one SVG is rendered to the DOM for any given color scheme (the `<picture>` element decides). The CSS override changes which `<source>` the browser picks — no JavaScript, no flicker on toggle, no double-payload.
+- **JS hook for manual toggle, not double-render**: rendering both light + dark SVGs to the DOM and CSS-toggling visibility would double the payload. A small JS hook in the existing theme-toggle script changes each `<source>`'s `media` attribute and clone-replaces the picture to force re-evaluation. Same-page mechanism, no double-payload, no flicker on toggle (the existing 250ms `.theme-transition` fade absorbs it).
 
 ## Architecture
 
@@ -93,30 +93,28 @@ The actual config-shape may need a small adjustment after reading the latest `re
 
 The implementation step in the plan will pull these straight from the `@theme` block at [src/styles/global.css:24](src/styles/global.css:24) so a future palette tweak only edits one place.
 
-### Manual-toggle CSS
+### Manual-toggle JS
 
-[src/styles/global.css](src/styles/global.css) gets a small block (next to the existing Shiki dual-theme override) that forces the `<picture>` to honor the `<html class="dark">` toggle:
+[src/layouts/Layout.astro](src/layouts/Layout.astro)'s existing theme-toggle script gets a small helper that updates each `<picture>`'s dark-source media attribute and clone-replaces the picture to force re-evaluation against the new media. The helper runs inside the same handler that toggles the `.dark` class.
 
-```css
-/*
- * rehype-mermaid emits <picture><source media="(prefers-color-scheme: dark)">
- * <img></picture>. Because the site uses a manual `<html class="dark">` toggle
- * (not prefers-color-scheme media queries) for theme switching, override the
- * picture source-selection so the toggle flips the diagram alongside the rest
- * of the page. Same vocabulary as the existing Shiki dual-theme override.
- */
-html:not(.dark) figure picture source[media*="prefers-color-scheme: dark"] {
-  display: none;
-}
-html.dark figure picture > img {
-  /* Browser already chose the dark source via media query when OS prefers dark.
-     For manual toggle from a light-OS, force the dark source by hiding the
-     fallback img and revealing the dark <source>'s srcset. */
-  visibility: visible; /* placeholder — actual mechanism verified in plan */
-}
+```js
+const setMermaidPictureTheme = (isDark) => {
+  document.querySelectorAll('figure picture').forEach((picture) => {
+    picture.querySelectorAll('source').forEach((source) => {
+      if (!source.dataset.originalMedia) {
+        source.dataset.originalMedia = source.media;
+      }
+      if (source.dataset.originalMedia.includes('dark')) {
+        source.media = isDark ? 'all' : source.dataset.originalMedia;
+      }
+    });
+    const clone = picture.cloneNode(true);
+    picture.replaceWith(clone);
+  });
+};
 ```
 
-The exact CSS will be finalized once the plugin's HTML output is observed in a first build (the rehype-mermaid `<picture>` markup may differ slightly from this sketch). The shape — manual-toggle CSS, no JS — is fixed.
+The existing 250ms `.theme-transition` fade absorbs any visual flicker from clone-replace.
 
 ### Build environment
 
@@ -207,7 +205,7 @@ EN labels: `목적 정의 → define purpose`, `개발 → develop`, `기능 추
 - All architecture decisions above.
 - New file `src/utils/mermaidTheme.ts` with the two `themeVariables` objects.
 - `astro.config.ts` modification to add `rehype-mermaid` to `rehypePlugins`.
-- New CSS block in `src/styles/global.css` for manual-toggle source selection.
+- JS hook added to the existing theme-toggle script in `src/layouts/Layout.astro` for manual-toggle picture re-evaluation.
 - `package.json` additions: `playwright`, `rehype-mermaid`, `postinstall` hook.
 - New spec file at `docs/spec-mermaid-diagrams.md` (this design's reference manual, distilled from this design doc).
 - One-line addition to `docs/spec-post-detail.md` linking to the new sub-spec.
