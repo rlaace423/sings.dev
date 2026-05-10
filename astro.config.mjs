@@ -30,10 +30,19 @@ export default defineConfig({
         rehypeMermaid,
         {
           strategy: "img-svg",
-          dark: { theme: "base", themeVariables: mermaidThemeDark },
+          // `flowchart.padding` adds inset to each node box so site fonts
+          // (Pretendard) — which are slightly wider than the build-time
+          // Chromium fallback (Helvetica) used to measure text width —
+          // don't overflow. Default is 8; 14 absorbs the typical mismatch.
+          dark: {
+            theme: "base",
+            themeVariables: mermaidThemeDark,
+            flowchart: { padding: 14 },
+          },
           mermaidConfig: {
             theme: "base",
             themeVariables: mermaidThemeLight,
+            flowchart: { padding: 14 },
           },
         },
       ],
