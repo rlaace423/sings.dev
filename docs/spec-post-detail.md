@@ -114,6 +114,7 @@
   - The authoring-to-HTML transformation happens in `src/utils/remarkPostFigure.ts`, wired in through `astro.config.mjs`'s `markdown.remarkPlugins`.
   - The visual rules live in `src/styles/global.css` as `.prose figure`, `.prose figure img`, `.prose figcaption`, and `.prose figure[data-width="wide"]`.
   - Post ID normalization for folder-form posts happens in `stripLocaleFromId` (`src/utils/blog.ts`), which strips the trailing `/index` segment so URLs stay the same as the flat-file layout.
+- **Mermaid diagrams**: see `docs/spec-mermaid-diagrams.md`.
 
 ## Image Lightbox
 
