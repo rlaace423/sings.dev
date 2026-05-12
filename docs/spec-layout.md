@@ -32,7 +32,7 @@
   - Apply a smart sticky header treatment:
     - The header is `sticky top-0 z-40`.
     - Use a semi-transparent dawn-toned background with `backdrop-blur`.
-    - Let the header background and bottom border run full-bleed across the viewport, while keeping the logo, navigation, and controls aligned to the centered inner container.
+    - Let the header background and bottom border run full-bleed across the viewport, while keeping the brand, navigation, and controls aligned to the centered inner container.
     - On desktop (`md` and up), keep the header always visible.
     - On mobile, hide the header while scrolling down and reveal it again while scrolling up.
 - **Footer**:
