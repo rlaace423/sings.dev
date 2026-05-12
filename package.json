@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.2.0",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -16,15 +16,15 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@tailwindcss/vite": "^4.2.2",
-    "astro": "^6.1.5",
-    "tailwindcss": "^4.2.2"
+    "@tailwindcss/vite": "4.2.2",
+    "astro": "^6.3.1",
+    "tailwindcss": "4.2.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
     "pagefind": "^1.5.2",
-    "playwright": "^1.49.0",
+    "playwright": "^1.60.0",
     "rehype-mermaid": "^3.0.0",
-    "wrangler": "^4.81.1"
+    "wrangler": "^4.90.1"
   }
 }

@@ -12,10 +12,10 @@ This decision also retires the previous spec's incorrect assumption that "system
 
 ## Decision
 
-- **Runner**: `ubuntu-latest` on GitHub Actions — has Chromium's system dependencies, Node 22, npm, and is sized for this build.
+- **Runner**: `ubuntu-latest` on GitHub Actions — has Chromium's system dependencies, Node 24, npm, and is sized for this build.
 - **Trigger**: `push` to `main` only. PR builds deferred (no secret exposure surface, no immediate PR-only verification need).
 - **Workflow file**: `.github/workflows/deploy.yml`.
-- **Steps**: checkout → setup-node (Node 22, npm cache) → cache Playwright Chromium → `npm ci` (postinstall handles Chromium) → `npm run build` → `npx wrangler deploy`.
+- **Steps**: checkout → setup-node (Node 24, npm cache) → cache Playwright Chromium → install `fonts-noto-cjk` (Korean glyph metrics for mermaid build) → `npm ci` (postinstall handles Chromium) → `npm run build` → `npx wrangler deploy`.
 - **Secrets**: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — both required, because `wrangler.jsonc` does not pin `account_id`.
 - **Concurrency**: `group: deploy-${{ github.ref }}`, `cancel-in-progress: false` — serialize back-to-back pushes, never kill an in-flight deploy.
 - **Permissions**: `contents: read` — minimal; the job only checks out source and pushes to Cloudflare.
@@ -57,16 +57,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - name: Cache Playwright Chromium
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+      # CJK glyphs for rehype-mermaid text-width measurement at build time;
+      # see Fonts section in docs/spec-mermaid-diagrams.md.
+      - name: Install CJK fonts for mermaid build
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
       - run: npm ci
       - run: npm run build
       - run: npx wrangler deploy

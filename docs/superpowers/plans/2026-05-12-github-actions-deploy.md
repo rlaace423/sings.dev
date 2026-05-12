@@ -6,7 +6,7 @@
 
 **Architecture:** A single workflow `.github/workflows/deploy.yml` runs on push to `main`, builds on ubuntu-latest (which ships with the Chromium system libraries CF's image lacks), and deploys via `npx wrangler deploy`. Three existing spec docs are updated to reflect the change. Secret provisioning and disabling the old CF auto-build are manual one-time author follow-ups documented in the spec.
 
-**Tech Stack:** GitHub Actions (`actions/checkout@v4`, `actions/setup-node@v4`, `actions/cache@v4`), Node 22, Wrangler 4, Playwright Chromium, `rehype-mermaid`.
+**Tech Stack:** GitHub Actions (`actions/checkout@v6`, `actions/setup-node@v6`, `actions/cache@v5`), Node 24, Wrangler 4, Playwright Chromium, `rehype-mermaid`.
 
 **Spec:** [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](../specs/2026-05-12-github-actions-deploy-design.md)
 
@@ -51,13 +51,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - name: Cache Playwright Chromium
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
