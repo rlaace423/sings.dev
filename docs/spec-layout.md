@@ -23,11 +23,12 @@
   - Every page advertises both RSS feeds via `<link rel="alternate" type="application/rss+xml">` so feed readers can discover them from anywhere on the site.
   - The current locale's feed is listed first so `auto-discover` clients pick the matching language by default. The KO feed is at `/rss.xml`, the EN feed at `/en/rss.xml`. Both feeds use `@astrojs/rss`, filter via `matchesLocale` + `isVisiblePost` (drafts excluded from the production build), and use the series-aware `getDisplayTitle` so series posts read as `Title (i/n): Subtitle` in the feed too.
 - **Header**:
-  - Left: a single link combining the `SiteLogo` microphone SVG mark and the `sings.dev` text, pointing at the locale-aware home page. See `docs/spec-site-identity.md`.
+  - Left: a single link rendering the `SiteBrand` wordmark, pointing at the locale-aware home page. `SiteBrand` carries the entire brand (the `$ ` prompt, `sings.dev` wordmark, and blinking cursor); no separate logo mark or extra text sits in the anchor. See `docs/spec-site-identity.md`.
   - Right: minimalist navigation links for `Posts` and `About`.
   - Controls: a search button sits to the left of the locale switcher, and the locale switcher sits to the left of the theme toggle.
   - Korean UI labels are `포스트`, `소개`; English UI labels are `Posts`, `About`.
-  - Every nav link uses `whitespace-nowrap` so Korean labels cannot split mid-word when the header compresses on narrow viewports. Nav and control gaps use `gap-4 sm:gap-5` and `gap-2 sm:gap-3` respectively to keep the logo, nav, and controls on a single row down to iPhone-SE width.
+  - Every nav link uses `whitespace-nowrap` so Korean labels cannot split mid-word when the header compresses on narrow viewports. Nav and control gaps use `gap-4 sm:gap-5` and `gap-2 sm:gap-3` respectively to keep the brand, nav, and controls on a single row down to iPhone-SE width.
+  - On sub-sm viewports, each primary-nav `<li>` carries `hidden sm:inline-block` so the `포스트` / `소개` text labels hide and the brand keeps its room. The right-side control cluster (search, locale switcher, theme toggle) stays on every viewport. Mobile readers reach `/posts` and `/about` via the home page's `$ whoami?` link and `모든 글` link.
   - Apply a smart sticky header treatment:
     - The header is `sticky top-0 z-40`.
     - Use a semi-transparent dawn-toned background with `backdrop-blur`.
@@ -35,4 +36,4 @@
     - On desktop (`md` and up), keep the header always visible.
     - On mobile, hide the header while scrolling down and reveal it again while scrolling up.
 - **Footer**:
-  - Keep a simple single-line signature at the bottom reading `© <year> sings.dev — Singing Developer`. No additional links, icons, or rows.
+  - Keep a simple single-line signature at the bottom reading `© <year> sings.dev`. No additional links, icons, or rows. The author nickname does not appear here.

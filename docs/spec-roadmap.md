@@ -16,7 +16,7 @@
 - The remaining work should continue to deepen the blog's usability without making it feel heavier, louder, or more product-like.
 - `/about` now carries structured identity metadata (photo, summary, social links, experience) while the rest of the site stays text-first.
 - The home page now leads with a motto-led `HomeIdentity` card (tagline `h1` + name + short `homeSummary` + icon-only socials), rendered by `src/components/HomeIdentity.astro` and sourced from the existing `pages` collection record. The full identity card (photo, longer summary, education, experience) stays on `/about` only. Category browsing lives on `/posts` and on category pages.
-- Site-shell identity pass is in place: `SiteLogo` mark in the header, identity-forward hero eyebrow on the home pages, and a `Singing Developer` signature in the footer.
+- Site-shell identity pass is in place: `SiteBrand` terminal-prompt wordmark in the header, motto-led `HomeIdentity` card on the home, and a minimal `© <year> sings.dev` footer signature.
 - Post bodies now support captioned figures: standalone markdown images are promoted to `<figure>` with the alt text reused as the caption, a `#wide` url fragment bleeds the figure outside the prose column on desktop, and every post now lives as a folder so images can co-locate with their post. See `docs/spec-post-detail.md` for the full figure rules.
 - Draft mode is in place: posts with `draft: true` render under `astro dev` and disappear from every public surface under `astro build` (see `docs/spec-drafts.md`).
 - Reading-comfort polish is in place: the light body bg is `dawn-100` (warm, paper-like), the dark body bg is a Tokyo Night Storm-inspired custom `night-800`, and the primary sans typeface is self-hosted Pretendard Std Variable (see `docs/spec-theme-typography.md`).
@@ -63,7 +63,7 @@
   - Author presence around posts
 - **Current Status**:
   - `/about` has landed as a structured identity + job-search surface with photo, summary, socials, and experience (see `docs/spec-about.md`).
-  - The header now carries the `SiteLogo` microphone mark next to the `sings.dev` text, and the footer carries a `Singing Developer` signature (see `docs/spec-site-identity.md`).
+  - The header now carries the `SiteBrand` terminal-prompt wordmark — `$ sings.dev` with a blinking block cursor in amber — and the footer carries a minimal `© <year> sings.dev` signature (see `docs/spec-site-identity.md`).
   - Home identity is finalised at: motto `h1` (from `identity.tagline`) + name (from `identity.name`) + short intro (from `identity.homeSummary`) + icon-only socials, all rendered by `src/components/HomeIdentity.astro`. The home no longer shows the photo or any resume-flavored content; those stay scoped to `/about`.
 - **Direction**:
   - Strengthen personality and authorship without drifting into branding or self-promotion.
