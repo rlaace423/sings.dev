@@ -43,6 +43,8 @@ _(Diagram: ...)_
 
 **Where the build runs:** GitHub Actions, `ubuntu-latest`. See [docs/spec-deploy.md](docs/spec-deploy.md) for the deploy pipeline overview. The runner ships with Chromium's system dependencies (`libatk-1.0.so.0`, `libnss3`, `libgbm1`, etc.) preinstalled — this is why the build was moved off Cloudflare's build image, which lacks those libraries and does not expose `sudo apt-get`. Full rationale: [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md).
 
+**Fonts:** `fontFamily` in [src/utils/mermaidTheme.ts](src/utils/mermaidTheme.ts) is pinned to `arial, sans-serif` so the build-time text-width measurement matches what view-time browsers render. `ubuntu-latest` already ships `fonts-liberation` (Arial-metric-compatible Latin), but not CJK fonts — the workflow installs `fonts-noto-cjk` before the build so Playwright Chromium can measure Korean glyph widths. Without this step, the build-time Korean fallback differs from what macOS / Windows browsers use at view time (Apple SD Gothic Neo, Malgun Gothic, etc.) and the last char of long Korean labels clips on the rendered SVG.
+
 **Caching:** the workflow caches `~/.cache/ms-playwright/` keyed on `package-lock.json`. The cache invalidates automatically when the `playwright` package version changes, so the npm package and the cached binary never drift apart.
 
 **Local development:** any modern macOS or Linux dev environment has the needed system libs. `npm install` runs the postinstall hook and Chromium lands in the Playwright cache; subsequent builds reuse it. After `npm update` (or any change to Playwright's pinned version), re-run `npm install` or `npx playwright install chromium` to re-sync.
