@@ -25,17 +25,24 @@ test("header keeps its controls inside an inner centered container", async () =>
 	);
 });
 
-test("header uses the SiteLogo mark next to the sings.dev text and keeps the Korean-safe nav guard plus mobile gap tightening", async () => {
+test("header uses the SiteBrand wordmark, hides primary nav text on sub-sm, and keeps the Korean-safe nav guard plus mobile gap tightening", async () => {
 	const header = await readFile(new URL("../src/components/Header.astro", import.meta.url), "utf8");
 
-	assert.match(header, /import SiteLogo from "\.\/SiteLogo\.astro";/);
-	assert.match(header, /<SiteLogo \/>/);
-	assert.match(header, /<span[^>]*>sings\.dev<\/span>/);
-	const logoOpens = header.indexOf("<SiteLogo");
-	const logoTextOpens = header.indexOf("<span>sings.dev</span>");
-	assert.ok(
-		logoOpens >= 0 && logoTextOpens > logoOpens,
-		"SiteLogo should render before the sings.dev text span",
+	assert.match(header, /import SiteBrand from "\.\/SiteBrand\.astro";/);
+	assert.match(header, /<SiteBrand \/>/);
+
+	assert.doesNotMatch(header, /import SiteLogo from/, "SiteLogo import must be gone");
+	assert.doesNotMatch(header, /<SiteLogo /, "<SiteLogo /> must be gone");
+	assert.doesNotMatch(
+		header,
+		/<span[^>]*>sings\.dev<\/span>/,
+		"the inline sings.dev <span> must be gone — the brand component owns the wordmark now",
+	);
+
+	assert.match(
+		header,
+		/navItems\.map[\s\S]*<li class="hidden sm:inline-block">/,
+		"each primary-nav <li> must hide on sub-sm via hidden sm:inline-block",
 	);
 
 	assert.match(header, /gap-2 sm:gap-3/);

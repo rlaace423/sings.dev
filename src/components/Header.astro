@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import SiteLogo from "./SiteLogo.astro";
+import SiteBrand from "./SiteBrand.astro";
 import {
 	defaultLocale,
 	type Locale,
@@ -42,8 +42,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 			href={homeHref}
 			class="inline-flex items-center gap-2 text-base font-semibold tracking-tight text-dawn-800 transition-colors hover:text-dawn-700 dark:text-night-50 dark:hover:text-night-200"
 		>
-			<SiteLogo />
-			<span>sings.dev</span>
+			<SiteBrand />
 		</a>
 
 		<div class="flex items-center gap-2 sm:gap-3">
@@ -51,7 +50,7 @@ const switchHref = getRelativeLocaleUrl(targetLocale, normalizedPath);
 				<ul class="flex items-center gap-4 sm:gap-5 text-sm text-dawn-700 dark:text-night-200">
 					{
 						navItems.map((item) => (
-							<li>
+							<li class="hidden sm:inline-block">
 								<a
 									href={item.href}
 									class="whitespace-nowrap transition-colors hover:text-dawn-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dawn-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dawn-100 dark:hover:text-night-50 dark:focus-visible:ring-night-500 dark:focus-visible:ring-offset-night-800"
