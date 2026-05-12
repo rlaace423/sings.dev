@@ -16,6 +16,8 @@ The immediate driver is two diagrams in [src/content/blog/ko/purpose-driven-syst
 - **Markdown convention**: standard fenced ` ```mermaid ` block. No new admonition syntax.
 - **Caption**: optional. Authors who want a caption add a separate italic line below the diagram (consistent with how `_(...)_` 곁다리 already work). The figure-caption auto-promotion that `remarkPostFigure` does for `<img>` does not apply to mermaid blocks; this is intentional — the diagram's own labels usually speak for themselves, and forcing every diagram into a captioned figure adds visual chrome the post often does not need.
 - **Build dependency**: `playwright` package + a `postinstall` hook in `package.json` that runs `playwright install chromium` so both local dev and CI/CD pull the headless Chromium binary automatically on first install. No `--with-deps` flag (which requires sudo apt-get) — system fonts and libs are assumed to come from the build host's base image.
+
+  > **Update 2026-05-12:** the "system fonts and libs from the base image" assumption held for local dev but did NOT hold for Cloudflare's build environment, which lacks GUI libraries like `libatk-1.0.so.0` and does not expose `sudo apt-get`. The build was moved to GitHub Actions `ubuntu-latest` (which has the deps preinstalled). See [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md).
 - **Manual-toggle compatibility**: the site uses `<html class="dark">` toggling via [src/layouts/Layout.astro](src/layouts/Layout.astro), not `prefers-color-scheme` directly. A small JS hook added to the existing theme-toggle script in `Layout.astro` overrides each `<picture>` element's `<source media>` and clone-replaces the picture to force re-evaluation, so manual toggles flip the diagram alongside the rest of the page. CSS alone cannot override `<picture>` source selection — that is a browser-side mechanism — so a JS line is unavoidable.
 
 ## Why
@@ -220,18 +222,20 @@ EN labels: `목적 정의 → define purpose`, `개발 → develop`, `기능 추
 - Multi-locale label-switching automation. Each locale's mermaid block is hand-translated, same as prose.
 - Cloudflare Pages build-environment fine-tuning. The default expectation is `postinstall` works; if the first deploy fails because Chromium misses a system library, the author handles it as a follow-up — see "Author follow-up" below.
 
-## Author follow-up (Cloudflare Pages)
+  > **Update 2026-05-12:** this prediction came true — Chromium failed to launch on CF for missing system libs. The follow-up resolution turned out to be moving the build off CF entirely rather than fine-tuning CF. See [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md).
 
-After the implementation is committed and pushed, the next Cloudflare Pages build will:
+## Author follow-up (resolved 2026-05-12)
 
-1. Run `npm install`, which triggers `postinstall: playwright install chromium`. Chromium binary downloads (~150MB) into the build environment's cache.
-2. Run `npm run build`, which invokes Astro and `rehype-mermaid`. rehype-mermaid spawns headless Chromium to render each mermaid block as SVG.
-3. **Possible failure modes** to watch:
-   - **Chromium fails to launch**: missing system libraries (`libnss3`, `libgbm1`, `libasound2`, etc.) on the Cloudflare Pages base image. Fix: add those packages via the build configuration, or switch strategy to commit prerendered SVGs.
-   - **Build time spike**: first build with Chromium download adds ~30-60s. Subsequent builds reuse the cache.
-   - **Korean glyphs render as tofu**: missing CJK fonts in the build image. Fix: install `fonts-noto-cjk` via the build-time apt step, or bundle a webfont and reference it in the mermaid `themeVariables.fontFamily`.
+The original prediction here was that the first CF build might fail and the author would patch CF's image. What actually happened:
 
-The author monitors the first deploy via the Cloudflare Pages dashboard and adjusts if needed. None of these failure modes are introduced by this design — they are pre-existing constraints of running Playwright in a CF Pages container.
+1. The first CF deploy ran `npm install` + `npm run build`. `postinstall` downloaded Chromium successfully (~150MB).
+2. `rehype-mermaid` then tried to spawn headless Chromium and got `libatk-1.0.so.0: cannot open shared object file`. CF's build base image has no GUI library stack.
+3. CF does not expose `sudo apt-get`, so `playwright install --with-deps` and any apt-based workaround was unavailable.
+4. **Resolution:** the build was moved off Cloudflare entirely onto GitHub Actions `ubuntu-latest`, which has the GUI deps preinstalled. Cloudflare now hosts only the prebuilt `dist/` via `wrangler deploy`. The git-connected automatic CF build was disabled by the author.
+
+For the design and rationale of the new pipeline see [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md). For day-to-day deploy documentation see [docs/spec-deploy.md](docs/spec-deploy.md).
+
+Korean glyph rendering and Chromium download time were non-issues in the new environment — preserving the original failure-modes list here as a record of the prediction.
 
 ## Alternatives Considered
 

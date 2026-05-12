@@ -39,11 +39,13 @@ _(Diagram: ...)_
 
 ## Build environment
 
-`rehype-mermaid` requires Playwright + Chromium. `package.json`'s `postinstall` hook auto-downloads Chromium on `npm install`. The first build after install or in a clean CI cache adds 30–60s for the binary download; subsequent builds reuse the cache.
+`rehype-mermaid` requires Playwright + Chromium at build time. `package.json`'s `postinstall` hook downloads the matching Chromium binary on `npm install` / `npm ci`.
 
-**CI/CD note:** the postinstall strategy depends on lifecycle scripts running. If a hardened CI environment uses `npm ci --ignore-scripts` (or the platform suppresses scripts by default), Chromium will not be downloaded and the `rehype-mermaid` render step will fail at build time. Fix in that case: append an explicit `npx playwright install chromium` step before the build runs.
+**Where the build runs:** GitHub Actions, `ubuntu-latest`. See [docs/spec-deploy.md](docs/spec-deploy.md) for the deploy pipeline overview. The runner ships with Chromium's system dependencies (`libatk-1.0.so.0`, `libnss3`, `libgbm1`, etc.) preinstalled — this is why the build was moved off Cloudflare's build image, which lacks those libraries and does not expose `sudo apt-get`. Full rationale: [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md).
 
-**Version drift:** Playwright pins its Chromium revision to the package version. After `npm update` (or any time Playwright's package version changes), run `npx playwright install chromium` to re-sync the cached binary.
+**Caching:** the workflow caches `~/.cache/ms-playwright/` keyed on `package-lock.json`. The cache invalidates automatically when the `playwright` package version changes, so the npm package and the cached binary never drift apart.
+
+**Local development:** any modern macOS or Linux dev environment has the needed system libs. `npm install` runs the postinstall hook and Chromium lands in the Playwright cache; subsequent builds reuse it. After `npm update` (or any change to Playwright's pinned version), re-run `npm install` or `npx playwright install chromium` to re-sync.
 
 ## Out of scope
 
