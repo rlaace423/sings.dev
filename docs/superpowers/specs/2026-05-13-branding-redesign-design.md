@@ -35,18 +35,18 @@ Structure (semantic, not exact class list):
 
 ```astro
 <span class="brand inline-flex items-baseline whitespace-nowrap font-mono">
-  <span class="brand-prompt mr-2 text-amber-700 dark:text-amber-300">$</span>
+  <span class="brand-prompt mr-2 text-amber-700 dark:text-[#e0af68]">$</span>
   <span class="brand-name">sings</span>
-  <span class="brand-tld text-amber-700 dark:text-amber-300">.dev</span>
-  <span class="brand-cursor ml-1 text-amber-700 dark:text-amber-300" aria-hidden="true"></span>
+  <span class="brand-tld text-amber-700 dark:text-[#e0af68]">.dev</span>
+  <span class="brand-cursor ml-1 text-amber-700 dark:text-[#e0af68]" aria-hidden="true"></span>
 </span>
 ```
 
-- **Wrapper**: `inline-flex` so the cursor block aligns to the wordmark's baseline. `whitespace-nowrap` prevents the cursor from wrapping to a second line on narrow viewports.
+- **Wrapper**: `inline-flex items-baseline` so the sibling spans don't render whitespace between them and the text spans share a common baseline. `whitespace-nowrap` prevents the cursor from wrapping to a second line on narrow viewports. (Flex containers ignore `vertical-align` on items, which is why the cursor's downward shift below baseline is handled by `transform: translateY(...)` in the cursor CSS rather than by `vertical-align`.)
 - **Font**: `font-mono` switches the wordmark from Pretendard to the existing project mono stack (the same `font-mono` used by the home page's `$ whoami?` link).
 - **Size / weight**: inherited from the parent `<a>`'s existing `text-base font-semibold tracking-tight`. The wrapper does not redeclare them. The brand stays one size on every viewport; on sub-sm widths it fits comfortably once the nav text labels hide (verified against a 375px mock).
 - **`sings`**: inherits text color from the parent `<a>` (the existing `text-dawn-800 dark:text-night-50`). No accent.
-- **`$`, `.dev`, cursor**: `text-amber-700 dark:text-amber-300` — the only accent on the page.
+- **`$`, `.dev`, cursor**: `text-amber-700 dark:text-[#e0af68]` — the only accent on the page. Light mode uses Tailwind's `amber-700`; dark mode uses a custom muted gold (`#e0af68`, Tokyo Night-style) as a Tailwind arbitrary value because Tailwind's `amber-300` reads as "highlighter yellow" against the dark navy background and contradicts the site's restrained editorial tone.
 - **Spacing**: `mr-2` after `$`, `ml-1` before the cursor. Both intentional — `$` and the command read as separate tokens; the cursor reads as glued to `.dev`.
 
 ## Cursor
@@ -59,9 +59,9 @@ CSS (lives next to `SiteBrand.astro` in a `<style>` block):
 .brand-cursor {
   display: inline-block;
   width: 0.55em;
-  height: 1.05em;
+  height: 1em;
   background: currentColor;
-  vertical-align: -0.1em;
+  transform: translateY(0.2em);
   animation: brand-cursor-blink 1s step-end infinite;
 }
 
@@ -76,21 +76,22 @@ CSS (lives next to `SiteBrand.astro` in a `<style>` block):
 
 - `step-end` gives a hard on/off blink (no fade) — the terminal feel.
 - `1s` cycle = 0.5s on, 0.5s off.
-- `currentColor` so the cursor inherits the amber accent set on the parent span (and falls back correctly if the accent token ever changes).
+- `height: 1em` + `transform: translateY(0.2em)` makes the cursor span from roughly the ascender top down to the descender depth, matching what a real terminal cursor looks like behind characters like `g` / `y`. (Transform is used instead of `vertical-align` because the wrapper is a flex container, which ignores `vertical-align` on items.)
+- `currentColor` so the cursor inherits the brand accent set on the parent span (and follows automatically if the accent token ever changes).
 - `prefers-reduced-motion: reduce` pins the cursor visible. The design still reads as a terminal because the cursor character is there; only the blink stops.
 
 The cursor is `aria-hidden="true"` because the visible blink doesn't carry semantic content — assistive tech reads `$ sings dot dev` already.
 
 ## Accent Color
 
-The accent token pair is **`text-amber-700`** in light mode and **`text-amber-300`** in dark mode (Tailwind defaults: `#a16207` / `#fcd34d`). Reasoning:
+The accent pair is **`text-amber-700`** in light mode (`#a16207`, Tailwind's `amber-700`) and **`text-[#e0af68]`** in dark mode (a custom muted gold inspired by Tokyo Night). Reasoning:
 
-- The site's `dawn-*` palette is warm-cream. Amber is in the same hue family — the accent reads as "part of the same palette, brighter" rather than as a foreign hue.
-- Earlier brainstorming used violet placeholders; violet is cool and clashes with the warm dawn surface. Discard.
-- Emerald terminal-green was considered. It would tilt the brand toward "90s CRT" nostalgia and would be the only cool hue in the warm palette. Discard.
-- A subtle no-hue accent (`#cbd5e1`-ish) was considered. It loses the prompt's punctuation effect — `$` and `.dev` no longer read as the *highlighted* tokens. Discard.
+- The site's `dawn-*` palette is warm-cream. The light-mode accent stays in the same warm hue family — `amber-700` reads as "part of the same palette, deeper" rather than as a foreign hue.
+- The dark-mode accent went through two rounds. First draft was Tailwind's `amber-300` (`#fcd34d`), but that reads as "highlighter yellow" against the dark navy background and pulls too much attention for an editorial blog. The replacement (`#e0af68`) is the same warm-gold family but dimmer and slightly desaturated — it reads as "a quietly chosen point of warmth" rather than as a screaming accent.
+- The dark-mode value uses Tailwind's arbitrary-value syntax (`dark:text-[#e0af68]`) rather than a theme token because this is the only place in the codebase that needs it; promoting it to a theme color would imply broader reuse that the brand-only rule explicitly forbids.
+- Earlier brainstorming considered violet (cool, clashes with warm dawn), emerald terminal-green (tilts toward "90s CRT" nostalgia, only cool hue in warm palette), and a subtle no-hue grey (loses the punctuation effect on `$` and `.dev`). All discarded in favour of the warm gold pair.
 
-Amber is not introduced as a sitewide accent. It appears only on the brand. No other surface (links, decorations, buttons) gains amber.
+The accent is brand-only. No other surface (links, decorations, buttons) gains `amber-*` or `#e0af68`.
 
 ## Mobile Adaptation
 
@@ -161,7 +162,7 @@ Before merge, verify nothing else still references the dropped pieces:
 ## Accessibility
 
 - The accessible name of the home-link anchor is the visible brand text. The cursor span carries `aria-hidden="true"` so screen readers do not announce an extra unknown character.
-- The amber tokens (`amber-700` on `#f5f5f4`-ish cream; `amber-300` on `#0f172a`-ish navy) clear WCAG AA contrast for normal text (4.5:1). Verify with a contrast checker against the actual dawn / night background tokens at implementation time; if a token misses, shift one step (e.g. `amber-800` / `amber-200`) rather than introduce a new hue.
+- The accent pair (`amber-700` `#a16207` on `#f5f5f4`-ish cream; `#e0af68` on `#0f172a`-ish navy) should clear WCAG AA contrast for normal text (4.5:1). Verify with a contrast checker against the actual dawn / night background tokens at implementation time; if a value misses, nudge along the same warm-gold hue (e.g. `amber-800` for light, or shift `#e0af68` toward `#d4a05d`) rather than introduce a new hue.
 - Keyboard focus on the home-link anchor reuses the existing `focus-visible:ring-dawn-300 dark:focus-visible:ring-night-500` pattern. No new focus ring on `SiteBrand` itself — the anchor owns the focus affordance.
 - `prefers-reduced-motion` pins the cursor in the on state. The brand stays recognizable; only the blink stops.
 
@@ -190,7 +191,7 @@ This spec does not produce those assets. The implementation plan only handles th
 - `tests/site-brand.test.mjs` — **new**, component-level:
   - renders `$`, `sings`, `.dev`, and a cursor span in document order.
   - cursor span carries `aria-hidden="true"` and the `brand-cursor` class.
-  - the accent class pair `text-amber-700 dark:text-amber-300` is present on the `$`, `.dev`, and cursor spans.
+  - the accent class pair `text-amber-700 dark:text-[#e0af68]` is present on the `$`, `.dev`, and cursor spans.
   - `$` and `.dev` are inside the same wrapper as `sings`, and the wrapper carries `font-mono` plus `whitespace-nowrap`.
 
 ## Spec Documents to Update at Implementation Time

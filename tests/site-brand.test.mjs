@@ -26,12 +26,12 @@ test("SiteBrand cursor span is aria-hidden", async () => {
 	);
 });
 
-test("SiteBrand applies the amber accent on $, .dev, and the cursor", async () => {
+test("SiteBrand applies the brand accent on $, .dev, and the cursor", async () => {
 	const source = await readFile(brandUrl, "utf8");
-	const matches = source.match(/text-amber-700 dark:text-amber-300/g) ?? [];
+	const matches = source.match(/text-amber-700 dark:text-\[#e0af68\]/g) ?? [];
 	assert.ok(
 		matches.length >= 3,
-		`expected at least 3 amber-accent classes (for $, .dev, cursor); got ${matches.length}`,
+		`expected at least 3 brand-accent classes (amber-700 light / #e0af68 dark) on $, .dev, cursor; got ${matches.length}`,
 	);
 });
 

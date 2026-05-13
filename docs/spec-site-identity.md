@@ -7,9 +7,9 @@
   - The domain `sings.dev` derives from this nickname.
   - The nickname is **not** a user-visible asset on any page. The header, home, footer, and `/about` page never display it.
 - **Brand Mark**:
-  - The brand is a terminal-prompt wordmark — `$ sings.dev` followed by a blinking block cursor — rendered in `font-mono` with a Tailwind amber accent (`text-amber-700` light, `text-amber-300` dark) on `$`, `.dev`, and the cursor.
+  - The brand is a terminal-prompt wordmark — `$ sings.dev` followed by a blinking block cursor — rendered in `font-mono` with a warm-gold accent (`text-amber-700` light / `text-[#e0af68]` dark) on `$`, `.dev`, and the cursor. The dark-mode value is a custom muted gold (not Tailwind's `amber-300`) because the brighter Tailwind value reads as too punchy against the night palette.
   - Implementation lives in `src/components/SiteBrand.astro`. The component is self-contained and includes the cursor-blink CSS plus a `prefers-reduced-motion: reduce` fallback that pins the cursor visible.
-  - The amber accent is brand-only. No other surface (links, buttons, decorations) uses amber.
+  - The brand accent is brand-only. No other surface (links, buttons, decorations) uses `amber-*` or `#e0af68`.
 - **Surfaces Carrying Author Identity**:
   1. Header — `SiteBrand` rendered inside the home-link anchor. No other text in that anchor; the wordmark *is* the brand.
   2. Home page introduction — the motto-led identity block rendered by `src/components/HomeIdentity.astro`: `tagline` as the `h1` (the author motto, e.g. `도전과 성취를 즐깁니다.` / `I enjoy the climb and the summit.`), the name as a smaller `<p>`, the short `homeSummary` paragraph, and an icon-only socials row. The identity data is read from the same `pages` collection record (`ko/about`, `en/about`) that powers `/about` so the home and `/about` cannot drift. The home does not show the photo, education, or experience — those stay on `/about`. The nickname does not appear in the motto. See `docs/spec-home-theme.md`.
@@ -22,7 +22,7 @@
   - The home identity stops at socials. Photo, education, and experience stay on `/about` only — that hierarchy is what keeps the home from drifting into resume-site / personal-landing-page energy.
   - Socials on the home render as icon-only links with `aria-label`; socials on `/about` render with visible text labels. `SocialIcon.astro` is the shared SVG source for both variants.
   - The header brand stays a single line at every viewport via `whitespace-nowrap`. On sub-sm, the primary nav links (`포스트` / `소개`) hide via `hidden sm:inline-block` so the brand keeps its room; `/posts` and `/about` remain reachable through the home page's existing entries (`$ whoami?` and `모든 글`).
-  - The amber accent is brand-only. Do not extend `text-amber-*` to links, buttons, headings, or any non-brand surface.
+  - The brand accent is brand-only. Do not extend `text-amber-*` or `text-[#e0af68]` to links, buttons, headings, or any non-brand surface.
   - The cursor blinks at 1Hz with `step-end` timing and respects `prefers-reduced-motion: reduce`. Do not speed it up, fade it, or color-cycle it.
 - **What To Avoid**:
   - Reintroducing the SM58-style microphone, a condenser stand microphone, a musical-note motif, or any iconography that competes with the editorial wordmark.
