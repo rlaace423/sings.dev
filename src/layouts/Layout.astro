@@ -33,6 +33,7 @@ const resolveLocalizedValue = (value: LocalizedValue) =>
 const resolvedTitle = resolveLocalizedValue(title);
 const resolvedDescription = resolveLocalizedValue(description);
 const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
+const gaId = import.meta.env.PUBLIC_GA_ID;
 ---
 
 <!doctype html>
@@ -75,6 +76,19 @@ const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
 			)
 		}
 		<title>{resolvedTitle}</title>
+		{
+			gaId && (
+				<>
+					<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+					<script is:inline define:vars={{ gaId }}>
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', gaId);
+					</script>
+				</>
+			)
+		}
 		<script is:inline>
 			(() => {
 				const storageKey = "theme";

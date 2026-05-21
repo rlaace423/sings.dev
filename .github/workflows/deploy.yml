@@ -35,6 +35,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends fonts-noto-cjk
       - run: npm ci
       - run: npm run build
+        env:
+          PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
       - run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
