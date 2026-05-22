@@ -24,6 +24,7 @@ import {
 	categoryHref,
 	getDisplayTitle,
 	stripLocaleFromId,
+	tagHref,
 } from "./blog";
 
 type BlogPost = CollectionEntry<"blog">;
@@ -193,27 +194,111 @@ export function buildBreadcrumbList(crumbs: BreadcrumbCrumb[]) {
 	};
 }
 
-/** Convenience for building the standard post breadcrumb chain. */
+const labels = {
+	home: { ko: "홈", en: "Home" },
+	posts: { ko: "포스트", en: "Posts" },
+} as const;
+
+const postsArchivePath = (lang: Locale) =>
+	lang === "ko" ? "/posts/" : `/${lang}/posts/`;
+
+const homeCrumb = (site: URL, lang: Locale): BreadcrumbCrumb => ({
+	name: labels.home[lang],
+	url: absoluteUrl(site, homePath(lang)),
+});
+
+const postsCrumb = (site: URL, lang: Locale): BreadcrumbCrumb => ({
+	name: labels.posts[lang],
+	url: absoluteUrl(site, postsArchivePath(lang)),
+});
+
+/** Breadcrumb for an individual post: home > posts > category > title. */
 export function buildPostBreadcrumbs(
 	post: BlogPost,
 	site: URL,
 	lang: Locale,
 ): BreadcrumbCrumb[] {
 	const slug = stripLocaleFromId(post.id);
-	const postsLabel = lang === "ko" ? "포스트" : "Posts";
-	const homeLabel = lang === "ko" ? "홈" : "Home";
-	const postsPath = lang === "ko" ? "/posts/" : `/${lang}/posts/`;
 	const postPath = lang === "ko" ? `/posts/${slug}/` : `/${lang}/posts/${slug}/`;
 
 	return [
-		{ name: homeLabel, url: absoluteUrl(site, homePath(lang)) },
-		{ name: postsLabel, url: absoluteUrl(site, postsPath) },
+		homeCrumb(site, lang),
+		postsCrumb(site, lang),
 		{
 			name: post.data.category,
 			url: absoluteUrl(site, categoryHref(post.data.category, lang)),
 		},
 		{ name: getDisplayTitle(post), url: absoluteUrl(site, postPath) },
 	];
+}
+
+/** Breadcrumb for the archive index: home > posts. */
+export function buildPostsIndexBreadcrumbs(site: URL, lang: Locale): BreadcrumbCrumb[] {
+	return [homeCrumb(site, lang), postsCrumb(site, lang)];
+}
+
+/** Breadcrumb for a category page: home > posts > <category>. */
+export function buildCategoryBreadcrumbs(
+	category: string,
+	site: URL,
+	lang: Locale,
+): BreadcrumbCrumb[] {
+	return [
+		homeCrumb(site, lang),
+		postsCrumb(site, lang),
+		{ name: category, url: absoluteUrl(site, categoryHref(category, lang)) },
+	];
+}
+
+/**
+ * Breadcrumb for a tag page: home > posts > #<tag>. The site has no
+ * `/tags/` index, so the parent crumb is the posts archive instead.
+ */
+export function buildTagBreadcrumbs(
+	tag: string,
+	site: URL,
+	lang: Locale,
+): BreadcrumbCrumb[] {
+	return [
+		homeCrumb(site, lang),
+		postsCrumb(site, lang),
+		{ name: `#${tag}`, url: absoluteUrl(site, tagHref(tag, lang)) },
+	];
+}
+
+export interface CollectionPageOptions {
+	site: URL;
+	lang: Locale;
+	path: string;
+	name: string;
+	description: string;
+	/** Optional post count — emitted as `numberOfItems` for richer signal. */
+	numberOfItems?: number;
+}
+
+export function buildCollectionPage({
+	site,
+	lang,
+	path,
+	name,
+	description,
+	numberOfItems,
+}: CollectionPageOptions) {
+	const url = absoluteUrl(site, path);
+	const page: Record<string, unknown> = {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		"@id": `${url}#collection`,
+		url,
+		name,
+		description,
+		inLanguage: LANG_TAG[lang],
+		isPartOf: { "@id": websiteId(site, lang) },
+	};
+	if (typeof numberOfItems === "number") {
+		page.numberOfItems = numberOfItems;
+	}
+	return page;
 }
 
 /**

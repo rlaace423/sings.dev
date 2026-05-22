@@ -14,6 +14,11 @@ import {
 	uniqueCategories,
 	uniqueTags,
 } from "../../../utils/blog";
+import {
+	buildBreadcrumbList,
+	buildCollectionPage,
+	buildPostsIndexBreadcrumbs,
+} from "../../../utils/jsonLd";
 
 const REPRESENTATIVE_TAG_LIMIT = 3;
 
@@ -35,12 +40,28 @@ const browseCategories = categories.map((category) => ({
 	count: categoryCounts.get(category) ?? 0,
 }));
 const browseTags = getTopTagsForPosts(posts, REPRESENTATIVE_TAG_LIMIT);
+
+const pageDescription = "An archive of English posts published on sings.dev.";
+const jsonLd = Astro.site
+	? [
+			buildCollectionPage({
+				site: Astro.site,
+				lang: "en",
+				path: "/en/posts/",
+				name: "Posts",
+				description: pageDescription,
+				numberOfItems: posts.length,
+			}),
+			buildBreadcrumbList(buildPostsIndexBreadcrumbs(Astro.site, "en")),
+		]
+	: undefined;
 ---
 
 <Layout
 	title="Posts | sings.dev"
-	description="An archive of English posts published on sings.dev."
+	description={pageDescription}
 	lang="en"
+	jsonLd={jsonLd}
 >
 	<section class="space-y-4">
 		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">

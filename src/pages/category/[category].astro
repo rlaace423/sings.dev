@@ -4,6 +4,7 @@ import { getCategoryDescription } from "../../data/archiveBrowse";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
 import {
+	categoryHref,
 	getTopTagsForPosts,
 	isVisiblePost,
 	matchesLocale,
@@ -13,6 +14,11 @@ import {
 	tagHref,
 	uniqueCategories,
 } from "../../utils/blog";
+import {
+	buildBreadcrumbList,
+	buildCategoryBreadcrumbs,
+	buildCollectionPage,
+} from "../../utils/jsonLd";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
@@ -36,14 +42,29 @@ const relatedTags = getTopTagsForPosts(posts, 8).filter((tag) =>
 		normalizeTaxonomyTags(post.data.tags ?? []).includes(tag),
 	).length >= 2,
 ).slice(0, 3);
+
+const pageDescription =
+	categoryDescription || `${category} 카테고리에 속한 글 목록입니다.`;
+const jsonLd = Astro.site
+	? [
+			buildCollectionPage({
+				site: Astro.site,
+				lang: "ko",
+				path: categoryHref(category, "ko"),
+				name: category,
+				description: pageDescription,
+				numberOfItems: posts.length,
+			}),
+			buildBreadcrumbList(buildCategoryBreadcrumbs(category, Astro.site, "ko")),
+		]
+	: undefined;
 ---
 
 <Layout
 	title={`${category} | sings.dev`}
-	description={
-		categoryDescription || `${category} 카테고리에 속한 글 목록입니다.`
-	}
+	description={pageDescription}
 	lang="ko"
+	jsonLd={jsonLd}
 >
 	<section class="space-y-4">
 		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">

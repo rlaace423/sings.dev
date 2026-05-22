@@ -8,8 +8,14 @@ import {
 	matchesLocale,
 	slugifyTaxonomy,
 	sortPostsByDate,
+	tagHref,
 	uniqueTags,
 } from "../../utils/blog";
+import {
+	buildBreadcrumbList,
+	buildCollectionPage,
+	buildTagBreadcrumbs,
+} from "../../utils/jsonLd";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko") && isVisiblePost(post));
@@ -27,12 +33,28 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
+
+const pageDescription = `${tag} 태그가 달린 글 목록입니다.`;
+const jsonLd = Astro.site
+	? [
+			buildCollectionPage({
+				site: Astro.site,
+				lang: "ko",
+				path: tagHref(tag, "ko"),
+				name: `#${tag}`,
+				description: pageDescription,
+				numberOfItems: posts.length,
+			}),
+			buildBreadcrumbList(buildTagBreadcrumbs(tag, Astro.site, "ko")),
+		]
+	: undefined;
 ---
 
 <Layout
 	title={`#${tag} | sings.dev`}
-	description={`${tag} 태그가 달린 글 목록입니다.`}
+	description={pageDescription}
 	lang="ko"
+	jsonLd={jsonLd}
 >
 	<section class="space-y-4">
 		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">

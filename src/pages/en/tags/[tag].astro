@@ -8,8 +8,14 @@ import {
 	matchesLocale,
 	slugifyTaxonomy,
 	sortPostsByDate,
+	tagHref,
 	uniqueTags,
 } from "../../../utils/blog";
+import {
+	buildBreadcrumbList,
+	buildCollectionPage,
+	buildTagBreadcrumbs,
+} from "../../../utils/jsonLd";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog", (post) => matchesLocale(post.id, "en") && isVisiblePost(post));
@@ -27,12 +33,28 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
+
+const pageDescription = `Posts tagged with ${tag}.`;
+const jsonLd = Astro.site
+	? [
+			buildCollectionPage({
+				site: Astro.site,
+				lang: "en",
+				path: tagHref(tag, "en"),
+				name: `#${tag}`,
+				description: pageDescription,
+				numberOfItems: posts.length,
+			}),
+			buildBreadcrumbList(buildTagBreadcrumbs(tag, Astro.site, "en")),
+		]
+	: undefined;
 ---
 
 <Layout
 	title={`#${tag} | sings.dev`}
-	description={`Posts tagged with ${tag}.`}
+	description={pageDescription}
 	lang="en"
+	jsonLd={jsonLd}
 >
 	<section class="space-y-4">
 		<p class="text-sm uppercase tracking-[0.18em] text-dawn-600 dark:text-night-400">
