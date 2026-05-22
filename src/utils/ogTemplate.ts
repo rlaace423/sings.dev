@@ -91,20 +91,21 @@ export function buildOGCard({ title, category, date, lang }: OGCardInput): Sator
 				],
 			),
 
-			// Middle: title (grows to fill remaining vertical space)
+			// Middle: title (grows to fill remaining vertical space).
+			// `display: -webkit-box` + line-clamp is the only way Satori
+			// truncates overflowing text — it doesn't honor a `display: flex`
+			// here, and overlong titles would otherwise push the footer off
+			// the card.
 			el(
 				"div",
 				{
-					display: "flex",
+					display: "-webkit-box",
 					fontSize: titleFontSize(title),
 					fontWeight: 700,
 					lineHeight: 1.2,
 					letterSpacing: "-0.02em",
 					color: COLORS.text,
-					// Allow up to ~3 lines before truncation. Satori supports
-					// `display: -webkit-box` + line-clamp.
 					// @ts-expect-error — Satori-specific webkit props.
-					display: "-webkit-box",
 					"-webkit-box-orient": "vertical",
 					"-webkit-line-clamp": 3,
 					overflow: "hidden",
