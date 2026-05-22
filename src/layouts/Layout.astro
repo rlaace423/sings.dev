@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import SearchModal from "../components/SearchModal.astro";
 import { defaultLocale, locales, type Locale, isLocale } from "../i18n/ui";
 import { getLocalizedSeoUrls } from "../utils/seo";
+import { serializeJsonLd } from "../utils/jsonLd";
 import "../styles/global.css";
 
 type LocalizedValue = string | Partial<Record<Locale, string>>;
@@ -22,6 +23,14 @@ interface Props {
 	 * required by Slack/X/etc.
 	 */
 	ogImage?: string;
+	/**
+	 * One or more schema.org JSON-LD objects emitted as
+	 * `<script type="application/ld+json">`. Pages use `src/utils/jsonLd.ts`
+	 * to build these — BlogPosting + BreadcrumbList on posts, Person + WebSite
+	 * on home, Person on /about. Crawlers (Google, Bing, AI assistants) read
+	 * these for rich results, Discover eligibility, and author attribution.
+	 */
+	jsonLd?: unknown | unknown[];
 }
 
 const {
@@ -31,7 +40,10 @@ const {
 	contentClass = "max-w-3xl",
 	ogType = "website",
 	ogImage,
+	jsonLd,
 } = Astro.props;
+
+const jsonLdBlocks = jsonLd === undefined ? [] : Array.isArray(jsonLd) ? jsonLd : [jsonLd];
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
 const seoUrls = Astro.site ? getLocalizedSeoUrls(Astro.site, Astro.url.pathname) : null;
@@ -90,6 +102,11 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 					<link rel="alternate" type="application/rss+xml" title="sings.dev (한국어)" href="/rss.xml" />
 				</>
 			)
+		}
+		{
+			jsonLdBlocks.map((block) => (
+				<script type="application/ld+json" set:html={serializeJsonLd(block)} />
+			))
 		}
 		<title>{resolvedTitle}</title>
 		{

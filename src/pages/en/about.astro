@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import AboutIdentity from "../../components/AboutIdentity.astro";
 import Layout from "../../layouts/Layout.astro";
+import { buildPerson, personId } from "../../utils/jsonLd";
 
 const [page] = await getCollection("pages", ({ id }) => id === "en/about");
 
@@ -14,9 +15,25 @@ const identity = page.data.identity;
 if (!identity) {
 	throw new Error("Missing identity on en/about page.");
 }
+
+const jsonLd = Astro.site
+	? buildPerson({
+			identity,
+			site: Astro.site,
+			lang: "en",
+			siblingPersonIds: [personId(Astro.site, "ko")],
+			fullProfile: true,
+			description: identity.summary,
+		})
+	: undefined;
 ---
 
-<Layout title={`${page.data.title} | sings.dev`} description={page.data.description} lang="en">
+<Layout
+	title={`${page.data.title} | sings.dev`}
+	description={page.data.description}
+	lang="en"
+	jsonLd={jsonLd}
+>
 	<AboutIdentity
 		lang="en"
 		name={identity.name}

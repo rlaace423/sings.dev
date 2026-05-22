@@ -20,6 +20,11 @@ import {
 	sortPostsByDate,
 	stripLocaleFromId,
 } from "../../../utils/blog";
+import {
+	buildBlogPosting,
+	buildBreadcrumbList,
+	buildPostBreadcrumbs,
+} from "../../../utils/jsonLd";
 import { getRelatedPosts, getSeriesNavigation } from "../../../utils/postReading";
 
 export async function getStaticPaths() {
@@ -35,6 +40,17 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTimeMinutes = getReadingTimeMinutes(post.body);
 const ogImagePath = `/og/en/${stripLocaleFromId(post.id)}.png`;
+const jsonLd = Astro.site
+	? [
+			buildBlogPosting({
+				post,
+				site: Astro.site,
+				lang: "en",
+				ogImageUrl: new URL(ogImagePath, Astro.site).toString(),
+			}),
+			buildBreadcrumbList(buildPostBreadcrumbs(post, Astro.site, "en")),
+		]
+	: undefined;
 const localePosts = sortPostsByDate(
 	await getCollection("blog", (post) => matchesLocale(post.id, "en") && isVisiblePost(post)),
 );
@@ -65,6 +81,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 	contentClass="max-w-none"
 	ogType="article"
 	ogImage={ogImagePath}
+	jsonLd={jsonLd}
 >
 	<ReadingProgress />
 	<CodeCopyButton />

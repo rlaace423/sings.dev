@@ -10,6 +10,7 @@ import {
 	sortPostsByDate,
 	stripLocaleFromId,
 } from "../../utils/blog";
+import { buildPerson, buildWebSite, personId } from "../../utils/jsonLd";
 
 const [aboutPage] = await getCollection("pages", ({ id }) => id === "en/about");
 
@@ -27,12 +28,27 @@ const posts = await getCollection("blog", (post) => matchesLocale(post.id, "en")
 const recentPosts = sortPostsByDate(posts).slice(0, 5);
 
 const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+const homeDescription = "Notes on backend architecture, MPC systems, and infrastructure routing.";
+const jsonLd = Astro.site
+	? [
+			buildPerson({
+				identity,
+				site: Astro.site,
+				lang: "en",
+				siblingPersonIds: [personId(Astro.site, "ko")],
+				fullProfile: false,
+				description: identity.homeSummary,
+			}),
+			buildWebSite(Astro.site, "en", homeDescription),
+		]
+	: undefined;
 ---
 
 <Layout
 	title="Home | sings.dev"
-	description="Notes on backend architecture, MPC systems, and infrastructure routing."
+	description={homeDescription}
 	lang="en"
+	jsonLd={jsonLd}
 >
 	<HomeIdentity
 		lang="en"

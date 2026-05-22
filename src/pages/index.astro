@@ -10,6 +10,7 @@ import {
 	sortPostsByDate,
 	stripLocaleFromId,
 } from "../utils/blog";
+import { buildPerson, buildWebSite, personId } from "../utils/jsonLd";
 
 const [aboutPage] = await getCollection("pages", ({ id }) => id === "ko/about");
 
@@ -27,12 +28,27 @@ const posts = await getCollection("blog", (post) => matchesLocale(post.id, "ko")
 const recentPosts = sortPostsByDate(posts).slice(0, 5);
 
 const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+const homeDescription = "백엔드 아키텍처, MPC 시스템, 인프라 라우팅에 대한 글을 모아 둔 공간입니다.";
+const jsonLd = Astro.site
+	? [
+			buildPerson({
+				identity,
+				site: Astro.site,
+				lang: "ko",
+				siblingPersonIds: [personId(Astro.site, "en")],
+				fullProfile: false,
+				description: identity.homeSummary,
+			}),
+			buildWebSite(Astro.site, "ko", homeDescription),
+		]
+	: undefined;
 ---
 
 <Layout
 	title="홈 | sings.dev"
-	description="백엔드 아키텍처, MPC 시스템, 인프라 라우팅에 대한 글을 모아 둔 공간입니다."
+	description={homeDescription}
 	lang="ko"
+	jsonLd={jsonLd}
 >
 	<HomeIdentity
 		lang="ko"
