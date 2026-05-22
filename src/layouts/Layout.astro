@@ -14,6 +14,14 @@ interface Props {
 	lang?: Locale;
 	contentClass?: string;
 	ogType?: "website" | "article";
+	/**
+	 * Path (relative to site root) of the OG image for this page.
+	 * Post pages pass `/og/<locale>/<slug>.png`; if omitted, falls back to the
+	 * locale-matched default at `/og/<lang>/default.png`. The path is resolved
+	 * against `Astro.site` so the emitted meta is always an absolute URL —
+	 * required by Slack/X/etc.
+	 */
+	ogImage?: string;
 }
 
 const {
@@ -22,6 +30,7 @@ const {
 	lang: langProp = defaultLocale,
 	contentClass = "max-w-3xl",
 	ogType = "website",
+	ogImage,
 } = Astro.props;
 
 const lang = isLocale(langProp) ? langProp : defaultLocale;
@@ -33,6 +42,8 @@ const resolveLocalizedValue = (value: LocalizedValue) =>
 const resolvedTitle = resolveLocalizedValue(title);
 const resolvedDescription = resolveLocalizedValue(description);
 const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
+const resolvedOgImage = ogImage ?? `/og/${lang}/default.png`;
+const ogImageUrl = Astro.site ? new URL(resolvedOgImage, Astro.site).toString() : resolvedOgImage;
 const gaId = import.meta.env.PUBLIC_GA_ID;
 ---
 
@@ -59,9 +70,14 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 		<meta property="og:site_name" content="sings.dev" />
 		<meta property="og:locale" content={ogLocale} />
 		{seoUrls && <meta property="og:url" content={seoUrls.canonical} />}
-		<meta name="twitter:card" content="summary" />
+		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:type" content="image/png" />
+		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={resolvedTitle} />
 		<meta name="twitter:description" content={resolvedDescription} />
+		<meta name="twitter:image" content={ogImageUrl} />
 		{
 			lang === "ko" ? (
 				<>

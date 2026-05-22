@@ -34,6 +34,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTimeMinutes = getReadingTimeMinutes(post.body);
+const ogImagePath = `/og/en/${stripLocaleFromId(post.id)}.png`;
 const localePosts = sortPostsByDate(
 	await getCollection("blog", (post) => matchesLocale(post.id, "en") && isVisiblePost(post)),
 );
@@ -63,6 +64,7 @@ const relatedItems = relatedPosts.map((entry) => ({
 	lang="en"
 	contentClass="max-w-none"
 	ogType="article"
+	ogImage={ogImagePath}
 >
 	<ReadingProgress />
 	<CodeCopyButton />
