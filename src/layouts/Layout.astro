@@ -196,12 +196,16 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 					};
 
 					const setMermaidPictureTheme = (isDark) => {
-						// Mermaid <picture> elements live directly in the prose body, not
-						// inside <figure> (remarkPostFigure only auto-promotes plain <img>
-						// paragraphs, not mermaid blocks). Match all <picture> in the post
-						// content; the originalMedia.includes('dark') guard inside the
-						// loop scopes the flip to mermaid output specifically.
+						// Walk every <picture> in the article — but only Mermaid's
+						// emit a `<source media="(prefers-color-scheme: dark)">`,
+						// which is what we need to flip on manual theme toggle.
+						// Regular content <picture> blocks (the AVIF/WebP wrappers
+						// the build adds to every post image) have no media query
+						// and need no work; skipping the clone-replace for those
+						// avoids ~330ms of forced reflow per toggle on image-heavy
+						// posts.
 						document.querySelectorAll('article picture').forEach((picture) => {
+							let mediaSwapped = false;
 							picture.querySelectorAll('source').forEach((source) => {
 								// Cache the original media query on first run so we can restore it.
 								if (!source.dataset.originalMedia) {
@@ -211,12 +215,15 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 								// dark, restore the original prefers-color-scheme query when light.
 								if (source.dataset.originalMedia.includes('dark')) {
 									source.media = isDark ? 'all' : source.dataset.originalMedia;
+									mediaSwapped = true;
 								}
 							});
-							// Picture source selection is browser-side and only re-evaluates on
-							// insertion. Clone-replace forces re-evaluation against the new media
-							// attribute. The existing 250ms .theme-transition fade absorbs any
-							// visual flicker.
+							// Only force a re-evaluation when we actually changed a source's
+							// media. Picture source selection is browser-side and only
+							// re-runs on insertion, so the clone-replace is required to
+							// commit the flip — but doing it for non-Mermaid pictures
+							// (where nothing changed) is pure layout thrash.
+							if (!mediaSwapped) return;
 							const clone = picture.cloneNode(true);
 							// Strip the zoomable marker on the cloned <img> so
 							// PostImageLightbox re-wires its click handler (cloneNode copies
