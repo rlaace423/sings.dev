@@ -54,8 +54,20 @@ export default defineConfig({
   // for the breakpoints below, scaled to its rendered width. `layout:
   // constrained` keeps the image at its natural size but allows scaling down
   // for smaller viewports — appropriate for editorial content.
+  //
+  // `responsiveStyles: true` opts in to Astro's responsive image CSS —
+  // but in practice that CSS is wired in via the `astro:assets`
+  // virtual module, which is only loaded when something imports from
+  // it. Markdown-only sites like this one never trigger that import,
+  // so the rules don't land in the bundle even with this flag on. As
+  // a fallback we copy the three essential rules directly into
+  // `src/styles/global.css` (search for `data-astro-image` there).
+  // Without those rules <img> renders at its intrinsic pixel width
+  // and overflows narrow viewports, which on Chrome Android forces a
+  // zoom-out of the entire page.
   image: {
     layout: "constrained",
+    responsiveStyles: true,
     breakpoints: [400, 640, 800, 1080, 1280, 1600, 2000],
   },
   // Inline the global stylesheet into every page's <head><style> so it

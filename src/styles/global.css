@@ -385,3 +385,27 @@ html.theme-transition * {
 .prose-site img[data-zoomable] {
 	cursor: zoom-in;
 }
+
+/*
+ * Responsive image fallback styles.
+ * `astro.config.mjs` sets `image.layout: "constrained"` so Astro stamps
+ * every markdown image with `data-astro-image="constrained"`. Astro
+ * normally pairs that attribute with a corresponding stylesheet
+ * injected via the `astro:assets` virtual module, but that import
+ * chain doesn't fire for markdown-only sites (no .astro file imports
+ * from `astro:assets`), so the CSS never lands in the bundle. Without
+ * it, <img> falls back to its intrinsic pixel width and overflows
+ * narrow viewports — which on Chrome Android forces a zoom-out of
+ * the entire page. The five rules below are copied verbatim from
+ * `astro/dist/assets/utils/generateImageStylesCSS.js` and pin the
+ * image to its container so this can't happen.
+ */
+:where([data-astro-image]) {
+	height: auto;
+}
+:where([data-astro-image="full-width"]) {
+	width: 100%;
+}
+:where([data-astro-image="constrained"]) {
+	max-width: 100%;
+}
