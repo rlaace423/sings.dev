@@ -190,7 +190,7 @@ html {
 }
 :where(.dark) .prose-site aside.callout[data-callout-type="note"] .callout-label,
 :where(.dark) .prose-site aside.callout[data-callout-type="tip"] .callout-label {
-	color: rgb(115 122 162 / 1); /* night-300 */
+	color: rgb(154 165 206 / 1); /* night-200 */
 }
 :where(.dark) .prose-site aside.callout[data-callout-type="warning"] {
 	border-color: rgb(59 66 97 / 1); /* night-600 frame */
@@ -317,7 +317,7 @@ html.dark .shiki span {
 
 :where(.dark) .code-copy-button {
 	border-color: rgb(59 66 97 / 1); /* night-600 */
-	color: rgb(115 122 162 / 1); /* night-300 */
+	color: rgb(154 165 206 / 1); /* night-200 */
 }
 
 .code-block:hover .code-copy-button,
