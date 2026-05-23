@@ -409,3 +409,25 @@ html.theme-transition * {
 :where([data-astro-image="constrained"]) {
 	max-width: 100%;
 }
+
+/*
+ * Long-unbreakable-word safety net for article body.
+ * The browser default `overflow-wrap: normal` only breaks at spaces or
+ * hyphens, so a long single token like
+ * `System.Security.Cryptography.RandomNumberGenerator.Create` blows past
+ * the article container and forces horizontal overflow — which on
+ * Chrome Android triggers a page-wide zoom-out so the line "fits".
+ * Pairing `overflow-wrap: anywhere` with `word-break: keep-all` keeps
+ * the layout sane for both scripts:
+ *   - Korean (Hangul): keep-all preserves natural phrase grouping; the
+ *     overflow-wrap only kicks in if a single token would otherwise
+ *     overflow, which is essentially never for Hangul.
+ *   - Long English/code strings: overflow-wrap breaks wherever needed
+ *     to fit the container.
+ */
+.prose-site,
+.prose-site li,
+.prose-site p {
+	overflow-wrap: anywhere;
+	word-break: keep-all;
+}
