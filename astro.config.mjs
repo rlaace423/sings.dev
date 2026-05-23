@@ -58,6 +58,16 @@ export default defineConfig({
     layout: "constrained",
     breakpoints: [400, 640, 800, 1080, 1280, 1600, 2000],
   },
+  // Inline the global stylesheet into every page's <head><style> so it
+  // arrives in the same response as the HTML, eliminating the
+  // render-blocking round-trip to /_astro/Layout.*.css. The cost is ~14 KiB
+  // gzipped extra per HTML response (Tailwind output), but it's the same
+  // bytes the browser would have fetched anyway plus a saved 100-160ms on
+  // slow 4G — net win for LCP without any FOUC risk (no critical/non-critical
+  // split, the full sheet is applied synchronously with parse).
+  build: {
+    inlineStylesheets: "always",
+  },
   integrations: [
     sitemap(),
     // Post-build image optimization: generates .avif siblings for every
