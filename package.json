@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
+    "node-html-parser": "^7.1.0",
     "pagefind": "^1.5.2",
     "playwright": "^1.60.0",
     "rehype-mermaid": "^3.0.0",

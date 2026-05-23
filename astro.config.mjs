@@ -7,6 +7,7 @@ import remarkAdmonition from "./src/utils/remarkAdmonition.ts";
 import rehypeCodeCopyButton from "./src/utils/rehypeCodeCopyButton.ts";
 import rehypeMermaid from "rehype-mermaid";
 import { mermaidThemeLight, mermaidThemeDark } from "./src/utils/mermaidTheme.ts";
+import imageOptimization from "./src/utils/integrationImageOptimization.ts";
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,5 +50,20 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://sings.dev",
-  integrations: [sitemap()],
+  // Built-in responsive images: every markdown image gets `srcset` + `sizes`
+  // for the breakpoints below, scaled to its rendered width. `layout:
+  // constrained` keeps the image at its natural size but allows scaling down
+  // for smaller viewports — appropriate for editorial content.
+  image: {
+    layout: "constrained",
+    breakpoints: [400, 640, 800, 1080, 1280, 1600, 2000],
+  },
+  integrations: [
+    sitemap(),
+    // Post-build image optimization: generates .avif siblings for every
+    // emitted .webp, then rewrites <img src="/_astro/*.webp"> tags in dist
+    // HTML to <picture> with AVIF + WebP sources. Marks the first qualifying
+    // image per HTML file as the LCP candidate (eager + fetchpriority high).
+    imageOptimization({ avifQuality: 60, avifEffort: 4 }),
+  ],
 });
