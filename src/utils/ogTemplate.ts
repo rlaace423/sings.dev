@@ -64,6 +64,11 @@ export function buildOGCard({ title, category, date, lang }: OGCardInput): Sator
 		{
 			width: 1200,
 			height: 630,
+			// Satori 0.6x sizes boxes like a browser (content-box), so the
+			// 72px/80px padding below would grow the root to 1360×774 and push
+			// the footer row past the 1200×630 canvas. Yoga-era Satori always
+			// behaved as border-box; make that explicit so both agree.
+			boxSizing: "border-box",
 			display: "flex",
 			flexDirection: "column",
 			justifyContent: "space-between",

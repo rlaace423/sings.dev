@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import remarkPostFigure from "./src/utils/remarkPostFigure.ts";
@@ -24,21 +25,29 @@ export default defineConfig({
     // as a programming language, strips the class, and rehype-mermaid finds
     // nothing to render — silently producing no <picture> output.
     syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },
-    remarkPlugins: [remarkPostFigure, remarkAdmonition],
-    rehypePlugins: [
-      rehypeCodeCopyButton,
-      [
-        rehypeMermaid,
-        {
-          strategy: "img-svg",
-          dark: { theme: "base", themeVariables: mermaidThemeDark },
-          mermaidConfig: {
-            theme: "base",
-            themeVariables: mermaidThemeLight,
+    // Astro 7 renders Markdown with its native Sätteri pipeline by default,
+    // which has no remark/rehype plugin support. The plugins below run on
+    // the classic unified pipeline from `@astrojs/markdown-remark`, wired
+    // in via `processor` (the old top-level `remarkPlugins` /
+    // `rehypePlugins` options are deprecated). `syntaxHighlight` and
+    // `shikiConfig` stay top-level: Astro hands them to the processor.
+    processor: unified({
+      remarkPlugins: [remarkPostFigure, remarkAdmonition],
+      rehypePlugins: [
+        rehypeCodeCopyButton,
+        [
+          rehypeMermaid,
+          {
+            strategy: "img-svg",
+            dark: { theme: "base", themeVariables: mermaidThemeDark },
+            mermaidConfig: {
+              theme: "base",
+              themeVariables: mermaidThemeLight,
+            },
           },
-        },
+        ],
       ],
-    ],
+    }),
     shikiConfig: {
       themes: {
         light: "github-light",
@@ -50,6 +59,13 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://sings.dev",
+  // Astro 7 changed the default from `true` to `"jsx"`, which also drops
+  // the whitespace between adjacent inline elements (`<a>…</a> <em>…</em>`
+  // renders with the words glued together). Keep the lossless pre-v7
+  // compression so every page renders exactly as before; switch to "jsx"
+  // deliberately after auditing the templates, not as a side effect of
+  // the upgrade.
+  compressHTML: true,
   // Built-in responsive images: every markdown image gets `srcset` + `sizes`
   // for the breakpoints below, scaled to its rendered width. `layout:
   // constrained` keeps the image at its natural size but allows scaling down
