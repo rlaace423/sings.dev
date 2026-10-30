@@ -17,12 +17,13 @@ test("layout emits OpenGraph meta tags driven by the resolved title, description
 	assert.match(layout, /seoUrls && <meta property="og:url" content=\{seoUrls\.canonical\}/);
 });
 
-test("layout emits Twitter Card meta tags as a text-only summary card", async () => {
+test("layout emits Twitter Card meta tags as a large-image card pointing at the OG image", async () => {
 	const layout = await readFile(layoutUrl, "utf8");
 
-	assert.match(layout, /<meta name="twitter:card" content="summary"/);
+	assert.match(layout, /<meta name="twitter:card" content="summary_large_image"/);
 	assert.match(layout, /<meta name="twitter:title" content=\{resolvedTitle\}/);
 	assert.match(layout, /<meta name="twitter:description" content=\{resolvedDescription\}/);
+	assert.match(layout, /<meta name="twitter:image" content=\{ogImageUrl\}/);
 });
 
 test("layout exposes an ogType prop that defaults to website and computes ogLocale from lang", async () => {

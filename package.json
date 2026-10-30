@@ -8,6 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "test": "node --experimental-strip-types --test",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "check": "npm run build && npm test && npm run test:visual",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",

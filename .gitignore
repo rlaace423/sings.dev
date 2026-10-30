@@ -30,3 +30,7 @@ pnpm-debug.log*
 
 # superpowers brainstorming session artifacts
 .superpowers/
+
+# playwright run output (visual suite)
+test-results/
+playwright-report/

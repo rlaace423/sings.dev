@@ -19,13 +19,16 @@ The site is closer to reading one person's notes than browsing a media portal. D
 
 ## Local development
 
-Requires Node `>=22.12.0`.
+Requires Node `>=24.0.0` (see `engines` in `package.json`).
 
 | Command | Action |
 | --- | --- |
 | `npm install` | Install dependencies |
 | `npm run dev` | Start the dev server at `http://localhost:4321` |
-| `npm test` | Run the Node test runner over `tests/` |
+| `npm test` | Unit, component, and page-structure tests (`tests/`); the page-structure tests read `dist/`, so build first |
+| `npm run test:visual` | Playwright suite against `dist/`: layout and contrast invariants, interactions, screenshot and OG-card baselines |
+| `npm run test:visual:update` | Rewrite the screenshot baselines for this platform after an intentional visual change |
+| `npm run check` | `build` → `test` → `test:visual` in one go |
 | `npm run build` | Build static output to `dist/` and generate the Pagefind index |
 | `npm run preview` | Preview the production build locally |
 
@@ -49,4 +52,4 @@ The site is a pure static deploy to Cloudflare via Wrangler. Build pipeline, dep
 - `docs/spec-roadmap.md` — current major improvement areas and recommended order. Treat as a steering document, not an implementation spec.
 - `docs/superpowers/specs/<date>-<topic>-design.md` — focused design docs for specific changes.
 - `docs/superpowers/plans/<date>-<topic>.md` — implementation plans paired with the design docs.
-- `tests/` — Node test runner specs covering taxonomy helpers, page structure invariants, and reading-flow logic. CI does not run yet, so always invoke `npm test` locally before merging.
+- `tests/` — the test suite: Node test runner specs (helpers, components, page structure read from `dist/`) and the Playwright visual suite under `tests/visual/`. CI runs both before every deploy. Layers, baseline policy, and conventions are in [`docs/spec-testing.md`](docs/spec-testing.md).

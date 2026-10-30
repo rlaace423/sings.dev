@@ -25,7 +25,7 @@ import {
 	getDisplayTitle,
 	stripLocaleFromId,
 	tagHref,
-} from "./blog";
+} from "./blog.ts";
 
 type BlogPost = CollectionEntry<"blog">;
 type AboutIdentity = NonNullable<CollectionEntry<"pages">["data"]["identity"]>;

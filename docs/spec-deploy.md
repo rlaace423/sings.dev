@@ -13,7 +13,7 @@
   - Pagefind walks `./dist` and writes its index into `./dist/pagefind/`. The dev server still works without this index, but the search modal will return no results until a build runs.
   - Sitemap generation runs as part of Astro's build via `@astrojs/sitemap`.
 - **Deploy Command**:
-  - Automatic: pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm run build`, and `npx wrangler deploy` on a GitHub Actions `ubuntu-latest` runner. See [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md) for the design rationale (short version: Cloudflare's build base image lacks Chromium system libraries needed by `rehype-mermaid`).
+  - Automatic: pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm run build`, `npm test`, `npm run test:visual`, and `npx wrangler deploy` on a GitHub Actions `ubuntu-latest` runner. A failing test blocks the deploy; see [docs/spec-testing.md](docs/spec-testing.md) for what each layer checks and how screenshot baselines are refreshed. See [docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md](docs/superpowers/specs/2026-05-12-github-actions-deploy-design.md) for the design rationale (short version: Cloudflare's build base image lacks Chromium system libraries needed by `rehype-mermaid`).
   - Manual (rollback, or ad-hoc redeploy from a dev machine): `npx wrangler deploy` from the repo root after a local `npm run build`. Requires `CLOUDFLARE_API_TOKEN` (and `CLOUDFLARE_ACCOUNT_ID`) in the environment, or `wrangler login` for an interactive session.
   - There is no `deploy` script in `package.json` — deploy is `npx wrangler deploy`, the same command CI runs.
 - **Runtime Expectations**:
@@ -22,8 +22,9 @@
   - Theme (light / dark) is resolved client-side from `localStorage` and `prefers-color-scheme`. Locale routing is fully static. No server contribution at request time.
   - 404 handling is delegated to Cloudflare's static-assets behavior via `assets.not_found_handling: "404-page"` in `wrangler.jsonc`. Requests that do not map to a built asset are served the prebuilt `dist/404.html` (the bilingual 404 page) with a `404 Not Found` status. Without this option, Cloudflare returns its built-in 404, which is what readers see on a missed route.
 - **Pre-push Checklist** (local, before merging to `main`):
-  - `npm test` passes.
   - `npm run build` completes without errors locally — fast-feedback gate before CI runs the same build.
+  - `npm test` passes (the page-structure tests read the fresh `dist/`).
+  - `npm run test:visual` passes; when a visual change was intended, baselines were refreshed with `npm run test:visual:update` and the diff reviewed.
   - `dist/pagefind/` exists and the build log shows locale filters for both `ko` and `en`.
   - Locally previewed via `npm run preview` at least once when something user-visible has changed.
   - CI runs the same build + deploy on the merged commit; failures show up in the GitHub Actions tab and notify by GitHub's default failure-email.
@@ -34,5 +35,4 @@
 - **Out of Scope for This Spec**:
   - DNS / domain configuration. Domain ownership and DNS routing are managed outside the repo.
 - **Future Work**:
-  - Add `npm test` as a workflow step when a regression makes the locally-run test gate insufficient.
   - PR-build workflow (build, no deploy) once there is a concrete reason to verify branches before merge.

@@ -1,0 +1,41 @@
+name: Refresh Linux visual baselines
+
+# Manual: run this after an intentional visual change, then download the
+# `visual-baselines-linux` artifact and commit it under
+# tests/visual/__screenshots__/. macOS baselines are refreshed locally with
+# `npm run test:visual:update` (see docs/spec-testing.md).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Cache Playwright Chromium
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+      - name: Install CJK fonts for mermaid build
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+      - run: npm ci
+      - run: npm run build
+        env:
+          PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
+      - name: Rewrite every Linux screenshot baseline from the current build
+        run: npm run test:visual:update
+      - uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines-linux
+          path: tests/visual/__screenshots__
+          retention-days: 30
