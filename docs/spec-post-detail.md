@@ -129,7 +129,7 @@
   - Backdrop: `dawn-100/95` (light) / `night-900/95` (dark) with `backdrop-blur-sm`. More opaque than the search modal on purpose — the image is the focus.
   - Lightbox image: rendered at the source `<img>`'s `src` and `srcset` (the browser fetches the largest candidate the source already exposes), capped at `90vw × 80vh` with `object-fit: contain`. No frame, no shadow, no border-radius.
   - Cursor: `zoom-in` on every in-prose `<img>` once the activation script has marked it; `zoom-out` on the lightbox image while open.
-  - Mermaid diagrams are excluded: the activation script skips an `<img>` whose `<picture>` carries a media-query `<source>` (the light/dark SVG pair from `rehype-mermaid`). The AVIF/WebP `<picture>` wrappers that the post-build image optimization adds to still content images have no media query and stay zoomable.
+  - Mermaid diagrams are excluded: the activation script skips an `<img>` whose `<picture>` carries a media-query `<source>` (the light/dark SVG pair from `rehype-mermaid`). The AVIF/WebP `<picture>` wrappers that the post-build image optimization adds to still content images have no media query and stay zoomable. Animated images (GIF sources, emitted as animated WebP) get no AVIF sibling and stay a bare `<img>`, which is zoomable as well.
 - **Implementation location**:
   - Component: `src/components/PostImageLightbox.astro` (markup + inline activation script). Mounted on `src/pages/posts/[...slug].astro` and `src/pages/en/posts/[...slug].astro`, just after `</article>`.
   - Translation keys: `lightbox.label` and `lightbox.close` in `src/i18n/ui.ts`.

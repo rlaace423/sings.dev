@@ -13,13 +13,22 @@
  *   WebP-as-source path is mildly lossier in theory but visually
  *   indistinguishable at the quality levels used here.
  *
+ *   Animated WebPs (Astro emits them for GIF sources and keeps every
+ *   frame) get no AVIF sibling. sharp/libvips cannot encode animated AVIF:
+ *   it silently writes the first frame only, so the `<picture>` would show
+ *   a still in every AVIF-capable browser while the lightbox, which copies
+ *   the WebP srcset, animated. The Sierpinski zoom in purpose-driven-systems
+ *   shipped that way for five months. Animated images are served as WebP.
+ *
  * Phase 2 — HTML rewrite
  *   Walk every `.html` file in `dist/`, find each `<img src="/_astro/*.webp">`
  *   that isn't already inside a `<picture>` (Mermaid output is), and wrap
  *   it in `<picture>` with an AVIF `<source>` first, a WebP `<source>`
  *   second, then the original `<img>` as the fallback. Modern browsers
  *   pick AVIF; older ones fall through to WebP; ancient ones see the
- *   bare `<img>`.
+ *   bare `<img>`. An `<img>` whose AVIF candidates are not all on disk
+ *   (animated source, or a failed transcode) is left unwrapped, so no
+ *   `<source>` ever points at a missing file.
  *
  *   The first qualifying `<img>` per HTML file is additionally marked as
  *   the LCP candidate: `loading="eager"` + `fetchpriority="high"`. This
@@ -71,6 +80,7 @@ async function generateAvifSiblings(
 	let totalAvif = 0;
 	let generated = 0;
 	let skipped = 0;
+	let animated = 0;
 
 	const concurrency = 4;
 	const queue = [...webpFiles];
@@ -90,6 +100,14 @@ async function generateAvifSiblings(
 
 			try {
 				const webpBuffer = readFileSync(webpPath);
+				// `pages` > 1 is an animated WebP (one page per frame). AVIF
+				// output would keep only the first frame, so leave it as WebP;
+				// the HTML rewriter sees no sibling on disk and skips the wrap.
+				const { pages = 1 } = await sharp(webpBuffer, { animated: true }).metadata();
+				if (pages > 1) {
+					animated += 1;
+					continue;
+				}
 				const avifBuffer = await sharp(webpBuffer)
 					.avif({ quality, effort })
 					.toBuffer();
@@ -109,7 +127,7 @@ async function generateAvifSiblings(
 	const elapsedMs = Date.now() - startedAt;
 	const savings = totalWebp ? Math.round(((totalWebp - totalAvif) / totalWebp) * 100) : 0;
 	log(
-		`AVIF: ${generated} generated (${skipped} skipped), ` +
+		`AVIF: ${generated} generated (${skipped} skipped, ${animated} animated left as WebP), ` +
 			`${(totalAvif / 1024).toFixed(0)}KiB total, -${savings}% vs WebP, ${elapsedMs}ms`,
 	);
 }
@@ -117,9 +135,11 @@ async function generateAvifSiblings(
 /**
  * Walk a parsed HTML tree, wrap qualifying `<img>` elements in
  * `<picture>` markup and tag the first one as the LCP candidate.
- * Returns true if any modification was made.
+ * `hasAvif` answers whether an AVIF sibling exists on disk for a
+ * `/_astro/*.webp` URL; an image with any candidate missing stays a bare
+ * `<img>`. Returns true if any modification was made.
  */
-function rewriteImagesInDocument(root: HTMLElement): boolean {
+function rewriteImagesInDocument(root: HTMLElement, hasAvif: (webpUrl: string) => boolean): boolean {
 	const imgs = root.querySelectorAll("img");
 	if (imgs.length === 0) return false;
 
@@ -141,10 +161,18 @@ function rewriteImagesInDocument(root: HTMLElement): boolean {
 			img.setAttribute("loading", "eager");
 			img.setAttribute("fetchpriority", "high");
 			img.setAttribute("data-lcp-candidate", "true");
+			touched = true;
 		}
 
 		const srcset = img.getAttribute("srcset");
 		const sizes = img.getAttribute("sizes");
+
+		// Every candidate needs an AVIF sibling on disk. Animated WebPs never
+		// get one (see generateAvifSiblings), and a failed transcode must not
+		// leave a <source> pointing at a 404. Such images keep the bare <img>,
+		// which serves the (possibly animated) WebP.
+		const webpCandidates = srcset ? srcsetUrls(srcset) : [src];
+		if (!webpCandidates.every(hasAvif)) continue;
 
 		// Build the <picture> wrapper as raw HTML. node-html-parser doesn't
 		// expose a clean DOM API for wrapping, but its replaceWith on raw
@@ -173,6 +201,14 @@ function escapeAttr(value: string): string {
 	return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
 
+/** URLs of each candidate in a srcset ("/_astro/a.webp 400w, /_astro/b.webp 640w"). */
+function srcsetUrls(srcset: string): string[] {
+	return srcset
+		.split(",")
+		.map((candidate) => candidate.trim().split(/\s+/)[0])
+		.filter((url): url is string => Boolean(url));
+}
+
 function walkHtmlFiles(dir: string, visit: (filePath: string) => void): void {
 	for (const entry of readdirSync(dir)) {
 		const fullPath = path.join(dir, entry);
@@ -185,8 +221,15 @@ function walkHtmlFiles(dir: string, visit: (filePath: string) => void): void {
 	}
 }
 
-function rewriteHtmlFiles(distDir: string, log: (msg: string) => void): void {
+function rewriteHtmlFiles(distDir: string, astroDir: string, log: (msg: string) => void): void {
 	const startedAt = Date.now();
+	const avifFiles = new Set(readdirSync(astroDir).filter((f) => f.endsWith(".avif")));
+	// `/_astro/<name>.webp` → is `<name>.avif` on disk? The query string is
+	// dropped; the file name is what matters.
+	const hasAvif = (webpUrl: string): boolean => {
+		const name = path.basename(webpUrl.split(/[?#]/)[0] ?? "");
+		return avifFiles.has(name.replace(/\.webp$/, ".avif"));
+	};
 	let visited = 0;
 	let modified = 0;
 	let pictureCount = 0;
@@ -196,7 +239,7 @@ function rewriteHtmlFiles(distDir: string, log: (msg: string) => void): void {
 		visited += 1;
 		const html = readFileSync(filePath, "utf8");
 		const root = parse(html, { comment: true, voidTag: { tags: ["img", "source", "link", "meta", "br", "hr", "input"] } });
-		const touched = rewriteImagesInDocument(root);
+		const touched = rewriteImagesInDocument(root, hasAvif);
 		if (!touched) return;
 
 		modified += 1;
@@ -234,7 +277,7 @@ export default function imageOptimization(
 				}
 
 				await generateAvifSiblings(astroDir, avifQuality, avifEffort, log);
-				rewriteHtmlFiles(distDir, log);
+				rewriteHtmlFiles(distDir, astroDir, log);
 			},
 		},
 	};
