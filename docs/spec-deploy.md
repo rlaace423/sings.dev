@@ -24,7 +24,7 @@
 - **Pre-push Checklist** (local, before merging to `main`):
   - `npm run build` completes without errors locally — fast-feedback gate before CI runs the same build.
   - `npm test` passes (the page-structure tests read the fresh `dist/`).
-  - `npm run test:visual` passes; when a visual change was intended, baselines were refreshed with `npm run test:visual:update` and the diff reviewed.
+  - `npm run test:visual` passes; when a visual change was intended, local baselines were refreshed with `npm run test:visual:update` and the diff reviewed, and the tracked Linux baselines were refreshed through the manual workflow and committed with the change (see [docs/spec-testing.md](docs/spec-testing.md)).
   - `dist/pagefind/` exists and the build log shows locale filters for both `ko` and `en`.
   - Locally previewed via `npm run preview` at least once when something user-visible has changed.
   - CI runs the same build + deploy on the merged commit; failures show up in the GitHub Actions tab and notify by GitHub's default failure-email.

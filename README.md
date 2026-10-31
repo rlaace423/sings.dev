@@ -27,7 +27,7 @@ Requires Node `>=24.0.0` (see `engines` in `package.json`).
 | `npm run dev` | Start the dev server at `http://localhost:4321` |
 | `npm test` | Unit, component, and page-structure tests (`tests/`); the page-structure tests read `dist/`, so build first |
 | `npm run test:visual` | Playwright suite against `dist/`: layout and contrast invariants, interactions, screenshot and OG-card baselines |
-| `npm run test:visual:update` | Rewrite the screenshot baselines for this platform after an intentional visual change |
+| `npm run test:visual:update` | Rewrite this machine's local screenshot baselines after an intentional visual change; the tracked Linux set is refreshed by the manual workflow (see `docs/spec-testing.md`) |
 | `npm run check` | `build` → `test` → `test:visual` in one go |
 | `npm run build` | Build static output to `dist/` and generate the Pagefind index |
 | `npm run preview` | Preview the production build locally |

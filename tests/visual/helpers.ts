@@ -118,11 +118,15 @@ export async function settle(page: Page) {
 // Screenshot baselines
 //
 // Baselines are platform-specific (Chromium rasterizes text differently on
-// macOS and Linux), so a fresh platform — the first CI run, or a new shot —
-// has nothing to compare against. Instead of failing, the helpers below write
-// the capture as the new baseline, annotate the test, and skip it at the end,
-// so the run stays green while the candidate files can be reviewed, committed
-// (or downloaded from the CI artifact) and compared from the next run on.
+// macOS and Linux). Only the Linux set is tracked in git: CI runs on Linux
+// and is the gate in front of every deploy, so that is the set worth sharing;
+// macOS sets are written on the first local run and gitignored. A fresh
+// platform, or a new shot, has nothing to compare against. Instead of
+// failing, the helpers below write the capture as the new baseline, annotate
+// the test, and skip it at the end, so the run stays green while the
+// candidates can be reviewed (on CI: downloaded from the
+// visual-baselines-linux artifact and committed) and compared from the next
+// run on.
 // ---------------------------------------------------------------------------
 
 const SCREENSHOT_DEFAULTS = { animations: "disabled", caret: "hide", scale: "css" } as const;
@@ -191,6 +195,7 @@ export function skipIfBaselinesCreated() {
 	test.skip(
 		created.length > 0,
 		`${created.length} screenshot baseline(s) were created for ${process.platform}/${info.project.name}. ` +
-			"Review them under tests/visual/__screenshots__/, commit them, and rerun to compare.",
+			"Review them under tests/visual/__screenshots__/ and rerun to compare. Only the Linux set is " +
+			"tracked in git: on CI, download the visual-baselines-linux artifact and commit it.",
 	);
 }

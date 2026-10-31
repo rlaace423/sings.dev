@@ -34,3 +34,9 @@ pnpm-debug.log*
 # playwright run output (visual suite)
 test-results/
 playwright-report/
+
+# screenshot baselines: only the Linux set is tracked (it is what CI compares
+# before a deploy). macOS / Windows sets are written on the first local run,
+# compared against on every later run, and never leave the machine.
+tests/visual/__screenshots__/*/darwin/
+tests/visual/__screenshots__/*/win32/

@@ -3,9 +3,10 @@ import { defineConfig, devices } from "playwright/test";
 // Visual regression suite for the built site. See docs/spec-testing.md.
 //
 // Runs against `dist/` through `tests/visual/serve.mjs`, so `npm run build`
-// must happen first. Screenshot baselines are stored per platform (macOS
-// locally, Linux in CI) because Chromium rasterizes text differently on
-// each; see the "Baselines" section of the spec for how to refresh them.
+// must happen first. Screenshot baselines are stored per platform because
+// Chromium rasterizes text differently on each; only the Linux set (what CI
+// compares before a deploy) is tracked, macOS sets stay local and gitignored.
+// See the "Screenshot baselines" section of the spec for how to refresh them.
 
 const PORT = 4173;
 
